@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  19 MAY 2025 14:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  20 MAY 2025 15:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -856,7 +856,7 @@ LaTeX Warning: Marginpar on page 2 moved.
 
 LaTeX Warning: Marginpar on page 3 moved.
 
-<Reynolds2025_files/figure-latex/SI_map_wexford_county_population-1.pdf, id=49,
+<Reynolds2025_files/figure-latex/SI_map_wexford_county_population-1.pdf, id=53,
  285.065pt x 168.63pt>
 File: Reynolds2025_files/figure-latex/SI_map_wexford_county_population-1.pdf Gr
 aphic file (type pdf)
@@ -867,7 +867,7 @@ population-1.pdf  used on input line 247.
 
 LaTeX Warning: Marginpar on page 3 moved.
 
-<Reynolds2025_files/figure-latex/SI_map_wexford_county-1.pdf, id=50, 127.47626p
+<Reynolds2025_files/figure-latex/SI_map_wexford_county-1.pdf, id=54, 127.47626p
 t x 167.62625pt>
 File: Reynolds2025_files/figure-latex/SI_map_wexford_county-1.pdf Graphic file 
 (type pdf)
@@ -878,50 +878,50 @@ Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_map_wexford_county-
 
 LaTeX Warning: Float too large for page by 6.00238pt on input line 252.
 
-<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-1.pdf, id=51, 133.4
+<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-1.pdf, id=55, 133.4
 9875pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-1.pdf Graphic 
 file (type pdf)
 <use Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_map_wexford_ennisco
-rthy-1.pdf  used on input line 264.
-(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
-<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-2.pdf, id=52, 133.4
+rthy-1.pdf  used on input line 261.
+(pdftex.def)             Requested size: 156.01566pt x 184.16887pt.
+<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-2.pdf, id=56, 133.4
 9875pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-2.pdf Graphic 
 file (type pdf)
 <use Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-2.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_map_wexford_ennisco
-rthy-2.pdf  used on input line 264.
-(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
-<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-3.pdf, id=53, 133.4
+rthy-2.pdf  used on input line 261.
+(pdftex.def)             Requested size: 156.01566pt x 184.16887pt.
+<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-3.pdf, id=57, 133.4
 9875pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-3.pdf Graphic 
 file (type pdf)
 <use Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-3.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_map_wexford_ennisco
-rthy-3.pdf  used on input line 264.
-(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
-<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-4.pdf, id=54, 133.4
+rthy-3.pdf  used on input line 261.
+(pdftex.def)             Requested size: 156.01566pt x 184.16887pt.
+<Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-4.pdf, id=58, 133.4
 9875pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-4.pdf Graphic 
 file (type pdf)
 <use Reynolds2025_files/figure-latex/SI_map_wexford_enniscorthy-4.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_map_wexford_ennisco
-rthy-4.pdf  used on input line 264.
-(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
+rthy-4.pdf  used on input line 261.
+(pdftex.def)             Requested size: 156.01566pt x 184.16887pt.
 
-Overfull \hbox (2.9591pt too wide) in paragraph at lines 264--265
+Overfull \hbox (2.94131pt too wide) in paragraph at lines 261--262
 [][] []
  []
 
 
-Overfull \hbox (2.9591pt too wide) in paragraph at lines 264--265
+Overfull \hbox (2.94131pt too wide) in paragraph at lines 261--262
 [] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--265
+Underfull \hbox (badness 10000) in paragraph at lines 261--262
 
  []
 
@@ -937,21 +937,21 @@ LaTeX Warning: Marginpar on page 3 moved.
 
 LaTeX Warning: Marginpar on page 3 moved.
 
-<Reynolds2025_files/figure-latex/wexford_social_needs-1.pdf, id=55, 402.50375pt
+<Reynolds2025_files/figure-latex/wexford_social_needs-1.pdf, id=59, 402.50375pt
  x 528.97626pt>
 File: Reynolds2025_files/figure-latex/wexford_social_needs-1.pdf Graphic file (
 type pdf)
 <use Reynolds2025_files/figure-latex/wexford_social_needs-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_social_needs-1
-.pdf  used on input line 286.
+.pdf  used on input line 285.
 (pdftex.def)             Requested size: 311.9986pt x 410.03307pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 286--287
+Underfull \hbox (badness 10000) in paragraph at lines 285--286
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 286--287
+Underfull \hbox (badness 10000) in paragraph at lines 285--286
 
  []
 
@@ -960,99 +960,193 @@ Underfull \hbox (badness 10000) in paragraph at lines 286--287
 lds2025_files/figure-latex/SI_map_wexford_enniscorthy-1.pdf> <./Reynolds2025_fi
 les/figure-latex/SI_map_wexford_enniscorthy-2.pdf> <./Reynolds2025_files/figure
 -latex/SI_map_wexford_enniscorthy-3.pdf> <./Reynolds2025_files/figure-latex/SI_
-map_wexford_enniscorthy-4.pdf>]
-<Reynolds2025_files/figure-latex/wexford_social_needs_population-1.pdf, id=116,
+map_wexford_enniscorthy-4.pdf>] [6 <./Reynolds2025_files/figure-latex/wexford_s
+ocial_needs-1.pdf>]
+<Reynolds2025_files/figure-latex/wexford_social_needs_population-1.pdf, id=131,
  285.065pt x 168.63pt>
 File: Reynolds2025_files/figure-latex/wexford_social_needs_population-1.pdf Gra
 phic file (type pdf)
 <use Reynolds2025_files/figure-latex/wexford_social_needs_population-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_social_needs_p
-opulation-1.pdf  used on input line 290.
+opulation-1.pdf  used on input line 289.
 (pdftex.def)             Requested size: 143.998pt x 85.18192pt.
+
+LaTeX Warning: Marginpar on page 7 moved.
+
 <Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-1.pdf, id
-=117, 116.435pt x 157.58875pt>
+=132, 116.435pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-1.pd
 f Graphic file (type pdf)
 <use Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-1.pdf
 >
 Package pdftex.def Info: Reynolds2025_files/figure-latex/social_needs_map_wexfo
-rd_enniscorthy-1.pdf  used on input line 301.
+rd_enniscorthy-1.pdf  used on input line 297.
 (pdftex.def)             Requested size: 240.02577pt x 324.86244pt.
 <Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-2.pdf, id
-=118, 116.435pt x 157.58875pt>
+=133, 116.435pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-2.pd
 f Graphic file (type pdf)
 <use Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-2.pdf
 >
 Package pdftex.def Info: Reynolds2025_files/figure-latex/social_needs_map_wexfo
-rd_enniscorthy-2.pdf  used on input line 301.
+rd_enniscorthy-2.pdf  used on input line 297.
 (pdftex.def)             Requested size: 240.02577pt x 324.86244pt.
 <Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-3.pdf, id
-=119, 133.49875pt x 157.58875pt>
+=134, 133.49875pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-3.pd
 f Graphic file (type pdf)
 <use Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-3.pdf
 >
 Package pdftex.def Info: Reynolds2025_files/figure-latex/social_needs_map_wexfo
-rd_enniscorthy-3.pdf  used on input line 301.
+rd_enniscorthy-3.pdf  used on input line 297.
 (pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
 <Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-4.pdf, id
-=120, 133.49875pt x 157.58875pt>
+=135, 133.49875pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-4.pd
 f Graphic file (type pdf)
 <use Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-4.pdf
 >
 Package pdftex.def Info: Reynolds2025_files/figure-latex/social_needs_map_wexfo
-rd_enniscorthy-4.pdf  used on input line 301.
+rd_enniscorthy-4.pdf  used on input line 297.
 (pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
 
-Overfull \hbox (2.96155pt too wide) in paragraph at lines 301--302
+Overfull \hbox (2.96155pt too wide) in paragraph at lines 297--298
 [][] []
  []
 
 
-Overfull \hbox (2.9591pt too wide) in paragraph at lines 301--302
+Overfull \hbox (2.9591pt too wide) in paragraph at lines 297--298
 [] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 301--302
+Underfull \hbox (badness 10000) in paragraph at lines 297--298
 
  []
 
 
-LaTeX Warning: Float too large for page by 13.19972pt on input line 302.
+LaTeX Warning: Float too large for page by 13.19972pt on input line 298.
 
-[6 <./Reynolds2025_files/figure-latex/wexford_social_needs-1.pdf> <./Reynolds20
-25_files/figure-latex/wexford_social_needs_population-1.pdf>] [7 <./Reynolds202
-5_files/figure-latex/social_needs_map_wexford_enniscorthy-1.pdf> <./Reynolds202
-5_files/figure-latex/social_needs_map_wexford_enniscorthy-2.pdf> <./Reynolds202
-5_files/figure-latex/social_needs_map_wexford_enniscorthy-3.pdf> <./Reynolds202
-5_files/figure-latex/social_needs_map_wexford_enniscorthy-4.pdf>]
 
-LaTeX Warning: Marginpar on page 8 moved.
+LaTeX Warning: Marginpar on page 7 moved.
+
+[7 <./Reynolds2025_files/figure-latex/wexford_social_needs_population-1.pdf>] [
+8 <./Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-1.pdf
+> <./Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-2.pdf
+> <./Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-3.pdf
+> <./Reynolds2025_files/figure-latex/social_needs_map_wexford_enniscorthy-4.pdf
+>]
+<Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_county_populati
+on-1.pdf, id=183, 285.065pt x 168.63pt>
+File: Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_county_pop
+ulation-1.pdf Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_county_popu
+lation-1.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/very_high_needs_SI_map
+_wexford_county_population-1.pdf  used on input line 318.
+(pdftex.def)             Requested size: 143.998pt x 85.18192pt.
+
+LaTeX Warning: Marginpar on page 9 moved.
+
+<Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_county-1.pdf, i
+d=184, 127.47626pt x 167.62625pt>
+File: Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_county-1.p
+df Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_county-1.pd
+f>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/very_high_needs_SI_map
+_wexford_county-1.pdf  used on input line 322.
+(pdftex.def)             Requested size: 468.45694pt x 616.00238pt.
+
+LaTeX Warning: Float too large for page by 6.00238pt on input line 323.
+
+<Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy-1.p
+df, id=185, 133.49875pt x 157.58875pt>
+File: Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorth
+y-1.pdf Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy
+-1.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/very_high_needs_SI_map
+_wexford_enniscorthy-1.pdf  used on input line 331.
+(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
+<Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy-2.p
+df, id=186, 133.49875pt x 157.58875pt>
+File: Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorth
+y-2.pdf Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy
+-2.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/very_high_needs_SI_map
+_wexford_enniscorthy-2.pdf  used on input line 331.
+(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
+<Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy-3.p
+df, id=187, 133.49875pt x 157.58875pt>
+File: Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorth
+y-3.pdf Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy
+-3.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/very_high_needs_SI_map
+_wexford_enniscorthy-3.pdf  used on input line 331.
+(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
+<Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy-4.p
+df, id=188, 133.49875pt x 157.58875pt>
+File: Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorth
+y-4.pdf Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_enniscorthy
+-4.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/very_high_needs_SI_map
+_wexford_enniscorthy-4.pdf  used on input line 331.
+(pdftex.def)             Requested size: 240.02455pt x 283.33728pt.
+
+Overfull \hbox (2.9591pt too wide) in paragraph at lines 331--332
+[][] []
+ []
+
+
+Overfull \hbox (2.9591pt too wide) in paragraph at lines 331--332
+[] []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 331--332
+
+ []
+
+
+LaTeX Warning: Marginpar on page 9 moved.
+
+
+LaTeX Warning: Marginpar on page 9 moved.
+
+
+LaTeX Warning: Marginpar on page 9 moved.
 
 
 Package bibentry Warning: You have used \nobibliography* 
 (bibentry)                without a following \bibliography.
 (bibentry)                You may not be able to run BibTeX.
 
-[8] (./Reynolds2025.aux)
+[9 <./Reynolds2025_files/figure-latex/very_high_needs_SI_map_wexford_county_pop
+ulation-1.pdf>] [10 <./Reynolds2025_files/figure-latex/very_high_needs_SI_map_w
+exford_county-1.pdf>] [11 <./Reynolds2025_files/figure-latex/very_high_needs_SI
+_map_wexford_enniscorthy-1.pdf> <./Reynolds2025_files/figure-latex/very_high_ne
+eds_SI_map_wexford_enniscorthy-2.pdf> <./Reynolds2025_files/figure-latex/very_h
+igh_needs_SI_map_wexford_enniscorthy-3.pdf> <./Reynolds2025_files/figure-latex/
+very_high_needs_SI_map_wexford_enniscorthy-4.pdf>] (./Reynolds2025.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
 Package rerunfilecheck Info: File `Reynolds2025.out' has not changed.
-(rerunfilecheck)             Checksum: 46E5F37711C535DEECA79F82C18A3111;483.
+(rerunfilecheck)             Checksum: 3AC2B703FF95A0E79C7C46ADD0DDC6C1;667.
  ) 
 Here is how much of TeX's memory you used:
- 15976 strings out of 474116
- 256056 string characters out of 5743682
+ 16044 strings out of 474116
+ 261091 string characters out of 5743682
  1950187 words of memory out of 5000000
- 37919 multiletter control sequences out of 15000+600000
+ 37980 multiletter control sequences out of 15000+600000
  614598 words of font info for 127 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 97i,11n,96p,751b,528s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 97i,11n,96p,791b,491s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/mathpazo/fplmr.pfb></usr
 /local/texlive/2024/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb></usr/loc
@@ -1061,10 +1155,10 @@ ve/2024/texmf-dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2024
 /texmf-dist/fonts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/urw/palatino/uplri8a.pfb>
-Output written on Reynolds2025.pdf (8 pages, 3663019 bytes).
+Output written on Reynolds2025.pdf (11 pages, 4309500 bytes).
 PDF statistics:
- 223 PDF objects out of 1000 (max. 8388607)
- 159 compressed objects within 2 object streams
- 26 named destinations out of 1000 (max. 500000)
- 1125 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 292 PDF objects out of 1000 (max. 8388607)
+ 206 compressed objects within 3 object streams
+ 33 named destinations out of 1000 (max. 500000)
+ 1163 words of extra memory for PDF output out of 10000 (max. 10000000)
 
