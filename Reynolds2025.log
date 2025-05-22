@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  21 MAY 2025 17:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  22 MAY 2025 20:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -862,7 +862,7 @@ File: Reynolds2025_files/figure-latex/wexford_si_and_needs-1.pdf Graphic file (
 type pdf)
 <use Reynolds2025_files/figure-latex/wexford_si_and_needs-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_si_and_needs-1
-.pdf  used on input line 247.
+.pdf  used on input line 248.
 (pdftex.def)             Requested size: 240.01642pt x 316.66034pt.
 <Reynolds2025_files/figure-latex/wexford_si_and_needs-2.pdf, id=50, 119.44624pt
  x 157.58875pt>
@@ -870,40 +870,65 @@ File: Reynolds2025_files/figure-latex/wexford_si_and_needs-2.pdf Graphic file (
 type pdf)
 <use Reynolds2025_files/figure-latex/wexford_si_and_needs-2.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_si_and_needs-2
-.pdf  used on input line 247.
+.pdf  used on input line 248.
 (pdftex.def)             Requested size: 240.01642pt x 316.66034pt.
 
-Overfull \hbox (2.94284pt too wide) in paragraph at lines 247--248
+Overfull \hbox (2.94284pt too wide) in paragraph at lines 248--249
 [][] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 247--248
+Underfull \hbox (badness 10000) in paragraph at lines 248--249
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 257--257
+Underfull \hbox (badness 10000) in paragraph at lines 263--263
 []\T1/pplj/m/n/8 Table 1: []County Wex-ford, pop-u-la-tion in each Tran-sit Sup
+-ply group-ing by ur-ban
+ []
+
+
+Overfull \hbox (151.65935pt too wide) in alignment at lines 262--325
+ [] [] [] [] [] [] [] [] [] 
+ []
+
+[3] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 335--335
+[]\T1/pplj/m/n/8 Table 2: []County Wex-ford, pop-u-la-tion in each Tran-sit Sup
 -ply and Com-bined
  []
 
 
-Overfull \hbox (104.09341pt too wide) in alignment at lines 256--273
+Overfull \hbox (104.09341pt too wide) in alignment at lines 334--351
  [] [] [] [] [] [] [] [] 
  []
 
-[3]
-<Reynolds2025_files/figure-latex/Wexford_needs_gap_population-1.pdf, id=58, 289
-.08pt x 170.6375pt>
-File: Reynolds2025_files/figure-latex/Wexford_needs_gap_population-1.pdf Graphi
+[5] [6 <./Reynolds2025_files/figure-latex/wexford_si_and_needs-1.pdf> <./Reynol
+ds2025_files/figure-latex/wexford_si_and_needs-2.pdf>]
+<Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf, id=86, 119
+.44624pt x 157.58875pt>
+File: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf Graphi
 c file (type pdf)
-<use Reynolds2025_files/figure-latex/Wexford_needs_gap_population-1.pdf>
-Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_popu
-lation-1.pdf  used on input line 277.
-(pdftex.def)             Requested size: 480.02705pt x 283.34929pt.
+<use Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_
+graphs-1.pdf  used on input line 367.
+(pdftex.def)             Requested size: 312.02188pt x 411.65915pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 277--278
+Underfull \hbox (badness 10000) in paragraph at lines 367--368
+
+ []
+
+<Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs_needs-1.pdf, id=8
+7, 259.97125pt x 165.61874pt>
+File: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs_needs-1.pdf 
+Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs_needs-1.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_
+graphs_needs-1.pdf  used on input line 371.
+(pdftex.def)             Requested size: 480.0031pt x 305.79346pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 371--372
 
  []
 
@@ -912,9 +937,9 @@ Package bibentry Warning: You have used \nobibliography*
 (bibentry)                without a following \bibliography.
 (bibentry)                You may not be able to run BibTeX.
 
-[4] [5 <./Reynolds2025_files/figure-latex/wexford_si_and_needs-1.pdf> <./Reynol
-ds2025_files/figure-latex/wexford_si_and_needs-2.pdf>] [6 <./Reynolds2025_files
-/figure-latex/Wexford_needs_gap_population-1.pdf>] (./Reynolds2025.aux)
+[7 <./Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>] [8 <
+./Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs_needs-1.pdf>] (.
+/Reynolds2025.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -923,13 +948,13 @@ Package rerunfilecheck Info: File `Reynolds2025.out' has not changed.
 (rerunfilecheck)             Checksum: 46E5F37711C535DEECA79F82C18A3111;483.
  ) 
 Here is how much of TeX's memory you used:
- 15875 strings out of 474116
- 249365 string characters out of 5743682
- 1961187 words of memory out of 5000000
- 37828 multiletter control sequences out of 15000+600000
+ 15894 strings out of 474116
+ 250252 string characters out of 5743682
+ 2032187 words of memory out of 5000000
+ 37843 multiletter control sequences out of 15000+600000
  613023 words of font info for 123 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 97i,11n,96p,428b,573s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 97i,11n,96p,444b,573s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/mathpazo/fplmr.pfb></usr/
@@ -939,10 +964,10 @@ e/2024/texmf-dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2024/
 texmf-dist/fonts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2024/texmf-di
 st/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/urw/palatino/uplri8a.pfb>
-Output written on Reynolds2025.pdf (6 pages, 2767060 bytes).
+Output written on Reynolds2025.pdf (8 pages, 4081180 bytes).
 PDF statistics:
- 146 PDF objects out of 1000 (max. 8388607)
- 109 compressed objects within 2 object streams
- 20 named destinations out of 1000 (max. 500000)
- 1080 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 163 PDF objects out of 1000 (max. 8388607)
+ 121 compressed objects within 2 object streams
+ 24 named destinations out of 1000 (max. 500000)
+ 1085 words of extra memory for PDF output out of 10000 (max. 10000000)
 
