@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  23 MAY 2025 19:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  24 MAY 2025 21:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -683,25 +683,25 @@ File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
 ) (./Reynolds2025.aux)
 \openout1 = `Reynolds2025.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 87.
-LaTeX Font Info:    ... okay on input line 87.
-Package hyperref Info: Link coloring OFF on input line 87.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 86.
+LaTeX Font Info:    ... okay on input line 86.
+Package hyperref Info: Link coloring OFF on input line 86.
 (./Reynolds2025.out) (./Reynolds2025.out)
 \@outlinefile=\write3
 \openout3 = `Reynolds2025.out'.
@@ -763,59 +763,59 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    Trying to load font information for OT1+pplx on input line 
-115.
+114.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/ot1pplx.fd
 File: ot1pplx.fd 2004/09/06 font definitions for OT1/pplx.
 )
 LaTeX Font Info:    Trying to load font information for OML+zplm on input line 
-115.
+114.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 
-115.
+114.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 
-115.
+114.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 
-115.
+114.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 )
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 10.42007pt on input line 115.
+(Font)              scaled to size 10.42007pt on input line 114.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 7.91925pt on input line 115.
+(Font)              scaled to size 7.91925pt on input line 114.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 6.25204pt on input line 115.
+(Font)              scaled to size 6.25204pt on input line 114.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 10.42007pt on input line 115.
+(Font)              scaled to size 10.42007pt on input line 114.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 7.91925pt on input line 115.
+(Font)              scaled to size 7.91925pt on input line 114.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 6.25204pt on input line 115.
+(Font)              scaled to size 6.25204pt on input line 114.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 8.33606pt on input line 115.
+(Font)              scaled to size 8.33606pt on input line 114.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 5.21004pt on input line 115.
+(Font)              scaled to size 5.21004pt on input line 114.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 8.33606pt on input line 115.
+(Font)              scaled to size 8.33606pt on input line 114.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 5.21004pt on input line 115.
+(Font)              scaled to size 5.21004pt on input line 114.
 LaTeX Font Info:    Trying to load font information for T1+fvm on input line 11
-5.
+4.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/bera/t1fvm.fd
 File: t1fvm.fd 2004/09/07 scalable font definitions for T1/fvm.
 )
 LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
-(Font)              scaled to size 6.80005pt on input line 115.
+(Font)              scaled to size 6.80005pt on input line 114.
 
-Overfull \hbox (21.74512pt too wide) in paragraph at lines 115--115
+Overfull \hbox (21.74512pt too wide) in paragraph at lines 114--114
 \T1/fvm/m/n/8 2c049091cafb56c66efc532ad2bdd774d8efc0eb$[]\T1/pplj/m/n/8 ; 
  []
 
@@ -829,7 +829,7 @@ LaTeX Warning: Marginpar on page 1 moved.
 LaTeX Warning: Marginpar on page 1 moved.
 
 LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
-141.
+140.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/ts1pplj.fd
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 )
@@ -862,7 +862,7 @@ File: Reynolds2025_files/figure-latex/wexford_si_map-1.pdf Graphic file (type p
 df)
 <use Reynolds2025_files/figure-latex/wexford_si_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_si_map-1.pdf  
-used on input line 248.
+used on input line 247.
 (pdftex.def)             Requested size: 144.00757pt x 189.36427pt.
 
 LaTeX Warning: Marginpar on page 3 moved.
@@ -873,100 +873,124 @@ File: Reynolds2025_files/figure-latex/wexford_si_pop_map-1.pdf Graphic file (ty
 pe pdf)
 <use Reynolds2025_files/figure-latex/wexford_si_pop_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_si_pop_map-1.p
-df  used on input line 252.
+df  used on input line 251.
 (pdftex.def)             Requested size: 144.00441pt x 93.24025pt.
 
 LaTeX Warning: Marginpar on page 3 moved.
 
 
-Overfull \hbox (2.23288pt too wide) in paragraph at lines 291--291
+Overfull \hbox (2.23288pt too wide) in paragraph at lines 290--290
 []|\T1/pplj/m/n/8 Castlebridge|  
  []
 
 
-Overfull \hbox (6.32887pt too wide) in paragraph at lines 296--296
+Overfull \hbox (6.32887pt too wide) in paragraph at lines 295--295
 []|\T1/pplj/m/n/8 Kilmuckridge|  
  []
 
 
-Overfull \hbox (0.97685pt too wide) in paragraph at lines 320--320
+Overfull \hbox (0.97685pt too wide) in paragraph at lines 319--319
 []|\T1/pplj/m/n/8 Adamstown|  
  []
 
 
-Overfull \hbox (0.60887pt too wide) in paragraph at lines 329--329
+Overfull \hbox (0.60887pt too wide) in paragraph at lines 328--328
 []|\T1/pplj/m/n/8 Ballycullane|  
  []
 
 
-Overfull \hbox (1.60086pt too wide) in paragraph at lines 334--334
+Overfull \hbox (1.60086pt too wide) in paragraph at lines 333--333
 []|\T1/pplj/m/n/8 Duncormick|  
  []
 
 
-Overfull \hbox (3.43285pt too wide) in paragraph at lines 336--336
+Overfull \hbox (3.43285pt too wide) in paragraph at lines 335--335
 []|\T1/pplj/m/n/8 Arthurstown|  
  []
 
 
-Overfull \hbox (218.52225pt too wide) in alignment at lines 277--340
+Overfull \hbox (218.52225pt too wide) in alignment at lines 276--339
  [] [] [] [] [] [] [] [] [] 
  []
 
 [3 <./Reynolds2025_files/figure-latex/wexford_si_map-1.pdf> <./Reynolds2025_fil
-es/figure-latex/wexford_si_pop_map-1.pdf>]
-<Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf, id=74, 127.47626pt x 
+es/figure-latex/wexford_si_pop_map-1.pdf>] [4]
+<Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf, id=78, 195.73125pt x 1
+72.645pt>
+File: Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf Graphic file (type
+ pdf)
+<use Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf
+  used on input line 352.
+(pdftex.def)             Requested size: 240.01328pt x 211.70401pt.
+<Reynolds2025_files/figure-latex/wexford_gglorenz-2.pdf, id=79, 195.73125pt x 1
+72.645pt>
+File: Reynolds2025_files/figure-latex/wexford_gglorenz-2.pdf Graphic file (type
+ pdf)
+<use Reynolds2025_files/figure-latex/wexford_gglorenz-2.pdf>
+Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_gglorenz-2.pdf
+  used on input line 352.
+(pdftex.def)             Requested size: 240.01328pt x 211.70401pt.
+
+Overfull \hbox (2.93655pt too wide) in paragraph at lines 352--353
+[][] []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 352--353
+
+ []
+
+<Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf, id=80, 127.47626pt x 
 167.62625pt>
 File: Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf Graphic file (typ
 e pdf)
 <use Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_needs_map-1.pd
-f  used on input line 344.
+f  used on input line 366.
 (pdftex.def)             Requested size: 144.00757pt x 189.36427pt.
-[4]
-
-LaTeX Warning: Marginpar on page 5 moved.
-
-<Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf, id=79, 279.0425pt
+<Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf, id=81, 279.0425pt
  x 180.675pt>
 File: Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf Graphic file 
 (type pdf)
 <use Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_needs_pop_map-
-1.pdf  used on input line 348.
+1.pdf  used on input line 380.
 (pdftex.def)             Requested size: 144.00441pt x 93.24025pt.
 
 LaTeX Warning: Marginpar on page 5 moved.
 
-[5 <./Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf> <./Reynolds2025_
-files/figure-latex/wexford_needs_pop_map-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 392--392
+[5 <./Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf> <./Reynolds2025_f
+iles/figure-latex/wexford_gglorenz-2.pdf> <./Reynolds2025_files/figure-latex/we
+xford_needs_map-1.pdf> <./Reynolds2025_files/figure-latex/wexford_needs_pop_map
+-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 394--394
 []\T1/pplj/m/n/8 Table 2: []County Wex-ford, pop-u-la-tion in each Tran-sit Sup
 -ply and Com-bined
  []
 
 
-Overfull \hbox (104.09341pt too wide) in alignment at lines 391--408
+Overfull \hbox (104.09341pt too wide) in alignment at lines 393--410
  [] [] [] [] [] [] [] [] 
  []
 
-<Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf, id=102, 12
+<Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf, id=117, 12
 7.47626pt x 167.62625pt>
 File: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf Graphi
 c file (type pdf)
 <use Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_
-graphs-1.pdf  used on input line 412.
+graphs-1.pdf  used on input line 426.
 (pdftex.def)             Requested size: 144.00757pt x 189.36427pt.
 <Reynolds2025_files/figure-latex/Wexford_needs_gap_map_population_graph-1.pdf, 
-id=103, 230.8625pt x 180.675pt>
+id=118, 191.71625pt x 180.675pt>
 File: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_population_graph-1.
 pdf Graphic file (type pdf)
 <use Reynolds2025_files/figure-latex/Wexford_needs_gap_map_population_graph-1.p
 df>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_
-population_graph-1.pdf  used on input line 416.
-(pdftex.def)             Requested size: 143.99983pt x 112.69553pt.
+population_graph-1.pdf  used on input line 430.
+(pdftex.def)             Requested size: 144.00916pt x 135.71542pt.
 
 LaTeX Warning: Marginpar on page 6 moved.
 
@@ -986,13 +1010,13 @@ Package rerunfilecheck Info: File `Reynolds2025.out' has not changed.
 (rerunfilecheck)             Checksum: 46E5F37711C535DEECA79F82C18A3111;483.
  ) 
 Here is how much of TeX's memory you used:
- 15905 strings out of 474116
- 251251 string characters out of 5743682
- 2027187 words of memory out of 5000000
- 37853 multiletter control sequences out of 15000+600000
+ 15936 strings out of 474116
+ 252716 string characters out of 5743682
+ 2026187 words of memory out of 5000000
+ 37883 multiletter control sequences out of 15000+600000
  613023 words of font info for 123 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 97i,11n,96p,449b,559s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 97i,12n,96p,449b,559s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/mathpazo/fplmr.pfb></usr/
@@ -1002,10 +1026,10 @@ e/2024/texmf-dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2024/
 texmf-dist/fonts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2024/texmf-di
 st/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/urw/palatino/uplri8a.pfb>
-Output written on Reynolds2025.pdf (6 pages, 4187063 bytes).
+Output written on Reynolds2025.pdf (6 pages, 4203501 bytes).
 PDF statistics:
- 173 PDF objects out of 1000 (max. 8388607)
- 127 compressed objects within 2 object streams
- 25 named destinations out of 1000 (max. 500000)
- 1095 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 190 PDF objects out of 1000 (max. 8388607)
+ 138 compressed objects within 2 object streams
+ 26 named destinations out of 1000 (max. 500000)
+ 1105 words of extra memory for PDF output out of 10000 (max. 10000000)
 
