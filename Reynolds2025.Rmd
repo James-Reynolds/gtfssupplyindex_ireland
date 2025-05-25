@@ -60,6 +60,8 @@ library(patchwork)
 library(ggmapinset)
 library(tufte)
 library(gglorenz)
+library(ggExtra)
+library(ggthemes)
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 
@@ -872,23 +874,114 @@ scale_fill_manual(values = c("Very Low" = "#FFFB07", "Low" = "#CEE102", "Below a
 
   
 
-```{r wexford_si_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: Small Area, by transit supply category"}
+```{r wexford_si_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: Small Areas (top), and aggregate population (bottom) by transit supply category"}
 
  county_wexford_map 
-# +inset_element(pcol_si_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0) 
-
-
-```
-
-```{r wexford_si_pop_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: population living in Small Areas, by transit supply category"}
+# +inset_element(pcol_si_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0)  / 
 
 pcol_si_wexford_county
 
 ```
 
-TRANSIT SUPPLY: Figure 1 shows Small Areas across County Wexford, categorised by transit supply, while Figure 2 summarises the share of the population living in Small Areas in each category. There are `r label_number(big.mark=",")(pcol_si_wexford_county$data[1:4,2] %>% sum())` people living in Small Areas with transit supply below the average across all Small Areas in County Wexford, representing some `r label_percent()(pcol_si_wexford_county$data[1:4,3] %>% sum())` of the total `r label_number(big.mark=",")(pcol_si_wexford_county$data[1:7,2] %>% sum())` population. This includes the `r label_number(big.mark=",")(pcol_si_wexford_county$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_wexford_county$data[1,3] %>% sum())`) living in Small Areas with no transit supply at all, which mostly appear to be in rural areas. 
 
-In general, most of the transit supply appears to be provided within the various centres of population. Table 1 shows the population in each Transit Supply category for the various urban areas in County Wexford, shown in order of population. As might be expected, those places with larger populations tend to have more transit supplied, but this appears to apply only in general terms. Notably, New Ross, Courttown, Rosslare Harbour and Castlebridge do not have any Small Areas with Very High transit supply, and the later three do not have any with High supply either.  Rosslare itself, however has some Small Areas with High and Very High transit supply, despite having fewer residents.
+TRANSIT SUPPLY: The average SI score for Small Areas across County Wexford is `r label_number(accuracy = 0.1)(si_wexford_250423_day_aggregated$si_by_area$SI %>% mean())`. 
+
+Figure 1 maps Small Areas in County Wexford by transit supply category and summarises the share of the total population living in Small Areas in each transit supply category. 
+
+There are `r label_number(big.mark=",")(pcol_si_wexford_county$data[1:4,2] %>% sum())` people living in Small Areas with transit supply below the average across all Small Areas in County Wexford, representing some `r label_percent()(pcol_si_wexford_county$data[1:4,3] %>% sum())` of the total `r label_number(big.mark=",")(pcol_si_wexford_county$data[1:7,2] %>% sum())` population. This includes the `r label_number(big.mark=",")(pcol_si_wexford_county$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_wexford_county$data[1,3] %>% sum())`) living in Small Areas with no transit supply at all, who mostly appear to live in rural areas. 
+
+```{r wexford_si_table_summary, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="County Wexford: population living in Small Areas, by transit supply category"}
+
+theme_gtsummary_compact()
+si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population, transit_supply) %>%
+   tbl_summary(
+    by = transit_supply,
+    digits = SI ~ 1,
+    type = all_continuous() ~ "continuous2",
+     statistic = list(
+      all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{p100}", "{sum}")
+   )) %>%
+    add_overall() %>%
+  as_kable_extra()
+    
+```
+
+\newpage
+
+```{r wexford_si_pop_histogram, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="County Wexford: population living in Small Areas, by transit supply category"}
+
+p <- ggplot(si_wexford_250423_day_aggregated$si_by_area, aes(population, SI, colour = transit_supply)) + 
+  geom_point() +
+  scale_colour_manual(values = c("Zero Supply" = "black", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen"), guide="none") +
+  theme_tufte(ticks=F) 
+ggMarginal(p, type = "histogram", fill="transparent")
+
+
+```
+
+Figure 3 shows population and SI scores for individual Small Areas across County Wexford. ow this relates to the distribution of SI scores across individual Small Areas, which is highly skewed^[`r label_number(accuracy = 0.01)(si_wexford_250423_day_aggregated$si_by_area$SI %>% Skew())`] as most have very little transit at all.
+
+
+```{r wexford_gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford: population living in Small Areas, by transit supply category (left) and Lorenz curve comparing Small Area population and SI score (right)"}
+
+
+
+text <- si_wexford_250423_day_aggregated$thresholds[6]
+numbers <- regmatches(text,gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+  unlist() %>% 
+  as.numeric()
+max <- numbers[2]
+very_high_limit <- numbers[1] / max
+
+
+
+si_wexford_250423_day_aggregated$si_by_area %>%
+    ggplot(aes(x = SI, n = population)) +
+    stat_lorenz(desc = FALSE) +
+    coord_fixed() +
+    geom_abline(linetype = "dashed") +
+    theme_minimal() +
+    hrbrthemes::scale_x_percent() +
+    hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+         y = "Cumulative share of SI score") +
+  geom_vline(xintercept=1-pcol_si_wexford_county$data[7,3], color = "darkgreen") +
+  geom_vline(xintercept=1-pcol_si_wexford_county$data[6:7,3] %>% sum(), color = "#53A212") +
+  geom_vline(xintercept=1-pcol_si_wexford_county$data[5:7,3] %>% sum(), color = "lightgreen") +
+  geom_vline(xintercept=1-pcol_si_wexford_county$data[4:7,3] %>% sum(), color = "#F29C33") +
+  geom_vline(xintercept=1-pcol_si_wexford_county$data[3:7,3] %>% sum(), color = "#F7C387") +
+  geom_vline(xintercept=1-pcol_si_wexford_county$data[2:7,3] %>% sum(), color = "#F9D8B1") +
+  geom_text(x = mean(c(0, 1-pcol_si_wexford_county$data[2:7,3] %>% sum())), y = 0.8, label="Zero Supply", angle = 90, color="black") +
+  geom_text(x = mean(c(1-pcol_si_wexford_county$data[2:7,3] %>% sum(), 1-pcol_si_wexford_county$data[3:7,3] %>% sum())), y = 0.8, label="Very Low", angle = 90, color="#F9D8B1") +
+  geom_text(x = mean(c(1-pcol_si_wexford_county$data[3:7,3] %>% sum(), 1-pcol_si_wexford_county$data[4:7,3] %>% sum())), y = 0.8, label="Low", angle = 90, color="#F7C387") +
+  geom_text(x = mean(c(1-pcol_si_wexford_county$data[4:7,3] %>% sum(), 1-pcol_si_wexford_county$data[5:7,3] %>% sum())), y = 0.8, label="Below average", angle = 90, color="#F29C33") +
+  geom_text(x = mean(c(1-pcol_si_wexford_county$data[5:7,3] %>% sum(), 1-pcol_si_wexford_county$data[6:7,3] %>% sum())), y = 0.8, label="Above average", angle = 90, color="lightgreen") +
+  geom_text(x = mean(c(1-pcol_si_wexford_county$data[6:7,3] %>% sum(), 1-pcol_si_wexford_county$data[7,3] %>% sum())), y = 0.8, label="High", angle = 90, color="#53A212") +
+  geom_text(x = mean(c(1-pcol_si_wexford_county$data[7,3] %>% sum(), 1)), y = 0.8, label="Very High", angle = 90, color="darkgreen") 
+
+lorenz_values <- si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population)
+lorenz_values <- Lc(lorenz_values$SI, lorenz_values$population)
+
+```
+
+
+Figure 3 shows the Lorenz Curve for County Wexford, and indicates that the distribution of transit supply to the population appears to be relatively unequal^[The Gini coefficient is `r Gini(si_wexford_250423_day_aggregated$si_by_area$SI, weights = si_wexford_250423_day_aggregated$si_by_area$population, unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.001)()`],
+ with `r label_percent(digits=2)(1-lorenz_values$L[514])` of the transit supply  service provided within Small Areas that are home to just `r label_percent(digits=2)(1-lorenz_values$p[514])` of the total population.
+
+
+
+
+
+In general, most of the transit supply appears to be provided within the various centres of population. 
+
+
+
+
+Table 1 shows the population in each Transit Supply category for the various urban areas in County Wexford, shown in order of population. As might be expected, those places with larger populations tend to have more transit supplied, but this appears to apply only in general terms. Notably, New Ross, Courttown, Rosslare Harbour and Castlebridge do not have any Small Areas with Very High transit supply, and the later three do not have any with High supply either.  Rosslare itself, however has some Small Areas with High and Very High transit supply, despite having fewer residents.
 
 
 
@@ -940,44 +1033,9 @@ wexford_small_area_supply_by_urban_area_table %>%
  
 
 Further down the list, Ferns appears to have more transit supply than might be expected for its population, while Kilmuchridge, Ballymurn, Coolgreany, Ballysimon, Adamstown and Killinierin have no transit at all despite their populations being higher than many places that do have at least some transit. 
+If only considering Small Areas within named urban areas (as per Table 1), the distribution of transit supply to the population still appears to be relatively unequal (Figure 3, right, Gini coefficient of 
 
-Figure 3 shows the Lorenz Curves for all of County Wexford (left) and those parts of County Wexford that are named urban areas. 
-
-```{r wexford_gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 2, out.width="50%", fig.cap="County Wexford: Lorenz curves for all Small Areas (left) and Small Areas within named urban areas (right)"}
-
-
-text <- si_wexford_250423_day_aggregated$thresholds[6]
-numbers <- regmatches(text,gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-  unlist() %>% 
-  as.numeric()
-max <- numbers[2]
-very_high_limit <- numbers[1] / max
-
-
-
-si_wexford_250423_day_aggregated$si_by_area %>%
-    ggplot(aes(x = SI, n = population)) +
-    stat_lorenz(desc = FALSE) +
-    coord_fixed() +
-    geom_abline(linetype = "dashed") +
-    theme_minimal() +
-    hrbrthemes::scale_x_percent() +
-    hrbrthemes::scale_y_percent() +
-  labs(x = "Cumulative share of population ",
-         y = "Cumulative share of SI score") +
-  geom_vline(xintercept=1-pcol_si_wexford_county$data[7,3], color = "darkgreen") +
-  geom_vline(xintercept=1-pcol_si_wexford_county$data[6:7,3] %>% sum(), color = "#53A212") +
-  geom_vline(xintercept=1-pcol_si_wexford_county$data[5:7,3] %>% sum(), color = "lightgreen") +
-  geom_vline(xintercept=1-pcol_si_wexford_county$data[4:7,3] %>% sum(), color = "#F29C33") +
-  geom_vline(xintercept=1-pcol_si_wexford_county$data[3:7,3] %>% sum(), color = "#F7C387") +
-  geom_vline(xintercept=1-pcol_si_wexford_county$data[2:7,3] %>% sum(), color = "#F9D8B1") +
-  geom_text(x = mean(c(0, 1-pcol_si_wexford_county$data[2:7,3] %>% sum())), y = 0.8, label="Zero Supply", angle = 90, color="black") +
-  geom_text(x = mean(c(1-pcol_si_wexford_county$data[2:7,3] %>% sum(), 1-pcol_si_wexford_county$data[3:7,3] %>% sum())), y = 0.8, label="Very Low", angle = 90, color="#F9D8B1") +
-  geom_text(x = mean(c(1-pcol_si_wexford_county$data[3:7,3] %>% sum(), 1-pcol_si_wexford_county$data[4:7,3] %>% sum())), y = 0.8, label="Low", angle = 90, color="#F7C387") +
-  geom_text(x = mean(c(1-pcol_si_wexford_county$data[4:7,3] %>% sum(), 1-pcol_si_wexford_county$data[5:7,3] %>% sum())), y = 0.8, label="Below average", angle = 90, color="#F29C33") +
-  geom_text(x = mean(c(1-pcol_si_wexford_county$data[5:7,3] %>% sum(), 1-pcol_si_wexford_county$data[6:7,3] %>% sum())), y = 0.8, label="Above average", angle = 90, color="lightgreen") +
-  geom_text(x = mean(c(1-pcol_si_wexford_county$data[6:7,3] %>% sum(), 1-pcol_si_wexford_county$data[7,3] %>% sum())), y = 0.8, label="High", angle = 90, color="#53A212") +
-  geom_text(x = mean(c(1-pcol_si_wexford_county$data[7,3] %>% sum(), 1)), y = 0.8, label="Very High", angle = 90, color="darkgreen") 
+```{r wexford_urban_area_Gini, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: Small Area, by social need for transport category"}
 
 
 si_wexford_250423_day_aggregated$si_by_area %>% 
@@ -1009,12 +1067,7 @@ wexford_urban_popiulation_gini_data <- si_wexford_250423_day_aggregated$si_by_ar
   filter(SA_URBAN_AREA_NAME != "NA") %>%
   st_drop_geometry() %>%
   select(SI, population)
-
-
 ```
-
-
-The distribution of transit supply to the population across all of Country Wexford appears to be relatively unequal (Figure 3, left, Gini coefficient of `r Gini(si_wexford_250423_day_aggregated$si_by_area$SI, weights = si_wexford_250423_day_aggregated$si_by_area$population, unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.001)()`). Around three quarters of the transit supply services Small Areas that are home to around only 15 percent of the population. If only considering Small Areas within named urban areas (as per Table 1), the distribution of transit supply to the population still appears to be relatively unequal (Figure 3, right, Gini coefficient of `r Gini(wexford_urban_popiulation_gini_data$SI, weights = wexford_urban_popiulation_gini_data$population, unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.001)()`). Around three quarters of the transit supply services Small Areas that are home to around only 30 percent of the population. 
 
 
 
