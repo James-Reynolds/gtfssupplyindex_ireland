@@ -63,6 +63,7 @@ library(gglorenz)
 library(ggExtra)
 library(ggthemes)
 library(geomtextpath)
+library(ggrepel)
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 
@@ -593,21 +594,21 @@ pcol_si_wexford_county <- si_wexford_250423_day_aggregated$si_by_area %>%
   geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
   scale_y_continuous(limits = c(0,.6)) +
   geom_hline(yintercept = 0)  + 
-  geom_text(aes(transit_supply,  0.5, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+  geom_text(aes(transit_supply,  0.5, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1) +
    coord_flip() + 
 scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
   scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
   guides(fill = "none", color = "none") +
   labs(
-    title = "Transit supply by population",
+    title = "Transit supply category by population",
     x = NULL,
     y = NULL
   ) +
   theme_void() +
   theme(
     panel.grid = element_blank(),
-    plot.title = element_blank(),
-    axis.text.y = element_text(hjust = 1),
+    plot.title = element_text(size = 4),
+    axis.text.y = element_text(size = 3, hjust = 1),
     axis.text.x = element_blank()
   ) 
 
@@ -684,7 +685,7 @@ scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "L
     coord_sf(xlim = c(lon[1],lon[2]), 
            ylim = c(lat[1], lat[2])) +  
   ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
+  ggspatial::annotation_scale(location = 'br', height = unit(0.1, "cm")) 
 
 county_wexford_density_map <- ggplot()+ 
   geom_sf(data=si_wexford_250423_day_aggregated$si_by_area,
@@ -702,386 +703,13 @@ scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "L
     coord_sf(xlim = c(lon[1],lon[2]), 
            ylim = c(lat[1], lat[2])) +  
   ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
+  ggspatial::annotation_scale(location = 'br', height = unit(0.1, "cm")) 
 
+#Create outlines for each of the named outlines
 
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Wexford") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-wexford_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Wexford"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-enniscorthy_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Gorey") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-gorey_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Gorey"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "New Ross") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-new_ross_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "New Ross"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Courtown") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-courtown_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Courtown"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Rosslare Harbour") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-rosslare_harbour_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Rosslare Harbour"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Castlebridge") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-castlebridge_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Castlebridge"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Rosslare") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-rosslare_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Rosslare"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Bunclody") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-bunclody_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Bunclody"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
-#Set boundings box
-bbox_list <- wexford %>% 
-  filter(SA_URBAN_AREA_NAME == "Ferns") %>%
-  st_geometry %>% 
-  st_combine() %>%
-  st_bbox()
-
-lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
-
-Poly_Coord_df = data.frame(lon, lat)
-
-poly <- Poly_Coord_df %>% 
-  st_as_sf(coords = c("lon", "lat"), 
-           crs = 2157) %>% 
-  st_bbox() %>% 
-  st_as_sfc()
-
-ferns_town_map <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Ferns"),
-          aes(fill = transit_supply), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none",
-#        legend.text = element_text(size = 4), 
-#        legend.title = element_text(size = 5), 
-#        legend.key.size = unit(0.08, 'cm')
-        ) + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-    coord_sf(xlim = c(lon[1],lon[2]), 
-           ylim = c(lat[1], lat[2])) +  
-#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
-  ggspatial::annotation_scale(location = 'br') 
-
-
-
+urban_area_name <- "Wexford"
+urban_area_name_variable <- "SA_URBAN_AREA_NAME"
+data_set <- si_wexford_250423_day_aggregated$si_by_area
 
 
 ```
@@ -1289,32 +917,10 @@ scale_fill_manual(values = c("Very Low" = "#FFFB07", "Low" = "#CEE102", "Below a
 
   
 
-TRANSIT SUPPLY: Figure 1 shows the share of the County Wexford population by the transit supply category of their Small Area of residence, while Figure 2 maps Small Areas in County Wexford by transit supply category. Table 1 shows summary statistics for Small Areas across County Wexford for both SI scores and population, both overall and split by the seven transit supply categories. 
 
-```{r wexford_si_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: population by transit supply category"}
-
-pcol_si_wexford_county
-```
-
-There are `r label_number(big.mark=",")(pcol_si_wexford_county$data[1:4,2] %>% sum())` people living in Small Areas with SI scores below the County Wexford average (`r label_number(accuracy = 0.1)(si_wexford_250423_day_aggregated$si_by_area$SI %>% mean())`), representing some `r label_percent()(pcol_si_wexford_county$data[1:4,3] %>% sum())` of the total `r label_number(big.mark=",")(pcol_si_wexford_county$data[1:7,2] %>% sum())` population. This includes the `r label_number(big.mark=",")(pcol_si_wexford_county$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_wexford_county$data[1,3] %>% sum())`) living in Small Areas with no transit supply at all, who mostly appear to live in rural areas. 
+TRANSIT SUPPLY:  Figure 1 maps Small Areas across County Wexford by transit supply category.  Table 1 shows summary statistics for SI score and population, overall and split by transit supply category. 
 
 
-
-```{r wexford_si_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford: Small Areas by transit supply category"}
-
-county_wexford_map + 
-  inset_element(wexford_town_map, left = 0.75, bottom = 0.21, right = 1.0, top =0.46) +
-inset_element(enniscorthy_town_map, left = 0.0, bottom = 0.6, right = 0.2, top =0.8) +
-  inset_element(gorey_town_map, left = 0.8, bottom = 0.8, right = 1.0, top =1.0) +
-  inset_element(new_ross_town_map, left = 0.8, bottom = 0.6, right = 1.0, top =0.8) +
-inset_element(courtown_town_map, left = 0.75, bottom = 0.21, right = 1.0, top =0.46) +
-inset_element(rosslare_harbour_town_map, left = 0.8, bottom = 0.1, right = 1.0, top =0.3) +
-  inset_element(castlebridge_town_map, left = 0.8, bottom = 0.48, right = 1.0, top =0.68) +
-  inset_element(rosslare_town_map, left = 0.8, bottom = 0.3, right = 1.0, top =0.5) +
-  inset_element(bunclody_town_map, left = 0.5, bottom = 0.8, right = 0.7, top =1.0) +
-  inset_element(ferns_town_map, left = 0.0, bottom = 0.8, right = 0.2, top =1.0)
-
-```
 
 ```{marginfigure}
 Table 1: Summary statistics, SI \& pop.
@@ -1343,18 +949,14 @@ si_wexford_250423_day_aggregated$si_by_area %>%
 ```
 
 
-```{r wexford_si_pop_histogram, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="Country Wexford pop. vs SI"}
-
-p <- ggplot(si_wexford_250423_day_aggregated$si_by_area, aes(population, SI, colour = transit_supply)) + 
-  geom_point() +
-  scale_colour_manual(values = c("Zero Supply" = "black", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen"), guide="none") +
-  theme_tufte(ticks=F) 
-ggMarginal(p, type = "histogram", fill="transparent")
+The total poplulation of County Wexford is `r label_number(big.mark=",")(pcol_si_wexford_county$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_wexford_county$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_wexford_county$data[1:4,2] %>% sum())` live in Small Areas where the SI score is below the County Wexford average (`r label_number(accuracy = 0.1)(si_wexford_250423_day_aggregated$si_by_area$SI %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_wexford_county$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_wexford_county$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
 
 
+
+```{r wexford_si_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford: Small Areas by transit supply category"}
+county_wexford_map + inset_element(pcol_si_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0)  
 
 ```
-
 
 
 
@@ -1405,10 +1007,404 @@ lorenz_values <- Lc(lorenz_values$SI, lorenz_values$population)
 ```
 
 
-Figure 3 shows population and SI scores for individual Small Areas across County Wexford^[The  distribution of SI scores across individual Small Areas appears highly skewed (skew = `r label_number(accuracy = 0.01)(si_wexford_250423_day_aggregated$si_by_area$SI %>% Skew())`).], while Figure 4 shows a Lorenz Curve comparing the share of population and share of SI score. These indicate transit supply is relatively unequally distributed to the population^[The Gini coefficient is `r Gini(si_wexford_250423_day_aggregated$si_by_area$SI, weights = si_wexford_250423_day_aggregated$si_by_area$population, unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.001)()`] and,
-for example, `r label_percent(digits=2)(1-lorenz_values$L[514])` of the transit supply  service is provided within Small Areas that are home to just `r label_percent(digits=2)(1-lorenz_values$p[514])` of the total population.
+A Lorenz Curve of distribution of County Wexford's transit supply to the population is shown in Figure 3. The Gini co-efficient is `r Gini(si_wexford_250423_day_aggregated$si_by_area$SI, weights = si_wexford_250423_day_aggregated$si_by_area$population, unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.001)()`, indicating a relatively unequal distribution. In total, the SI score across all of County Wexford is approximately `r label_number(big.mark=",", accuracy = 1000)(pcol_si_wexford_county$data[1:7,2] %>% sum())`, but `r label_percent(digits=2)(1-lorenz_values$L[585])` of this goes to Small Areas that are home to just `r label_percent(digits=2)(1-lorenz_values$p[585])` of the total population. `r label_percent(digits=2)(lorenz_values$p[514])` of the population live in Small Areas that, in combination, receive just `r label_percent(digits=2)(lorenz_values$L[514])` of the total supply.
 
-In general, most of the transit supply appears to be provided within the various centres of population. Figure 5 shows boxplots of the SI scores for the various urban areas in County Wexford, while Table 1 summarises population in each Transit Supply category. 
+This is perhaps not surprising, given that providing transit services in rural and low density areas is challenging. However, approximately `r label_percent(accuracy = 1)(si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum() / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% select(population) %>% sum())` (`r label_number(big.mark = ",", accuracy = 1000)(si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum())` people) live in Small Areas that are within one of the `r si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(SA_URBAN_AREA_NAME) %>% unique() %>% nrow()` named 'urban areas' within the county.   
+
+Figure 4 shows the total population and aggregate SI scores across each named urban area. Boxplots of the SI scores for Small Areas within each of the various urban areas are shown in Figure 5.
+
+```{r wexford_si_pop_histogram, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, fig.cap="Country Wexford pop. vs SI, aggregated by urban areas"}
+
+si_pop_by_urban_area <- si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% aggregate(cbind(SI, population) ~ SA_URBAN_AREA_NAME, sum)
+
+p <- ggplot(si_pop_by_urban_area, aes(population, SI)) + 
+  geom_point()  + 
+  geom_text_repel(label = si_pop_by_urban_area$SA_URBAN_AREA_NAME, size = 2) +
+  theme_tufte(ticks=F) + 
+  scale_x_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_y_log10(labels = scales::label_number(big.mark = ","))
+ggMarginal(p, type = "histogram", fill="transparent") 
+
+
+
+```
+
+
+```{r wexford_towns_boxplot, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, fig.cap="County Wexford urban areas: boxplot of Small Area SI scores, ordered by population size"}
+
+lower_thresholds <- tibble(very_low = regmatches(si_wexford_250423_day_aggregated$thresholds[1],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+    unlist() %>% 
+    as.numeric() %>% head(n=1),
+    low = regmatches(si_wexford_250423_day_aggregated$thresholds[2],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+    unlist() %>% 
+    as.numeric() %>% head(n=1),
+    below_average = regmatches(si_wexford_250423_day_aggregated$thresholds[3],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+    unlist() %>% 
+    as.numeric() %>% head(n=1),
+  above_average = regmatches(si_wexford_250423_day_aggregated$thresholds[4],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+    unlist() %>% 
+    as.numeric() %>% head(n=1),
+  high = regmatches(si_wexford_250423_day_aggregated$thresholds[5],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+    unlist() %>% 
+    as.numeric() %>% head(n=1),
+  very_high = regmatches(si_wexford_250423_day_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+    unlist() %>% 
+    as.numeric() %>% head(n=1))
+
+
+new_order <- with(si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  select(SI, population, SA_URBAN_AREA_NAME) %>% 
+  filter(SA_URBAN_AREA_NAME != "NA"), 
+  reorder(SA_URBAN_AREA_NAME, population, sum)) 
+
+  
+si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  select(SI, SA_URBAN_AREA_NAME) %>% 
+  filter(SA_URBAN_AREA_NAME != "NA") %>%
+  ggplot(aes(SA_URBAN_AREA_NAME %>% factor(levels = new_order %>% levels()) ,SI)) + 
+  theme_tufte() + 
+  geom_texthline(yintercept=lower_thresholds$very_high, label = "Very High", vjust=4,color = "darkgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$high, label = "High", vjust=3,color = "#53A212", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$above_average, label = "Above Average", vjust=2,color = "lightgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$below_average, label = "Below Average", vjust=2,color = "#F29C33", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$low, label = "Low", vjust=1,color = "#F7C387", size = 2) + 
+    theme(axis.text.y = element_text(size = 4), 
+            axis.text.x = element_text(size = 4)) +
+geom_tufteboxplot(outlier.colour="transparent") + 
+  theme(axis.title=element_blank()) +
+  coord_flip() 
+  
+```
+
+
+In general terms, places with larger populations tend to have higher SI scores, but this does not appear to consistent. Instead, some places have much higher or lower SI scores than others with similar population sizes^[For example, Rosslare (population `r si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Rosslare") %>% select(population) %>% sum() %>% label_number(big.mark = ',')()`) has an aggregate SI score of `r label_number(accuracy=1)(si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Rosslare") %>% select(SI) %>% sum())`, which is `r label_percent(accuracy=0.1)((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Rosslare") %>% select(SI) %>% sum()) / (si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% sum()))` of the total for County Wexford. Castlebridge (population `r si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Castlebridge") %>% select(population) %>% sum() %>% label_number(big.mark = ',')()`), however, has an SI of only `r label_number(accuracy=1)(si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Castlebridge") %>% select(SI) %>% sum())` (`r label_percent(accuracy=0.1)((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Castlebridge") %>% select(SI) %>% sum()) / (si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% sum()))`) of the total for County Wexford.]. Towards the lower end of the scale, some urban areas have no transit at all, despite having higher populations than others that do have transit services^[For example, Kilmuckridge (`r si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Kilmuckridge") %>% select(population) %>% sum() %>% label_number(big.mark = ',')()`) and Ballymurn (`r si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Ballymurn") %>% select(population) %>% sum() %>% label_number(big.mark = ',')()`) do not have any transit service at all, despite being of similar size to Taghmon (opulation `r si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Taghmon") %>% select(population) %>% sum() %>% label_number(big.mark = ',')()`), which has an SI score of `r label_number(accuracy=1)(si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Taghmon") %>% select(SI) %>% sum())` (`r label_percent(accuracy=0.1)((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Taghmon") %>% select(SI) %>% sum()) / (si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% sum()))`) of the county total]. Further details are provided in Table XX, in the Appendix.
+
+
+\newpage
+
+SOCIAL NEEDS FOR TRANSPORT: The average social needs index score across County Wexford is `r label_number(accuracy = 0.1)(si_wexford_250423_day_aggregated$si_by_area$combined_needs_index %>% mean())`. Figure 6 maps the social needs categories across County Wexford, while Figure 7 shows the grouping by population. 
+
+
+```{r wexford_needs_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="County Wexford: Small Area, by social need for transport category"}
+
+ combined_needs_2021_plot
+
+
+```
+
+```{r wexford_needs_pop_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: population living in Small Areas, by social need for transport category"}
+
+pcol_needs_wexford_county
+
+
+#combined_needs_2021_plot + 
+#    inset_element(pcol_needs_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0) 
+
+
+```
+
+
+There are `r label_number(big.mark=",")(pcol_needs_wexford_county$data[4:6,2] %>% sum())` people living in Small Areas that have social need for transport scores that are above the County Wexford average, representing some `r label_percent()(pcol_needs_wexford_county$data[4:6,3] %>% sum())` of the total popluation (`r label_number(big.mark=",")(pcol_needs_wexford_county$data[1:6,2] %>% sum())`). This includes the `r label_number(big.mark=",")(pcol_needs_wexford_county$data[6,2] %>% sum())` people (`r label_percent()(pcol_needs_wexford_county$data[6,3] %>% sum())`) living in Small Areas with Very High social needs for transport. 
+
+
+
+
+\newpage
+
+```{r Wexford_needs_gap_boxplot, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford, SI score by needs category"}
+si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  select(SI, composite_needs) %>% 
+  ggplot(aes(composite_needs,SI)) + 
+  theme_tufte() + 
+  geom_texthline(yintercept=lower_thresholds$very_high, label = "Very High", vjust=4,color = "darkgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$high, label = "High", vjust=3,color = "#53A212", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$above_average, label = "Above Average", vjust=2,color = "lightgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$below_average, label = "Below Average", vjust=2,color = "#F29C33", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$low, label = "Low", vjust=1,color = "#F7C387", size = 2) + 
+    theme(axis.text.y = element_text(size = 4), 
+            axis.text.x = element_text(size = 4)) +
+geom_tufteboxplot(outlier.colour="transparent") + 
+  theme(axis.title=element_blank()) +
+  coord_flip() 
+```
+
+
+NEEDS-GAP: Figure 8 shows boxplots of SI scores for Small Areas across County Wexford, by social need for transport category.  
+
+
+
+
+
+```{r Wexford_needs_gap_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford, Populations within each SI and Combined Needs Index grouping"}
+
+si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
+
+wexford_small_area_need_gap_population_crosstable_2021 <- si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>%
+  aggregate(population ~ composite_needs  + transit_supply, sum)
+
+
+si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
+
+
+wexford_small_area_need_gap_population_crosstable_2021$composite_needs <- factor(
+  wexford_small_area_need_gap_population_crosstable_2021$composite_needs, 
+  levels = c("Very Low", "Low", "Below average", "Above average", "High", "Very High"))
+wexford_small_area_need_gap_population_crosstable_2021$transit_supply <- factor(
+  wexford_small_area_need_gap_population_crosstable_2021$transit_supply, 
+  levels = c("Zero Supply", "Very Low", "Low", "Below average", "Above average", "High", "Very High"))
+
+wexford_small_area_need_gap_population_crosstable_2021$composite_needs <- wexford_small_area_need_gap_population_crosstable_2021$composite_needs %>% 
+  fct_rev()
+
+wexford_small_area_need_gap_population_crosstable_plot <- wexford_small_area_need_gap_population_crosstable_2021 %>% 
+  pivot_wider(names_from = transit_supply, values_from = population) %>%
+  adorn_totals(where = c("row", "col")) %>%
+  adorn_percentages(denominator = "row") %>%
+  adorn_pct_formatting() %>% 
+  adorn_ns() %>% 
+  select(composite_needs, `Zero Supply`, `Very Low`, `Low`, `Below average`, `Above average`, `High`, `Very High`, Total) %>%
+  kable(align = "lrrrrrrr", 
+        caption = "County Wexford, population in each Transit Supply and Combined Needs grouping",
+        col.names = c("Needs", 
+                   "Zero Supply", "Very Low", "Low", "Below average",
+                   "Above average", "High", "Very High", "Total")) %>% 
+  add_header_above(c(" " = 1, "Transit supply" = 7, " " = 1)) %>%
+  kable_styling(font_size = 8) %>%
+  kableExtra::column_spec(1, width = "2.5cm") %>% 
+  kableExtra::column_spec(2, width = "1.25cm", background = c("#a50026", "#d73027", "#f46d43", "#fdae61", 
+"#fee090","#ffffbf","#ffffff"), color = c("white", "white", "white", "black", "black", "black", "black")) %>%
+  kableExtra::column_spec(3, width = "1.25cm" , background = c("#d73027", "#f46d43", "#fdae61", 
+"#fee090","#ffffbf", "#e0f3f8", "#ffffff"), color = c("white", "white", "black", "black", "black", "black", "black")) %>%
+  kableExtra::column_spec(4, width = "1.25cm", background = c("#f46d43", "#fdae61", 
+"#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#ffffff"), color = c("white", "black", "black", "black", "black", "black", "black")) %>%
+  kableExtra::column_spec(5, width = "1.25cm", background = c("#fdae61", 
+"#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1", "#ffffff"), color = c("black", "black", "black", "black", "black", "black", "black")) %>%
+  kableExtra::column_spec(6, width = "1.25cm", background = c("#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#ffffff"), color = c("black", "black", "black", "black", "black", "white", "black"))  %>%
+  kableExtra::column_spec(7, width = "1.25cm", background = c("#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "#ffffff"), color = c("black", "black", "black", "black", "white", "white", "black")) %>% 
+   kableExtra::column_spec(8, width = "1.25cm", background = c("#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "#9400d3", "#ffffff"), color = c("black", "black", "black", "white", "white", "white", "black")) %>%
+  kableExtra::column_spec(9, width = "1.25cm")
+
+
+wexford_small_area_need_gap_population_crosstable_2021_plot <- wexford_small_area_need_gap_population_crosstable_2021 %>%
+    ggbarstats(x = transit_supply, 
+             y = composite_needs, 
+             counts = "population"
+             ) + 
+  scale_fill_manual(values = c("Very High" = "darkgreen",
+                               "High" = "#53A212", 
+                               "Above average" = "lightgreen", 
+                               "Below average" = "#F29C33",
+                               "Low" = "#F7C387", 
+                               "Very Low" = "#F9D8B1", 
+                               "Zero Supply" = "#FFFFFF" )) +  
+                                 theme(legend.position="bottom")
+
+#wexford_small_area_need_gap_population_crosstable_2021_plot
+  
+
+### Calculate by Small Area to allow statistical tests
+
+wexford_small_area_need_gap_zone_crosstable_2021 <-  si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>%
+  tabyl(transit_supply,composite_needs) %>% 
+  untabyl() %>% 
+  select(transit_supply, `Very Low`, Low, `Below average`, `Above average`, High, `Very High`)
+
+wexford_small_area_need_gap_zone_crosstable_2021_test <- wexford_small_area_need_gap_zone_crosstable_2021[,2:7] %>%
+  chisq.test()
+
+#wexford_small_area_need_gap_zone_crosstable_2021_test$expected
+# all values over 5, assumptions met. 
+
+```
+
+
+
+
+
+Table 1 shows the share of the County Wexford population living in Small Areas with each combination of the transit supply and social need for transport categories. In general, Small Areas in the higher categories of social need for transit appear to be more likely to also be in the lower categories of transit supply^[Differences in the share of Small Areas in each transit supply category across the different social need for transport groups were statistically significant (`r prmisc::print_chi2(wexford_small_area_need_gap_zone_crosstable_2021_test)`).].. 
+
+
+ For example, 
+`r label_percent()(wexford_small_area_need_gap_population_crosstable_2021[36:39,3] %>% sum() / wexford_small_area_need_gap_population_crosstable_2021[36:42,3] %>% sum())` of those living in Small Areas with Very High social needs for transport had below average transit supplies, compared to just `r label_percent()(wexford_small_area_need_gap_population_crosstable_2021[1:4,3] %>% sum() / wexford_small_area_need_gap_population_crosstable_2021[1:7,3] %>% sum())` of those living in Small Areas with Very Low social needs for transport. Out of the total `r wexford_small_area_need_gap_population_crosstable_2021[,3] %>% sum() %>% label_number(big.mark = ",")()` population of County Wexford, some `r sum(wexford_small_area_need_gap_population_crosstable_2021[36,3], wexford_small_area_need_gap_population_crosstable_2021[29,3], wexford_small_area_need_gap_population_crosstable_2021[22,3]) %>% label_number(big.mark = ",")()` (`r label_percent()(sum(wexford_small_area_need_gap_population_crosstable_2021[36,3], wexford_small_area_need_gap_population_crosstable_2021[29,3], wexford_small_area_need_gap_population_crosstable_2021[22,3]) / (wexford_small_area_need_gap_population_crosstable_2021[,3] %>% sum()))`) live in Small Areas with social needs for transport that are above the County average, but where there is no transit supply at all.  
+
+
+```{r Wexford_needs_gap_map_graphs_needs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford, Needs-gap by population, split by social needs for transport category"}
+
+wexford_small_area_need_gap_population_crosstable_plot
+
+```
+
+
+```{r Wexford_needs_gap_map_graphs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, fig.cap="County Wexford, Needs-gap by Small Area (red = highest gap)"}
+
+#combine (cross) transit supply and social needs factors.
+ si_wexford_250423_day_aggregated$si_by_area$gap_colour <- fct_cross(si_wexford_250423_day_aggregated$si_by_area$transit_supply, si_wexford_250423_day_aggregated$si_by_area$composite_needs)
+
+#combine colour cells
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(b = c("Zero Supply:High", "Very Low:Very High"))
+
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(c = c("Zero Supply:Above average", "Very Low:High", "Low:Very High"))
+
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(d = c("Zero Supply:Below average", "Very Low:Above average", "Low:High", "Below average:Very High"))
+
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(d = c("Zero Supply:Below average", "Very Low:Above average", "Low:High", "Below average:Very High"))                                                                                                                                  
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(e = c("Zero Supply:Low", "Very Low:Below average", "Low:Above average", "Below average:High", "Above average:Very High"))                                                                                                                                  
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(f = c("Zero Supply:Very Low", "Very Low:Low", "Low:Below average", "Below average:Above average", "Above average:High", "High:Very High"))                                            
+
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(g = c("Very Low:Very Low", "Low:Low", "Below average:Below average", "Above average:Above average", "High:High", "Very High:Very High"))                                                                                                                                    
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(h = c("Low:Very Low", "Below average:Low", "Above average:Below average", "High:Above average", "Very High:High"))                                                                                                                                                                                                                                                                      
+
+
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(i = c("Below average:Very Low", "Above average:Low", "High:Below average", "Very High:Above average"))                                                                                                                                  
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(j = c("Above average:Very Low", "High:Low", "Very High:Below average"))                                                                                                                               
+                                                                                                                                  
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(k = c("High:Very Low", "Very High:Low"))                                                                                                                                 
+   
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour  %>% fct_recode(a = "Zero Supply:Very High", l = "Very High:Very Low")
+
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_relevel(c("a", "b", "c", "d","e", "f", "g", "h", "i", "j", "k", "l"))
+
+
+
+
+needs_gap_plot <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area,
+          aes(fill =  gap_colour), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+    ggspatial::annotation_scale(location = 'br') 
+
+
+wexford_small_area_need_gap_population_crosstable_2021_sum_by_gap_colour <- si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>%
+  aggregate(population ~ gap_colour, sum)
+
+
+pcol_needs_gap_wexford_county <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ gap_colour, sum) %>%
+  right_join(tibble(gap_colour = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(gap_colour=factor(gap_colour, levels = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev() %>% levels())) %>%
+  arrange(gap_colour) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
+  scale_y_continuous(limits = c(0,.4)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(gap_colour,  0.3, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1) +
+   coord_flip() + 
+ scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Needs-gap by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 4),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+#needs_gap_plot + 
+#    inset_element(pcol_needs_gap_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0) 
+
+
+plot_population_by_color_group_by_needs <-  function(df=df, needs_category=needs_category) {
+  df %>%
+  st_drop_geometry() %>%
+  filter(composite_needs == needs_category) %>%
+  aggregate(population ~ gap_colour, sum) %>%
+  right_join(tibble(gap_colour = df$gap_colour %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(gap_colour=factor(gap_colour, levels = df$gap_colour %>% fct_rev() %>% levels())) %>%
+  arrange(gap_colour) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
+  scale_y_continuous(limits = c(0,.6)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(gap_colour,  0.5, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1.5) +
+   coord_flip() + 
+ scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = needs_category,
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+}
+very_high_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Very High")
+
+high_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "High")
+
+above_average_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Above average")
+
+below_average_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Below average")
+
+low_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Low")
+
+very_low_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Very Low")
+
+needs_gap_plot  + inset_element(pcol_needs_gap_wexford_county, left = 0.0, bottom = 0.75, right = 0.45, top =1.0) 
+
+```
+
+
+
+
+
+
+
+## Enniscorthy 
+
+```{r holding, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford, population living in Small Areas, by needs-gap grouping"}
+urban_areas_outline <- wexford %>% 
+  filter(SA_URBAN_AREA_NAME != "NA") %>%
+  group_by(SA_URBAN_AREA_NAME) %>%
+  summarise()
+
+county_wexford_map + 
+  geom_sf(data=urban_areas_outline, fill = NA)  + 
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank())
+
+```
+## Wexford (town)
+
+
+# Appendix 
+
+
 
 ```{r wexford_si_by_urban_area, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol= 2, out.width="50%", fig.cap="County Wexford: transit supply (left) and social need for transport (right) by Small Area"}
 
@@ -1455,333 +1451,3 @@ wexford_small_area_supply_by_urban_area_table %>%
   kableExtra::column_spec(9, width = "2cm") 
 
 ```
- 
-
-```{r wexford_towns_boxplot, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford urban areas: boxplot of Small Area SI scores"}
-
-lower_thresholds <- tibble(very_low = regmatches(si_wexford_250423_day_aggregated$thresholds[1],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-    unlist() %>% 
-    as.numeric() %>% head(n=1),
-    low = regmatches(si_wexford_250423_day_aggregated$thresholds[2],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-    unlist() %>% 
-    as.numeric() %>% head(n=1),
-    below_average = regmatches(si_wexford_250423_day_aggregated$thresholds[3],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-    unlist() %>% 
-    as.numeric() %>% head(n=1),
-  above_average = regmatches(si_wexford_250423_day_aggregated$thresholds[4],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-    unlist() %>% 
-    as.numeric() %>% head(n=1),
-  high = regmatches(si_wexford_250423_day_aggregated$thresholds[5],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-    unlist() %>% 
-    as.numeric() %>% head(n=1),
-  very_high = regmatches(si_wexford_250423_day_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-    unlist() %>% 
-    as.numeric() %>% head(n=1))
-
-
-new_order <- with(si_wexford_250423_day_aggregated$si_by_area %>%
-  st_drop_geometry() %>%
-  select(SI, SA_URBAN_AREA_NAME) %>% 
-  filter(SA_URBAN_AREA_NAME != "NA"), 
-  reorder(SA_URBAN_AREA_NAME, SI, median)) 
-
-  
-si_wexford_250423_day_aggregated$si_by_area %>%
-  st_drop_geometry() %>%
-  select(SI, SA_URBAN_AREA_NAME) %>% 
-  filter(SA_URBAN_AREA_NAME != "NA") %>%
-  ggplot(aes(SA_URBAN_AREA_NAME %>% factor(levels = new_order %>% levels()) ,SI)) + theme_tufte() +
-geom_tufteboxplot(outlier.colour="transparent") + 
-  theme(axis.title=element_blank()) +
-  coord_flip() +
-  geom_texthline(yintercept=lower_thresholds$very_high, label = "Very High", vjust=4,color = "darkgreen", size = 2) +
-  geom_texthline(yintercept=lower_thresholds$high, label = "High", vjust=3,color = "#53A212", size = 2) +
-  geom_texthline(yintercept=lower_thresholds$above_average, label = "Above Average", vjust=2,color = "lightgreen", size = 2) +
-  geom_texthline(yintercept=lower_thresholds$below_average, label = "Below Average", vjust=2,color = "#F29C33", size = 2) +
-  geom_texthline(yintercept=lower_thresholds$low, label = "Low", vjust=1,color = "#F7C387", size = 2) + 
-    theme(axis.text.y = element_text(size = 4), 
-            axis.text.x = element_text(size = 4)) 
-  
-```
-
-
-
-As might be expected, those places with larger populations tend to have more transit supplied, but this appears to apply only in general terms. Notably, New Ross, Courttown, Rosslare Harbour and Castlebridge do not have any Small Areas with Very High transit supply, and the later three do not have any with High supply either.  Rosslare itself, however has some Small Areas with High and Very High transit supply, despite having fewer residents. Further down the list, Ferns appears to have more transit supply than might be expected for its population, while Kilmuchridge, Ballymurn, Coolgreany, Ballysimon, Adamstown and Killinierin have no transit at all despite their populations being higher than many places that do have at least some transit. 
-If only considering Small Areas within named urban areas (as per Table 1), the distribution of transit supply to the population still appears to be relatively unequal (Figure 3, right, Gini coefficient of 
-
-
-
-
-```{r wexford_needs_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: Small Area, by social need for transport category"}
-
- combined_needs_2021_plot
-
-
-```
-
-
-
-SOCIAL NEEDS FOR TRANSPORT:
-
-Figure 3 shows Small Areas across County Wexford, categorised by social need for transport, while Figure 4 shows the population living in Small Areas in each category. There are `r label_number(big.mark=",")(pcol_needs_wexford_county$data[4:6,2] %>% sum())` people living in Small Areas that have above the average score (across all Small Areas in County Wexford) for social needs for transport, representing some `r label_percent()(pcol_needs_wexford_county$data[4:6,3] %>% sum())` of the total popluation (`r label_number(big.mark=",")(pcol_needs_wexford_county$data[1:6,2] %>% sum())`). This includes the `r label_number(big.mark=",")(pcol_needs_wexford_county$data[6,2] %>% sum())` people (`r label_percent()(pcol_needs_wexford_county$data[6,3] %>% sum())`) living in Small Areas with Very High social needs for transport. 
-
-
-```{r wexford_needs_pop_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford: population living in Small Areas, by social need for transport category"}
-
-pcol_needs_wexford_county
-
-```
-
-
-```{r wexford_needs, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, fig.cap="County Wexford: social need for transport categories by Small Area"}
-
-
-combined_needs_2021_plot + 
-    inset_element(pcol_needs_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0) 
-
-
-```
-
-NEEDS-GAP:
-
-Table 2 shows the share of the County Wexford population living in Small Areas with each combination of the transit supply and social need for transport categories. Figure 3 maps the Small Areas by each combination, with those that have similar needs-gaps shown using the same colours, as shown in Table 2. 
-
-
-```{r Wexford_needs_gap_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford, Populations within each SI and Combined Needs Index grouping"}
-
-
-
-wexford_small_area_need_gap_population_crosstable_2021 <- si_wexford_250423_day_aggregated$si_by_area %>% 
-  st_drop_geometry() %>%
-  aggregate(population ~ transit_supply + composite_needs, sum)
-
-
-wexford_small_area_need_gap_population_crosstable_plot <- wexford_small_area_need_gap_population_crosstable_2021 %>% 
-  pivot_wider(names_from = composite_needs, values_from = population) %>%
-  adorn_totals(where = c("row", "col")) %>%
-  adorn_percentages(denominator = "col") %>%
-  adorn_pct_formatting() %>% 
-  adorn_ns() %>% 
-  select(transit_supply, `Very High`, `High`, `Above average`, `Below average`, Low, `Very Low`, Total) %>%
-  kable(align = "lrrrrrrr", 
-        caption = "County Wexford, population in each Transit Supply and Combined Needs grouping",
-        col.names = c("Supply", 
-                   "Very High", "High", 
-                   "Above average", "Below average",
-                   "Low", "Very Low", "Total")) %>% 
-  add_header_above(c(" " = 1, "Combined Needs Index Category" = 6, " " = 1)) %>%
-  kable_styling(font_size = 8) %>%
-  kableExtra::column_spec(1, width = "2.5cm") %>% 
-  kableExtra::column_spec(2, width = "1.25cm", background = c("#a50026", "#d73027", "#f46d43", "#fdae61", 
-"#fee090","#ffffbf", "#e0f3f8","#ffffff"), color = c("white", "white", "white", "black", "black", "black", "black", "black")) %>%
-  kableExtra::column_spec(3, width = "1.25cm" , background = c("#d73027", "#f46d43", "#fdae61", 
-"#fee090","#ffffbf", "#e0f3f8", "#abd9e9" ,"#ffffff"), color = c("white", "white", "black", "black", "black", "black", "black", "black")) %>%
-  kableExtra::column_spec(4, width = "1.25cm", background = c("#f46d43", "#fdae61", 
-"#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#ffffff"), color = c("white", "black", "black", "black", "black", "black", "black", "black")) %>%
-  kableExtra::column_spec(5, width = "1.25cm", background = c("#fdae61", 
-"#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#ffffff"), color = c("black", "black", "black", "black", "black", "black", "white", "black")) %>%
-  kableExtra::column_spec(6, width = "1.25cm", background = c("#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "#ffffff"), color = c("black", "black", "black", "black", "black", "white", "white", "black"))  %>%
-  kableExtra::column_spec(7, width = "1.25cm", background = c("#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "purple", "#ffffff"), color = c("black", "black", "black", "black", "white", "white", "white", "black")) %>%
-  kableExtra::column_spec(8, width = "1.25cm")
-
-wexford_small_area_need_gap_population_crosstable_2021$composite_needs <- factor(
-  wexford_small_area_need_gap_population_crosstable_2021$composite_needs, 
-  levels = c("Very Low", "Low", "Below average", "Above average", "High", "Very High"))
-wexford_small_area_need_gap_population_crosstable_2021$transit_supply <- factor(
-  wexford_small_area_need_gap_population_crosstable_2021$transit_supply, 
-  levels = c("Zero Supply", "Very Low", "Low", "Below average", "Above average", "High", "Very High"))
-
-
-wexford_small_area_need_gap_population_crosstable_2021_plot <- wexford_small_area_need_gap_population_crosstable_2021 %>%
-    ggbarstats(x = transit_supply, 
-             y = composite_needs, 
-             counts = "population"
-             ) + 
-  scale_fill_manual(values = c("Very High" = "darkgreen",
-                               "High" = "#53A212", 
-                               "Above average" = "lightgreen", 
-                               "Below average" = "#F29C33",
-                               "Low" = "#F7C387", 
-                               "Very Low" = "#F9D8B1", 
-                               "Zero Supply" = "#FFFFFF" )) +  
-                                 theme(legend.position="bottom")
-
-#wexford_small_area_need_gap_population_crosstable_2021_plot
-  
-
-### Calculate by Small Area to allow statistical tests
-
-wexford_small_area_need_gap_zone_crosstable_2021 <-  si_wexford_250423_day_aggregated$si_by_area %>% 
-  st_drop_geometry() %>%
-  tabyl(transit_supply,composite_needs) %>% 
-  untabyl() %>% 
-  select(transit_supply, `Very Low`, Low, `Below average`, `Above average`, High, `Very High`)
-
-wexford_small_area_need_gap_zone_crosstable_2021_test <- wexford_small_area_need_gap_zone_crosstable_2021[,2:7] %>%
-  chisq.test()
-
-#wexford_small_area_need_gap_zone_crosstable_2021_test$expected
-# all values over 5, assumptions met. 
-
-```
-
-
-```{r Wexford_needs_gap_map_graphs_needs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford, Needs-gap by population, split by social needs for transport category"}
-
-wexford_small_area_need_gap_population_crosstable_plot
-
-```
-
-
-Differences in the share of Small Areas in each transit supply category across the different social need for transport groups were statistically significant (`r prmisc::print_chi2(wexford_small_area_need_gap_zone_crosstable_2021_test)`). In general, those living in Small Areas with higher social needs for transit appeared to be more likely to also have lower levels of transit supply. For example, 
-`r label_percent()(wexford_small_area_need_gap_population_crosstable_2021[36:39,3] %>% sum() / wexford_small_area_need_gap_population_crosstable_2021[36:42,3] %>% sum())` of those living in Small Areas with Very High social needs for transport had below average transit supplies, compared to just `r label_percent()(wexford_small_area_need_gap_population_crosstable_2021[1:4,3] %>% sum() / wexford_small_area_need_gap_population_crosstable_2021[1:7,3] %>% sum())` of those living in Small Areas with Very Low social needs for transport. Out of the total `r wexford_small_area_need_gap_population_crosstable_2021[,3] %>% sum() %>% label_number(big.mark = ",")()` population of County Wexford, some `r sum(wexford_small_area_need_gap_population_crosstable_2021[36,3], wexford_small_area_need_gap_population_crosstable_2021[29,3], wexford_small_area_need_gap_population_crosstable_2021[22,3]) %>% label_number(big.mark = ",")()` (`r label_percent()(sum(wexford_small_area_need_gap_population_crosstable_2021[36,3], wexford_small_area_need_gap_population_crosstable_2021[29,3], wexford_small_area_need_gap_population_crosstable_2021[22,3]) / (wexford_small_area_need_gap_population_crosstable_2021[,3] %>% sum()))`) live in Small Areas with social needs for transport that are above the County average, but where there is no transit supply at all.  
-
-
-
-
-```{r Wexford_needs_gap_map_graphs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford, Needs-gap by Small Area"}
-
-#combine (cross) transit supply and social needs factors.
- si_wexford_250423_day_aggregated$si_by_area$gap_colour <- fct_cross(si_wexford_250423_day_aggregated$si_by_area$transit_supply, si_wexford_250423_day_aggregated$si_by_area$composite_needs)
-
-#combine colour cells
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(b = c("Zero Supply:High", "Very Low:Very High"))
-
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(c = c("Zero Supply:Above average", "Very Low:High", "Low:Very High"))
-
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(d = c("Zero Supply:Below average", "Very Low:Above average", "Low:High", "Below average:Very High"))
-
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(d = c("Zero Supply:Below average", "Very Low:Above average", "Low:High", "Below average:Very High"))                                                                                                                                  
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(e = c("Zero Supply:Low", "Very Low:Below average", "Low:Above average", "Below average:High", "Above average:Very High"))                                                                                                                                  
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(f = c("Zero Supply:Very Low", "Very Low:Low", "Low:Below average", "Below average:Above average", "Above average:High", "High:Very High"))                                            
-
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(g = c("Very Low:Very Low", "Low:Low", "Below average:Below average", "Above average:Above average", "High:High", "Very High:Very High"))                                                                                                                                    
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(h = c("Low:Very Low", "Below average:Low", "Above average:Below average", "High:Above average", "Very High:High"))                                                                                                                                                                                                                                                                      
-
-
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(i = c("Below average:Very Low", "Above average:Low", "High:Below average", "Very High:Above average"))                                                                                                                                  
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(j = c("Above average:Very Low", "High:Low", "Very High:Below average"))                                                                                                                               
-                                                                                                                                  
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_collapse(k = c("High:Very Low", "Very High:Low"))                                                                                                                                 
-   
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour  %>% fct_recode(a = "Zero Supply:Very High", l = "Very High:Very Low")
-
-si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_relevel(c("a", "b", "c", "d","e", "f", "g", "h", "i", "j", "k", "l"))
-
-
-
-
-needs_gap_plot <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area,
-          aes(fill =  gap_colour), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none"
-  ) +
-    #    legend.text = element_text(size = 4), 
-    #    legend.title = element_text(size = 5)) + 
-  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="purple")) +
-    ggspatial::annotation_scale(location = 'br') 
-
-
-wexford_small_area_need_gap_population_crosstable_2021_sum_by_gap_colour <- si_wexford_250423_day_aggregated$si_by_area %>% 
-  st_drop_geometry() %>%
-  aggregate(population ~ gap_colour, sum)
-
-
-pcol_needs_gap_wexford_county <- si_wexford_250423_day_aggregated$si_by_area %>%
-  st_drop_geometry() %>%
-  aggregate(population ~ gap_colour, sum) %>%
-  right_join(tibble(gap_colour = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% levels())) %>%
-  replace_na(list(population = 0)) %>%
-  mutate(gap_colour=factor(gap_colour, levels = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev() %>% levels())) %>%
-  arrange(gap_colour) %>%
-  mutate(perc=population/sum(population)) %>% 
-  na.omit() %>%
-  ggplot() + 
-  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
-  scale_y_continuous(limits = c(0,.25)) +
-  geom_hline(yintercept = 0)  + 
-  geom_text(aes(gap_colour,  0.15, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
-   coord_flip() + 
- scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="purple")) +
-  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
-  guides(fill = "none", color = "none") +
-  labs(
-    title = "Needs-gap by population",
-    x = NULL,
-    y = NULL
-  ) +
-  theme_void() +
-  theme(
-    panel.grid = element_blank(),
-    plot.title = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_blank()
-  ) 
-
-#needs_gap_plot + 
-#    inset_element(pcol_needs_gap_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0) 
-
-
-plot_population_by_color_group_by_needs <-  function(df=df, needs_category=needs_category) {
-  df %>%
-  st_drop_geometry() %>%
-  filter(composite_needs == needs_category) %>%
-  aggregate(population ~ gap_colour, sum) %>%
-  right_join(tibble(gap_colour = df$gap_colour %>% levels())) %>%
-  replace_na(list(population = 0)) %>%
-  mutate(gap_colour=factor(gap_colour, levels = df$gap_colour %>% fct_rev() %>% levels())) %>%
-  arrange(gap_colour) %>%
-  mutate(perc=population/sum(population)) %>% 
-  na.omit() %>%
-  ggplot() + 
-  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
-  scale_y_continuous(limits = c(0,.6)) +
-  geom_hline(yintercept = 0)  + 
-  geom_text(aes(gap_colour,  0.5, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1.5) +
-   coord_flip() + 
- scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="purple")) +
-  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
-  guides(fill = "none", color = "none") +
-  labs(
-    title = needs_category,
-    x = NULL,
-    y = NULL
-  ) +
-  theme_void() +
-  theme(
-    panel.grid = element_blank(),
-    plot.title = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_blank()
-  ) 
-}
-very_high_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Very High")
-
-high_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "High")
-
-above_average_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Above average")
-
-below_average_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Below average")
-
-low_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Low")
-
-very_low_needs_plot <- plot_population_by_color_group_by_needs(df=si_wexford_250423_day_aggregated$si_by_area, needs_category = "Very Low")
-
-needs_gap_plot 
-#+
-#    inset_element(pcol_needs_gap_wexford_county, left = 0.0, bottom = 0.7, right = 0.5, top =1.0) 
-
-```
-
-```{r Wexford_needs_gap_map_population_graph, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Wexford, population living in Small Areas, by needs-gap grouping"}
-pcol_needs_gap_wexford_county
-
-```
-
-
-
-
