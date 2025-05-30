@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  30 MAY 2025 17:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  30 MAY 2025 18:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -897,19 +897,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 325--326
 
  []
 
-<Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf, id=75, 268.00125p
-t x 169.63374pt>
+<Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf, id=75, 279.0425pt
+ x 164.615pt>
 File: Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf Graphic file 
 (type pdf)
 <use Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_towns_boxplot-
 1.pdf  used on input line 329.
-(pdftex.def)             Requested size: 479.99731pt x 303.8185pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 329--330
-[][]
- []
-
+(pdftex.def)             Requested size: 480.01611pt x 283.17497pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 329--330
 
@@ -925,10 +920,9 @@ LaTeX Warning: Marginpar on page 5 moved.
 LaTeX Warning: Marginpar on page 5 moved.
 
 [5 <./Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf> <./Reynolds2025_f
-iles/figure-latex/wexford_si_pop_histogram-1.pdf>] [6 <./Reynolds2025_files/fig
-ure-latex/wexford_towns_boxplot-1.pdf>]
-<Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf, id=110, 127.47626pt x
- 167.62625pt>
+iles/figure-latex/wexford_si_pop_histogram-1.pdf>]
+<Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf, id=97, 127.47626pt x 
+167.62625pt>
 File: Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf Graphic file (typ
 e pdf)
 <use Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf>
@@ -936,10 +930,10 @@ Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_needs_map-1.pd
 f  used on input line 353.
 (pdftex.def)             Requested size: 144.00757pt x 189.36427pt.
 
-LaTeX Warning: Marginpar on page 7 moved.
+LaTeX Warning: Marginpar on page 6 moved.
 
-<Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf, id=111, 279.0425p
-t x 180.675pt>
+<Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf, id=98, 279.0425pt
+ x 180.675pt>
 File: Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf Graphic file 
 (type pdf)
 <use Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf>
@@ -947,15 +941,16 @@ Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_needs_pop_map-
 1.pdf  used on input line 357.
 (pdftex.def)             Requested size: 144.00441pt x 93.24025pt.
 
-LaTeX Warning: Marginpar on page 7 moved.
+LaTeX Warning: Marginpar on page 6 moved.
 
-[7 <./Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf> <./Reynolds2025_
-files/figure-latex/wexford_needs_pop_map-1.pdf>]
+[6 <./Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf> <./Reynolds2
+025_files/figure-latex/wexford_needs_map-1.pdf> <./Reynolds2025_files/figure-la
+tex/wexford_needs_pop_map-1.pdf>]
 Overfull \hbox (173.41592pt too wide) in paragraph at lines 382--422
  [][] 
  []
 
-<Reynolds2025_files/figure-latex/Wexford_needs_gap_boxplot-1.pdf, id=133, 279.0
+<Reynolds2025_files/figure-latex/Wexford_needs_gap_boxplot-1.pdf, id=128, 279.0
 425pt x 163.61125pt>
 File: Reynolds2025_files/figure-latex/Wexford_needs_gap_boxplot-1.pdf Graphic f
 ile (type pdf)
@@ -969,75 +964,79 @@ Underfull \hbox (badness 10000) in paragraph at lines 425--426
  []
 
 
+LaTeX Warning: Marginpar on page 7 moved.
+
+[7 <./Reynolds2025_files/figure-latex/Wexford_needs_gap_boxplot-1.pdf>]
+
 LaTeX Warning: Marginpar on page 8 moved.
 
-[8 <./Reynolds2025_files/figure-latex/Wexford_needs_gap_boxplot-1.pdf>]
+
 Underfull \hbox (badness 10000) in paragraph at lines 446--446
 []\T1/pplj/m/n/8 Table 1: []County Wex-ford, pop-u-la-tion in each Tran-sit Sup
 -ply and Com-bined
  []
 
 
-Overfull \hbox (151.65935pt too wide) in alignment at lines 445--461
- [] [] [] [] [] [] [] [] [] 
+Overfull \hbox (104.09341pt too wide) in alignment at lines 445--462
+ [] [] [] [] [] [] [] [] 
  []
 
-<Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf, id=147, 11
+<Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf, id=143, 11
 9.44624pt x 157.58875pt>
 File: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf Graphi
 c file (type pdf)
 <use Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_
-graphs-1.pdf  used on input line 472.
-(pdftex.def)             Requested size: 312.02188pt x 411.65915pt.
+graphs-1.pdf  used on input line 466.
+(pdftex.def)             Requested size: 466.97937pt x 616.09888pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 472--473
-
- []
+LaTeX Warning: Float too large for page by 6.09888pt on input line 467.
 
 
-Overfull \hbox (2.23288pt too wide) in paragraph at lines 497--497
+LaTeX Warning: Marginpar on page 8 moved.
+
+[8] [9 <./Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>]
+Overfull \hbox (2.23288pt too wide) in paragraph at lines 516--516
 []|\T1/pplj/m/n/8 Castlebridge|  
  []
 
 
-Overfull \hbox (6.32887pt too wide) in paragraph at lines 502--502
+Overfull \hbox (6.32887pt too wide) in paragraph at lines 521--521
 []|\T1/pplj/m/n/8 Kilmuckridge|  
  []
 
 
-Overfull \hbox (0.97685pt too wide) in paragraph at lines 526--526
+Overfull \hbox (0.97685pt too wide) in paragraph at lines 545--545
 []|\T1/pplj/m/n/8 Adamstown|  
  []
 
 
-Overfull \hbox (0.60887pt too wide) in paragraph at lines 535--535
+Overfull \hbox (0.60887pt too wide) in paragraph at lines 554--554
 []|\T1/pplj/m/n/8 Ballycullane|  
  []
 
 
-Overfull \hbox (1.60086pt too wide) in paragraph at lines 540--540
+Overfull \hbox (1.60086pt too wide) in paragraph at lines 559--559
 []|\T1/pplj/m/n/8 Duncormick|  
  []
 
 
-Overfull \hbox (3.43285pt too wide) in paragraph at lines 542--542
+Overfull \hbox (3.43285pt too wide) in paragraph at lines 561--561
 []|\T1/pplj/m/n/8 Arthurstown|  
  []
 
 
-Overfull \hbox (218.52225pt too wide) in alignment at lines 483--546
+Overfull \hbox (218.52225pt too wide) in alignment at lines 502--565
  [] [] [] [] [] [] [] [] [] 
  []
 
-[9]
+[10]
 
 Package bibentry Warning: You have used \nobibliography* 
 (bibentry)                without a following \bibliography.
 (bibentry)                You may not be able to run BibTeX.
 
-[10] [11 <./Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>
-] (./Reynolds2025.aux)
+[11] (./Reynolds2025.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -1046,13 +1045,13 @@ Package rerunfilecheck Info: File `Reynolds2025.out' has not changed.
 (rerunfilecheck)             Checksum: BFFC83385863CF180A9C0D94EBC1A3D1;568.
  ) 
 Here is how much of TeX's memory you used:
- 15970 strings out of 474116
- 253100 string characters out of 5743682
- 2041187 words of memory out of 5000000
+ 15972 strings out of 474116
+ 253111 string characters out of 5743682
+ 2027187 words of memory out of 5000000
  37901 multiletter control sequences out of 15000+600000
- 617722 words of font info for 130 fonts, out of 8000000 for 9000
+ 618381 words of font info for 132 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 97i,19n,96p,509b,573s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 97i,19n,96p,449b,573s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/mathpazo/fplmr.pfb></usr/
@@ -1063,7 +1062,7 @@ texmf-dist/fonts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2024/texmf-di
 st/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1
 /urw/palatino/uplri8a.pfb>
-Output written on Reynolds2025.pdf (11 pages, 4166611 bytes).
+Output written on Reynolds2025.pdf (11 pages, 4167664 bytes).
 PDF statistics:
  228 PDF objects out of 1000 (max. 8388607)
  169 compressed objects within 2 object streams
