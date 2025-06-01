@@ -1139,8 +1139,6 @@ si_wexford_250423_day_aggregated$si_by_area %>%
 
 
 
-si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
-
 si_social_needs_test <- si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI, composite_needs)
 
 si_social_needs_test_result <- kruskal.test(SI ~ composite_needs, data = si_social_needs_test)
@@ -1166,6 +1164,8 @@ geom_tufteboxplot(outlier.colour="transparent") +
 
 si_by_needs_box_plot
 
+
+si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
 
 ### Calculate by Small Area to allow statistical tests
 
@@ -1677,6 +1677,7 @@ minimum_value_of_threshold <- numbers[1]
 
 ```{r enniscorthy_si_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy: Small Areas by transit supply category"}
 enniscorthy_map 
+
 ```
 
 ```{r enniscorthy_si_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy: population by transit supply category"}
@@ -1766,12 +1767,9 @@ ggMarginal(q, type = "histogram", fill="transparent")
 
 ```
 
-In general, and as shown in Figure 9, the transit supply in Enniscorthy appears to be higher in more central areas. Figure 12 plots SI score against distance to the main post office in Enniscorthy, which indicates that transit supply is High or Very High for almost all Small Areas with centroids closer than around 500 metres, yet these areas generally appear to have small populations.  Further away from the centre of town, however, there appears to be less of a link between distance and transit supply, although there is a swathe of Small Areas with "Above Average" transit supply and  populations in the 200-250 range, mostly located along a WNW corridor^[The R702m Bellefield Road alignment.}. 
+In general, and as shown in Figure 9, the transit supply in Enniscorthy appears to be higher in more central areas. Figure 12 plots SI score against distance to the main post office in Enniscorthy, which indicates that transit supply is High or Very High for almost all Small Areas with centroids closer than around 500 metres, yet these areas generally appear to have small populations.  Further away from the centre of town, however, there appears to be less of a link between distance and transit supply. Notably there appears to be a swathe of Small Areas with "Above Average" transit supply and  populations in the 200-250 range, mostly located along a WNW corridor^[Bellefield Road (R702).], whereas northern, . 
 
-
-\newpage
-
-SOCIAL NEEDS FOR TRANSPORT: The average social needs index score across County Wexford is `r label_number(accuracy = 0.1)(si_wexford_250423_day_aggregated$si_by_area$combined_needs_index %>% mean())`. Figure 5 maps the social needs categories across County Wexford, while Figure 6 shows the grouping by population. 
+SOCIAL NEEDS FOR TRANSPORT: The average social needs index score across Enniscorthy is `r label_number(accuracy = 0.1)(enniscorthy_only$combined_needs_index %>% mean())`. Figure 13 maps the social needs categories across County Wexford, while Figure 14 shows the grouping by population. 
 
 
 ```{r enniscorthy_needs_map, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy: Small Area, by social need for transport category"}
@@ -1797,14 +1795,13 @@ There are `r label_number(big.mark=",")(pcol_needs_enniscorthy$data[4:6,2] %>% s
 
 
 
-
 \newpage
 
 
-NEEDS-GAP: Table 2 shows summary statistics for SI score and transit supply category, overall and split by social needs category, for Small Areas across County Wexford.  Figure 7 shows boxplots of SI scores for Small Areas across Enniscorthy, by social need for transport category.  
+NEEDS-GAP: Table 4 shows summary statistics for SI score and transit supply category, overall and split by social needs category, for Small Areas across Enniscorthy.  Figure 15 shows boxplots of SI scores for Small Areas across Enniscorthy, by social need for transport category.  
 
 ```{marginfigure}
-Table 2: Small Areas: SI score and transit supply category, by needs category.
+Table 4: Enniscorthy Small Areas: SI score and transit supply category, by needs category.
 ```
 
 
@@ -1816,6 +1813,7 @@ si_wexford_250423_day_aggregated$si_by_area %>%
   st_drop_geometry() %>% 
   filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>%
   select(SI, transit_supply, composite_needs) %>% 
+  droplevels() %>%  
   tbl_summary(by = composite_needs,
               digits = SI ~ 1,
     type = all_continuous() ~ "continuous2",
@@ -1827,8 +1825,6 @@ si_wexford_250423_day_aggregated$si_by_area %>%
   modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6") ~ "**Social needs category**") %>%
   as_kable_extra() 
 
-
-si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
 
 si_social_needs_test <- si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(SI, composite_needs)
 
@@ -1856,6 +1852,8 @@ geom_tufteboxplot(outlier.colour="transparent") +
 si_by_needs_box_plot
 
 
+si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
+
 ### Calculate by Small Area to allow statistical tests
 
 enniscorthy_small_area_need_gap_zone_crosstable_2021 <-  si_wexford_250423_day_aggregated$si_by_area %>% 
@@ -1864,8 +1862,10 @@ enniscorthy_small_area_need_gap_zone_crosstable_2021 <-  si_wexford_250423_day_a
   untabyl() %>% 
   select(transit_supply, `Very Low`, Low, `Below average`, `Above average`, High, `Very High`)
 
-enniscorthy_small_area_need_gap_zone_crosstable_2021_test <- wexford_small_area_need_gap_zone_crosstable_2021[,2:7] %>%
-  chisq.test()
+enniscorthy_small_area_need_gap_zone_crosstable_2021_test <- enniscorthy_small_area_need_gap_zone_crosstable_2021[3:7,2:7] %>%
+  fisher.test(simulate.p.value=TRUE)
+
+enniscorthy_small_area_need_gap_zone_crosstable_2021_test$expected
 
 ```
 
@@ -1875,8 +1875,7 @@ Differences in the SI score between Small Areas in different social needs catego
 `r label_number(accuracy = 0.1)(si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>%  filter(composite_needs == "Very High") %>% select(SI) %>% unlist() %>% as.numeric() %>% mean())` for those with Very High social needs for transport, which is the opposite to what might be desired to improve social equity.   
 
 
-Differences in the share of Small Areas in each transit supply category across the different social need for transport groups were statistically significant^[`r prmisc::print_chi2(enniscorthy_small_area_need_gap_zone_crosstable_2021_test)`]. However, exploring this as it relates to the population living in Small Areas with each combination of each combination of the transit supply and social need for transport categories, as shown in Table 1, may be of more interest. 
-
+Differences in the share of Small Areas in each transit supply category across the different social need for transport groups were statistically significant^[`r enniscorthy_small_area_need_gap_zone_crosstable_2021_test$method`, p=`r label_number(accuracy = 0.001)(enniscorthy_small_area_need_gap_zone_crosstable_2021_test$p.value)`]. Again, this is explored further with respect to the aggregate population in each combination of categories in the following.
 
 
 
@@ -1885,30 +1884,21 @@ Differences in the share of Small Areas in each transit supply category across t
 
 si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
 
-enniscorthy_small_area_need_gap_population_crosstable_2021 <- si_wexford_250423_day_aggregated$si_by_area %>% 
-  st_drop_geometry() %>%
-  aggregate(population ~ composite_needs  + transit_supply, sum)
+enniscorthy_small_area_need_gap_population_crosstable_2021 <- 
+xtabs(population ~ transit_supply + composite_needs, si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Enniscorthy")) %>%
+  as.tibble()
 
+names(enniscorthy_small_area_need_gap_population_crosstable_2021) <- c("transit_supply", "composite_needs", "population")
 
-si_wexford_250423_day_aggregated$si_by_area$composite_needs <- si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% fct_rev()
-
-
-enniscorthy_small_area_need_gap_population_crosstable_2021$composite_needs <- factor(
-  enniscorthy_small_area_need_gap_population_crosstable_2021$composite_needs, 
-  levels = c("Very Low", "Low", "Below average", "Above average", "High", "Very High"))
-enniscorthy_small_area_need_gap_population_crosstable_2021$transit_supply <- factor(
-  enniscorthy_small_area_need_gap_population_crosstable_2021$transit_supply, 
-  levels = c("Zero Supply", "Very Low", "Low", "Below average", "Above average", "High", "Very High"))
-
-enniscorthy_small_area_need_gap_population_crosstable_2021$composite_needs <- enniscorthy_small_area_need_gap_population_crosstable_2021$composite_needs %>% 
-  fct_rev()
 
 population_supply_needs_cross_table <- enniscorthy_small_area_need_gap_population_crosstable_2021 %>% 
   pivot_wider(names_from = composite_needs, values_from = population) 
 
 
 enniscorthy_small_area_need_gap_population_crosstable_plot <- enniscorthy_small_area_need_gap_population_crosstable_2021 %>% 
-  pivot_wider(names_from = composite_needs, values_from = population) %>%
+  pivot_wider(names_from = composite_needs, values_from = population, names_expand = TRUE) %>%
   adorn_totals(where = c("row", "col")) %>%
   adorn_percentages(denominator = "col") %>%
   adorn_pct_formatting() %>% 
@@ -1959,10 +1949,56 @@ enniscorthy_small_area_need_gap_population_crosstable_2021_plot <- enniscorthy_s
 
 enniscorthy_small_area_need_gap_population_crosstable_plot
 
+
+
+pcol_needs_gap_enniscorthy <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% 
+  aggregate(population ~ gap_colour, sum) %>%
+  right_join(tibble(gap_colour = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(gap_colour=factor(gap_colour, levels = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev() %>% levels())) %>%
+  arrange(gap_colour) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
+  scale_y_continuous(limits = c(0,.4)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(gap_colour,  0.3, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+ scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Needs-gap by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+#needs_gap_plot + 
+#    inset_element(pcol_needs_gap_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0) 
+
+
+
+```
+
+Figure 16 summarises the magnitude of the needs-gap across the Enniscorthy population, while Figure 17 maps the needs-gaps. Although there are no Small Areas in Enniscorthy in the two largest needs-gaps categories (dark red, red), There are `r label_number(big.mark = ",")(pcol_needs_gap_enniscorthy$data[7:12,2] %>% sum())` people living in the Small Areas in the upper half of the needs-gaps categories (i.e. yellow or orange), being `r label_percent(accuracy = 1)(pcol_needs_gap_enniscorthy$data[7:12,2] %>% sum() / pcol_needs_gap_enniscorthy$data[,2] %>% sum())` of the total Enniscorthy population. As shown in the map in Figure 17, these people appear to mostly living in the outer parts of Enniscorthy.  
+
+
+```{r enniscorthy_needs_gap_map_poplation, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy: Needs-gap by population"}
+pcol_needs_gap_enniscorthy
+
 ```
 
 
-```{r enniscorthy_needs_gap_map_graphs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Wexford, Needs-gap by Small Area (red = highest gap)"}
+```{r enniscorthy_needs_gap_map_graphs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="Enniscorthy: Needs-gap by Small Area"}
 
 
 needs_gap_plot <- ggplot()+ 
@@ -1985,50 +2021,13 @@ enniscorthy_small_area_need_gap_population_crosstable_2021_sum_by_gap_colour <- 
   filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>%
   aggregate(population ~ gap_colour, sum)
 
-
-pcol_needs_gap_enniscorthy <- si_wexford_250423_day_aggregated$si_by_area %>%
-  st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% 
-  aggregate(population ~ gap_colour, sum) %>%
-  right_join(tibble(gap_colour = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% levels())) %>%
-  replace_na(list(population = 0)) %>%
-  mutate(gap_colour=factor(gap_colour, levels = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev() %>% levels())) %>%
-  arrange(gap_colour) %>%
-  mutate(perc=population/sum(population)) %>% 
-  na.omit() %>%
-  ggplot() + 
-  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
-  scale_y_continuous(limits = c(0,.4)) +
-  geom_hline(yintercept = 0)  + 
-  geom_text(aes(gap_colour,  0.3, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1) +
-   coord_flip() + 
- scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
-  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
-  guides(fill = "none", color = "none") +
-  labs(
-    title = "Needs-gap by population",
-    x = NULL,
-    y = NULL
-  ) +
-  theme_void() +
-  theme(
-    panel.grid = element_blank(),
-    plot.title = element_text(size = 4),
-    axis.text.y = element_blank(),
-    axis.text.x = element_blank()
-  ) 
-
-#needs_gap_plot + 
-#    inset_element(pcol_needs_gap_wexford_county, left = 0.0, bottom = 0.8, right = 0.6, top =1.0) 
-
-
-needs_gap_plot  + inset_element(pcol_needs_gap_enniscorthy, left = 0.0, bottom = 0.8, right = 0.6, top =1.0)
+needs_gap_plot  
 ```
 
 
-
-Figure 8 maps Small Areas across Enniscorty by the magnitude of the needs-gap. 
 ## Wexford (town)
 
+\newpage
 
 # Appendix 
 

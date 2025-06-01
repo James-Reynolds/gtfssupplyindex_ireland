@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  31 MAY 2025 19:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  1 JUN 2025 21:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1036,23 +1036,26 @@ File: Reynolds2025_files/figure-latex/enniscorthy_si_pop_histogram-1.pdf Graphi
 c file (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_si_pop_histogram-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_si_pop_his
-togram-1.pdf  used on input line 576.
+togram-1.pdf  used on input line 574.
 (pdftex.def)             Requested size: 312.02032pt x 190.98752pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 576--577
+Underfull \hbox (badness 10000) in paragraph at lines 574--575
 
  []
 
 [10 <./Reynolds2025_files/figure-latex/enniscorthy_si_map-1.pdf> <./Reynolds202
 5_files/figure-latex/enniscorthy_si_population-1.pdf> <./Reynolds2025_files/fig
 ure-latex/enniscorthy_gglorenz-1.pdf>]
+
+LaTeX Warning: Marginpar on page 11 moved.
+
 <Reynolds2025_files/figure-latex/enniscorthy_needs_map-1.pdf, id=197, 143.53625
 pt x 167.62625pt>
 File: Reynolds2025_files/figure-latex/enniscorthy_needs_map-1.pdf Graphic file 
 (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_needs_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_map-
-1.pdf  used on input line 586.
+1.pdf  used on input line 594.
 (pdftex.def)             Requested size: 144.00458pt x 168.17317pt.
 
 LaTeX Warning: Marginpar on page 11 moved.
@@ -1063,7 +1066,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_needs_pop_map-1.pdf Graphic f
 ile (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_needs_pop_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_pop_
-map-1.pdf  used on input line 590.
+map-1.pdf  used on input line 598.
 (pdftex.def)             Requested size: 144.00458pt x 94.25754pt.
 
 LaTeX Warning: Marginpar on page 11 moved.
@@ -1071,20 +1074,22 @@ LaTeX Warning: Marginpar on page 11 moved.
 [11 <./Reynolds2025_files/figure-latex/enniscorthy_si_pop_histogram-1.pdf> <./R
 eynolds2025_files/figure-latex/enniscorthy_needs_map-1.pdf> <./Reynolds2025_fil
 es/figure-latex/enniscorthy_needs_pop_map-1.pdf>]
-Overfull \hbox (159.41592pt too wide) in paragraph at lines 614--654
+Overfull \hbox (159.41592pt too wide) in paragraph at lines 622--658
  [][] 
  []
 
+LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
+(Font)              scaled to size 8.50006pt on input line 660.
 <Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_boxplot-1.pdf, id=227, 2
 78.03876pt x 163.61125pt>
 File: Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_boxplot-1.pdf Graph
 ic file (type pdf)
 <use Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_boxplot-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_
-boxplot-1.pdf  used on input line 657.
+boxplot-1.pdf  used on input line 665.
 (pdftex.def)             Requested size: 312.00371pt x 183.59784pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 657--658
+Underfull \hbox (badness 10000) in paragraph at lines 665--666
 
  []
 
@@ -1096,85 +1101,95 @@ LaTeX Warning: Marginpar on page 12 moved.
 LaTeX Warning: Marginpar on page 13 moved.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 678--678
+Underfull \hbox (badness 10000) in paragraph at lines 685--685
 []\T1/pplj/m/n/8 Table 2: []En-nis-cor-thy, pop-u-la-tion in each Tran-sit Sup-
 ply and Com-bined Needs
  []
 
 
-Overfull \hbox (104.09341pt too wide) in alignment at lines 677--694
+Overfull \hbox (104.09341pt too wide) in alignment at lines 684--701
  [] [] [] [] [] [] [] [] 
  []
 
-<Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.pdf, id=241
-, 133.49875pt x 157.58875pt>
+<Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_poplation-1.pdf, id=
+241, 227.85126pt x 180.675pt>
+File: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_poplation-1.pdf
+ Graphic file (type pdf)
+<use Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_poplation-1.pdf>
+
+Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_
+map_poplation-1.pdf  used on input line 714.
+(pdftex.def)             Requested size: 144.00249pt x 114.18698pt.
+<Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.pdf, id=242
+, 143.53625pt x 167.62625pt>
 File: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.pdf Gr
 aphic file (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_
-map_graphs-1.pdf  used on input line 698.
-(pdftex.def)             Requested size: 480.10616pt x 566.7419pt.
+map_graphs-1.pdf  used on input line 718.
+(pdftex.def)             Requested size: 312.0092pt x 364.37437pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 698--699
+Underfull \hbox (badness 10000) in paragraph at lines 718--719
 
  []
 
-
-Overfull \hbox (2.23288pt too wide) in paragraph at lines 722--722
+[13 <./Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_poplation-1.pd
+f>] [14 <./Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.p
+df>]
+Overfull \hbox (2.23288pt too wide) in paragraph at lines 743--743
 []|\T1/pplj/m/n/8 Castlebridge|  
  []
 
 
-Overfull \hbox (6.32887pt too wide) in paragraph at lines 727--727
+Overfull \hbox (6.32887pt too wide) in paragraph at lines 748--748
 []|\T1/pplj/m/n/8 Kilmuckridge|  
  []
 
 
-Overfull \hbox (0.97685pt too wide) in paragraph at lines 751--751
+Overfull \hbox (0.97685pt too wide) in paragraph at lines 772--772
 []|\T1/pplj/m/n/8 Adamstown|  
  []
 
 
-Overfull \hbox (0.60887pt too wide) in paragraph at lines 760--760
+Overfull \hbox (0.60887pt too wide) in paragraph at lines 781--781
 []|\T1/pplj/m/n/8 Ballycullane|  
  []
 
 
-Overfull \hbox (1.60086pt too wide) in paragraph at lines 765--765
+Overfull \hbox (1.60086pt too wide) in paragraph at lines 786--786
 []|\T1/pplj/m/n/8 Duncormick|  
  []
 
 
-Overfull \hbox (3.43285pt too wide) in paragraph at lines 767--767
+Overfull \hbox (3.43285pt too wide) in paragraph at lines 788--788
 []|\T1/pplj/m/n/8 Arthurstown|  
  []
 
 
-Overfull \hbox (218.52225pt too wide) in alignment at lines 708--771
+Overfull \hbox (218.52225pt too wide) in alignment at lines 729--792
  [] [] [] [] [] [] [] [] [] 
  []
 
-[13]
+[15]
 
 Package bibentry Warning: You have used \nobibliography* 
 (bibentry)                without a following \bibliography.
 (bibentry)                You may not be able to run BibTeX.
 
-[14] [15 <./Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.
-pdf>] (./Reynolds2025.aux)
+[16] (./Reynolds2025.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
 Package rerunfilecheck Info: File `Reynolds2025.out' has not changed.
-(rerunfilecheck)             Checksum: 4D2EBDDC735E75462600A869AE4C1E68;568.
+(rerunfilecheck)             Checksum: BFFC83385863CF180A9C0D94EBC1A3D1;568.
  ) 
 Here is how much of TeX's memory you used:
- 16070 strings out of 474116
- 258633 string characters out of 5743682
- 2041187 words of memory out of 5000000
- 37987 multiletter control sequences out of 15000+600000
- 618381 words of font info for 132 fonts, out of 8000000 for 9000
+ 16088 strings out of 474116
+ 259530 string characters out of 5743682
+ 2025187 words of memory out of 5000000
+ 38001 multiletter control sequences out of 15000+600000
+ 619001 words of font info for 134 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  97i,19n,96p,450b,573s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
@@ -1187,10 +1202,10 @@ texmf-dist/fonts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2024/texmf-di
 st/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1
 /urw/palatino/uplri8a.pfb>
-Output written on Reynolds2025.pdf (15 pages, 4346846 bytes).
+Output written on Reynolds2025.pdf (16 pages, 4351268 bytes).
 PDF statistics:
- 323 PDF objects out of 1000 (max. 8388607)
- 235 compressed objects within 3 object streams
- 47 named destinations out of 1000 (max. 500000)
- 1153 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 338 PDF objects out of 1000 (max. 8388607)
+ 246 compressed objects within 3 object streams
+ 50 named destinations out of 1000 (max. 500000)
+ 1158 words of extra memory for PDF output out of 10000 (max. 10000000)
 
