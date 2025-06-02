@@ -1912,18 +1912,18 @@ enniscorthy_small_area_need_gap_population_crosstable_plot <- enniscorthy_small_
                    "Low", "Very Low", "Total")) %>% 
   add_header_above(c(" " = 1, "Combined Needs Index Category" = 6, " " = 1)) %>%
   kable_styling(font_size = 8) %>%
-  kableExtra::column_spec(1, width = "2.5cm") %>% 
-  kableExtra::column_spec(2, width = "1.25cm", background = c("#a50026", "#d73027", "#f46d43", "#fdae61", 
+  kableExtra::column_spec(1, width = "2.25cm") %>% 
+  kableExtra::column_spec(2, width = "1.0cm", background = c("#a50026", "#d73027", "#f46d43", "#fdae61", 
 "#fee090","#ffffbf", "#e0f3f8","#ffffff"), color = c("white", "white", "white", "black", "black", "black", "black", "black")) %>%
-  kableExtra::column_spec(3, width = "1.25cm" , background = c("#d73027", "#f46d43", "#fdae61", 
+  kableExtra::column_spec(3, width = "1.0cm" , background = c("#d73027", "#f46d43", "#fdae61", 
 "#fee090","#ffffbf", "#e0f3f8", "#abd9e9" ,"#ffffff"), color = c("white", "white", "black", "black", "black", "black", "black", "black")) %>%
-  kableExtra::column_spec(4, width = "1.25cm", background = c("#f46d43", "#fdae61", 
+  kableExtra::column_spec(4, width = "1.0cm", background = c("#f46d43", "#fdae61", 
 "#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#ffffff"), color = c("white", "black", "black", "black", "black", "black", "black", "black")) %>%
-  kableExtra::column_spec(5, width = "1.25cm", background = c("#fdae61", 
+  kableExtra::column_spec(5, width = "1.0cm", background = c("#fdae61", 
 "#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#ffffff"), color = c("black", "black", "black", "black", "black", "black", "white", "black")) %>%
-  kableExtra::column_spec(6, width = "1.25cm", background = c("#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "#ffffff"), color = c("black", "black", "black", "black", "black", "white", "white", "black"))  %>%
-  kableExtra::column_spec(7, width = "1.25cm", background = c("#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "#9400d3", "#ffffff"), color = c("black", "black", "black", "black", "white", "white", "white", "black")) %>%
-  kableExtra::column_spec(8, width = "1.25cm")
+  kableExtra::column_spec(6, width = "1.0cm", background = c("#fee090","#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "#ffffff"), color = c("black", "black", "black", "black", "black", "white", "white", "black"))  %>%
+  kableExtra::column_spec(7, width = "1.0cm", background = c("#ffffbf", "#e0f3f8", "#abd9e9","#74add1","#4575b4", "#313695", "#9400d3", "#ffffff"), color = c("black", "black", "black", "black", "white", "white", "white", "black")) %>%
+  kableExtra::column_spec(8, width = "1.0cm")
 
 enniscorthy_small_area_need_gap_population_crosstable_2021_plot <- enniscorthy_small_area_need_gap_population_crosstable_2021 %>%
     ggbarstats(x = transit_supply, 
@@ -1989,7 +1989,7 @@ pcol_needs_gap_enniscorthy <- si_wexford_250423_day_aggregated$si_by_area %>%
 
 ```
 
-Figure 16 summarises the magnitude of the needs-gap across the Enniscorthy population, while Figure 17 maps the needs-gaps. Although there are no Small Areas in Enniscorthy in the two largest needs-gaps categories (dark red, red), There are `r label_number(big.mark = ",")(pcol_needs_gap_enniscorthy$data[7:12,2] %>% sum())` people living in the Small Areas in the upper half of the needs-gaps categories (i.e. yellow or orange), being `r label_percent(accuracy = 1)(pcol_needs_gap_enniscorthy$data[7:12,2] %>% sum() / pcol_needs_gap_enniscorthy$data[,2] %>% sum())` of the total Enniscorthy population. As shown in the map in Figure 17, these people appear to mostly living in the outer parts of Enniscorthy.  
+Figure 16 summarises the magnitude of the needs-gap across the Enniscorthy population, while Figure 17 maps the needs-gaps. Although there are no Small Areas in Enniscorthy in the two largest needs-gaps categories (dark red, red), There are `r label_number(big.mark = ",")(pcol_needs_gap_enniscorthy$data[7:12,2] %>% sum())` people living in the Small Areas in the upper half of the needs-gaps categories (i.e. yellow or orange), being `r label_percent(accuracy = 1)(pcol_needs_gap_enniscorthy$data[7:12,2] %>% sum() / pcol_needs_gap_enniscorthy$data[,2] %>% sum())` of the total Enniscorthy population. As shown in the map in Figure 17, these people appear to mostly living in outer parts of Enniscorthy.  
 
 
 ```{r enniscorthy_needs_gap_map_poplation, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy: Needs-gap by population"}
@@ -1998,7 +1998,7 @@ pcol_needs_gap_enniscorthy
 ```
 
 
-```{r enniscorthy_needs_gap_map_graphs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="Enniscorthy: Needs-gap by Small Area"}
+```{r enniscorthy_needs_gap_map_graphs, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy: Needs-gap by Small Area"}
 
 
 needs_gap_plot <- ggplot()+ 
@@ -2025,7 +2025,477 @@ needs_gap_plot
 ```
 
 
-## Wexford (town)
+## Comparing Enniscorthy to other urban areas
+Figures 3 and 4, above, have provided some comparisons between transit suppply in different urban areas. This section, however, compares transit service and needs-gaps in Enniscorthy with those in Wexford (population `r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Wexford") %>% select(population) %>% as.numeric())`), Gorey (`r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% as.numeric())`) and New Ross (`r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "New Ross") %>% select(population) %>% as.numeric())`). Together with Enniscorthy these urban areas are home to `r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% select(population) %>% sum())` people, which is `r label_percent()((si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% select(population) %>% sum()) / si_pop_by_urban_area %>% select(population) %>% sum())` of the total county population.` 
+
+Figure 18 shows the share of population in each transit supply category in Weford, Gorey and New Ross, while Figure 19 shows maps of the transit supply for Small Areas in each town. Table 5 shows summary statistics. 
+
+
+```{r SI_other_places_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol =3, out.width="33%", fig.cap="Wexford (l), Gorey (c) and New Ross (r): Transit Supply by population"}
+
+
+
+pcol_si_wexford <- si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "Wexford") %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
+  scale_y_continuous(limits = c(0,.75)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Transit supply category by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+pcol_si_gorey <- si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "Gorey") %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
+  scale_y_continuous(limits = c(0,.75)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Transit supply category by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+pcol_si_new_ross <- si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "New Ross") %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
+  scale_y_continuous(limits = c(0,.75)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Transit supply category by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+pcol_si_wexford
+pcol_si_gorey
+pcol_si_new_ross
+```
+
+
+```{r comparison_si_table_summary, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="Enniscorthy, Gorey, New Ross and Wexford: population living in Small Areas, by transit supply category"}
+
+theme_gtsummary_compact()
+si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% 
+  select(SI, transit_supply, population, SA_URBAN_AREA_NAME) %>%
+   tbl_summary(
+    by = SA_URBAN_AREA_NAME,
+    digits = SI ~ 1,
+    type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{p100}", "{sum}")
+   )) %>%
+    add_overall() %>% 
+  add_p() %>%
+  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4") ~ "**Urban Area**") %>%
+  as_kable_extra()
+
+
+```
+
+
+```{marginfigure}
+Table 5: Enniscorthy, Gorey, New Ross and Wexford: Summary statistics.
+```
+
+
+
+```{r other_gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy, Gorey, New Ross and Wexford: Lorenz curves"}
+
+
+si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>%
+    ggplot(aes(x = SI, n = population, colour = SA_URBAN_AREA_NAME)) +
+    stat_lorenz(desc = FALSE) +
+    coord_fixed() +
+    geom_abline(linetype = "dashed") +
+    theme_minimal() +
+    hrbrthemes::scale_x_percent() +
+    hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+         y = "Cumulative share of SI score", 
+       colour = "Urban area") +
+   theme(
+    legend.position = c(.5, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "left",
+    legend.margin = margin(4, 4, 4, 4)
+    ) + 
+scale_colour_manual(values = c("Enniscorthy" = "black", "Gorey" = "#F29C33", "New Ross" = "darkgreen", "Wexford" = "lightgreen")) 
+```
+
+
+```{r SI_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top-left), Gorey (bottom-left) and New Ross (right): Transit Supply by Small Area"}
+
+
+#Set boundings box
+bbox_list <- wexford %>% 
+  filter(SA_URBAN_AREA_NAME == "Wexford") %>%
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+
+wexford_town_map <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% 
+            filter(SA_URBAN_AREA_NAME == "Wexford"),
+          aes(fill = transit_supply), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none",
+#        legend.text = element_text(size = 4), 
+#        legend.title = element_text(size = 5), 
+#        legend.key.size = unit(0.08, 'cm')
+        ) + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+    coord_sf(xlim = c(lon[1],lon[2]), 
+           ylim = c(lat[1], lat[2])) +  
+  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
+  ggspatial::annotation_scale(location = 'br', height = unit(0.1, "cm")) 
+
+
+#Set boundings box
+bbox_list <- wexford %>% 
+  filter(SA_URBAN_AREA_NAME == "Gorey") %>%
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+
+gorey_map <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% 
+            filter(SA_URBAN_AREA_NAME == "Gorey"),
+          aes(fill = transit_supply), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none",
+#        legend.text = element_text(size = 4), 
+#        legend.title = element_text(size = 5), 
+#        legend.key.size = unit(0.08, 'cm')
+        ) + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+    coord_sf(xlim = c(lon[1],lon[2]), 
+           ylim = c(lat[1], lat[2])) +  
+#  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
+  ggspatial::annotation_scale(location = 'br', height = unit(0.1, "cm")) 
+
+
+#Set boundings box
+bbox_list <- wexford %>% 
+  filter(SA_URBAN_AREA_NAME == "New Ross") %>%
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+
+new_ross_map <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% 
+            filter(SA_URBAN_AREA_NAME == "New Ross"),
+          aes(fill = transit_supply), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none",
+#        legend.text = element_text(size = 4), 
+#        legend.title = element_text(size = 5), 
+#        legend.key.size = unit(0.08, 'cm')
+        ) + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+    coord_sf(xlim = c(lon[1],lon[2]), 
+           ylim = c(lat[1], lat[2])) +  
+  #ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.4, "cm"), width = unit(0.4, "cm")) + 
+  ggspatial::annotation_scale(location = 'br', height = unit(0.1, "cm")) 
+
+wexford_town_map / gorey_map
+new_ross_map
+
+
+lorenz_wexford_town <- si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Wexford") %>% select(SI,population) 
+lorenz_wexford_town <- Lc(x=lorenz_wexford_town$SI, n=lorenz_wexford_town$population)
+
+
+lorenz_gorey <- si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(SI,population) 
+lorenz_gorey <- Lc(x=lorenz_gorey$SI, n=lorenz_gorey$population)
+
+
+lorenz_new_ross <- si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "New Ross") %>% select(SI,population) 
+lorenz_new_ross <- Lc(x=lorenz_new_ross$SI, n=lorenz_new_ross$population)
+
+
+```
+
+
+
+Despite have similar populations, the aggregate SI score for Gorey is only `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(SI) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(SI) %>% sum())` of that for Enniscorthy. New Ross, in contrast, has an aggregate SI score that is `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "New Ross") %>% select(SI) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(SI) %>% sum())` of that Enniscorthy, despite having only a population that is `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(population) %>% sum())` of the size of Enniscorthy. 
+
+The geographic distribution of transit supply appears to be similar that that in Ennicorthy for the other three urban areas shown in Figure 19, with outer areas generally having less transit. However, Gorey for having 12 Small Areas withno transit supply at all, despite these areas being home to `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum())` of its population. In general, transit supply appears to be unevenly distributed to the population, especially in Gorey, as shown in the Lorenz Curves in Figure 20^[Gini co-efficients are New Ross `r label_number(accuracy = 0.001)(lorenz_new_ross$Gini)`, Wexford `r label_number(accuracy = 0.001)(lorenz_wexford_town$Gini)`, Enniscorthy `r label_number(accuracy = 0.001)(lorenz_values$Gini)` for Ennicorthy and Gorey `r label_number(accuracy = 0.001)(lorenz_gorey$Gini)`.]. 
+
+
+Figure 21 shows the distibution of population to each of the needs-gaps groups, while Figure 22 shows maps for Wexford, Gorey and New Ross.  
+
+```{r needs_gap_other_places_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol =3, out.width="33%", fig.cap="Wexford (l), Gorey (c) and New Ross (r): Needs-gap by population"}
+
+pcol_needs_gap_wexford <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Wexford") %>% 
+  aggregate(population ~ gap_colour, sum) %>%
+  right_join(tibble(gap_colour = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(gap_colour=factor(gap_colour, levels = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev() %>% levels())) %>%
+  arrange(gap_colour) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
+  scale_y_continuous(limits = c(0,.5)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(gap_colour,  0.4, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+ scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Needs-gap by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+
+pcol_needs_gap_gorey <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% 
+  aggregate(population ~ gap_colour, sum) %>%
+  right_join(tibble(gap_colour = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(gap_colour=factor(gap_colour, levels = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev() %>% levels())) %>%
+  arrange(gap_colour) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
+  scale_y_continuous(limits = c(0,.5)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(gap_colour,  0.4, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+ scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Needs-gap by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+
+pcol_needs_gap_new_ross <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "New Ross") %>% 
+  aggregate(population ~ gap_colour, sum) %>%
+  right_join(tibble(gap_colour = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(gap_colour=factor(gap_colour, levels = si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev() %>% levels())) %>%
+  arrange(gap_colour) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
+  scale_y_continuous(limits = c(0,.5)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(gap_colour,  0.4, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+ scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Needs-gap by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_needs_gap_wexford
+pcol_needs_gap_gorey
+pcol_needs_gap_new_ross
+```
+
+
+```{r needs_gaps_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top-left), Gorey (bottom-left) and New Ross (right): Needs-gap by Small Area"}
+
+
+needs_gap_plot_wexford <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Wexford"),
+          aes(fill =  gap_colour), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+    ggspatial::annotation_scale(location = 'br') 
+
+
+needs_gap_plot_gorey <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Gorey"),
+          aes(fill =  gap_colour), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+    ggspatial::annotation_scale(location = 'br') 
+
+
+needs_gap_plot_new_ross <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "New Ross"),
+          aes(fill =  gap_colour), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+    ggspatial::annotation_scale(location = 'br') 
+
+
+needs_gap_plot_wexford / needs_gap_plot_gorey
+needs_gap_plot_new_ross
+
+```
 
 \newpage
 
