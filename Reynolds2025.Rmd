@@ -2135,6 +2135,11 @@ pcol_si_gorey
 pcol_si_new_ross
 ```
 
+```{marginfigure}
+Table 5: Enniscorthy, Gorey, New Ross and Wexford: Summary statistics.
+```
+
+
 
 ```{r comparison_si_table_summary, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="Enniscorthy, Gorey, New Ross and Wexford: population living in Small Areas, by transit supply category"}
 
@@ -2157,36 +2162,6 @@ si_wexford_250423_day_aggregated$si_by_area %>%
 
 ```
 
-
-```{marginfigure}
-Table 5: Enniscorthy, Gorey, New Ross and Wexford: Summary statistics.
-```
-
-
-
-```{r other_gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy, Gorey, New Ross and Wexford: Lorenz curves"}
-
-
-si_wexford_250423_day_aggregated$si_by_area %>%
-  filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>%
-    ggplot(aes(x = SI, n = population, colour = SA_URBAN_AREA_NAME)) +
-    stat_lorenz(desc = FALSE) +
-    coord_fixed() +
-    geom_abline(linetype = "dashed") +
-    theme_minimal() +
-    hrbrthemes::scale_x_percent() +
-    hrbrthemes::scale_y_percent() +
-  labs(x = "Cumulative share of population ",
-         y = "Cumulative share of SI score", 
-       colour = "Urban area") +
-   theme(
-    legend.position = c(.5, .95),
-    legend.justification = c("right", "top"),
-    legend.box.just = "left",
-    legend.margin = margin(4, 4, 4, 4)
-    ) + 
-scale_colour_manual(values = c("Enniscorthy" = "black", "Gorey" = "#F29C33", "New Ross" = "darkgreen", "Wexford" = "lightgreen")) 
-```
 
 
 ```{r SI_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top-left), Gorey (bottom-left) and New Ross (right): Transit Supply by Small Area"}
@@ -2333,7 +2308,33 @@ lorenz_new_ross <- Lc(x=lorenz_new_ross$SI, n=lorenz_new_ross$population)
 
 Despite have similar populations, the aggregate SI score for Gorey is only `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(SI) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(SI) %>% sum())` of that for Enniscorthy. New Ross, in contrast, has an aggregate SI score that is `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "New Ross") %>% select(SI) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(SI) %>% sum())` of that Enniscorthy, despite having only a population that is `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(population) %>% sum())` of the size of Enniscorthy. 
 
-The geographic distribution of transit supply appears to be similar that that in Ennicorthy for the other three urban areas shown in Figure 19, with outer areas generally having less transit. However, Gorey for having 12 Small Areas withno transit supply at all, despite these areas being home to `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum())` of its population. In general, transit supply appears to be unevenly distributed to the population, especially in Gorey, as shown in the Lorenz Curves in Figure 20^[Gini co-efficients are New Ross `r label_number(accuracy = 0.001)(lorenz_new_ross$Gini)`, Wexford `r label_number(accuracy = 0.001)(lorenz_wexford_town$Gini)`, Enniscorthy `r label_number(accuracy = 0.001)(lorenz_values$Gini)` for Ennicorthy and Gorey `r label_number(accuracy = 0.001)(lorenz_gorey$Gini)`.]. 
+
+
+```{r other_gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Enniscorthy, Gorey, New Ross and Wexford: Lorenz curves"}
+
+
+si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>%
+    ggplot(aes(x = SI, n = population, colour = SA_URBAN_AREA_NAME)) +
+    stat_lorenz(desc = FALSE) +
+    coord_fixed() +
+    geom_abline(linetype = "dashed") +
+    theme_minimal() +
+    hrbrthemes::scale_x_percent() +
+    hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+         y = "Cumulative share of SI score", 
+       colour = "Urban area") +
+   theme(
+    legend.position = c(.5, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "left",
+    legend.margin = margin(4, 4, 4, 4)
+    ) + 
+scale_colour_manual(values = c("Enniscorthy" = "black", "Gorey" = "#F29C33", "New Ross" = "darkgreen", "Wexford" = "lightgreen")) 
+```
+
+The geographic distribution of transit supply appears to be similar that that in Ennicorthy for the other three urban areas shown in Figure 19, with outer areas generally having less transit. However, Gorey for having 12 Small Areas withno transit supply at all, despite these areas being home to `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum())` of its population. In general, transit supply appears to be unevenly distributed to the population, especially in Gorey, as shown in the Lorenz Curves in Figure 20^[Gini co-efficients are New Ross `r label_number(accuracy = 0.001)(lorenz_new_ross$Gini)`, Wexford `r label_number(accuracy = 0.001)(lorenz_wexford_town$Gini)`, Enniscorthy `r label_number(accuracy = 0.001)(lorenz_values$Gini)` and Gorey `r label_number(accuracy = 0.001)(lorenz_gorey$Gini)`.]. 
 
 
 Figure 21 shows the distibution of population to each of the needs-gaps groups, while Figure 22 shows maps for Wexford, Gorey and New Ross.  
@@ -2441,7 +2442,61 @@ pcol_needs_gap_new_ross <- si_wexford_250423_day_aggregated$si_by_area %>%
 pcol_needs_gap_wexford
 pcol_needs_gap_gorey
 pcol_needs_gap_new_ross
+
+## Statistical test: colour by Small Area
+
+colour_by_sa_test <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% 
+  tabyl(gap_colour, SA_URBAN_AREA_NAME) %>% fisher.test(simulate.p.value=TRUE)
+
+colour_by_sa_enniscorthy_gorey_test <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey") %>% 
+  tabyl(gap_colour, SA_URBAN_AREA_NAME) %>%
+  fisher.test()
+
 ```
+
+
+
+Differences in the share of Small Areas to needs-gap colour groups across Wexford, Gorey, New Ross (Figure 21) and Enniscorthy (Figure 16) are statistically significant^[`r colour_by_sa_test$method`, p=`r label_number(accuracy = 0.001)(colour_by_sa_test$p.value)`]. Needs-gaps appear to be lowest in Wexford, then Enniscorthy and New Ross, and then highest in Gorey, where `r label_percent()(pcol_needs_gap_gorey$data[7:12, "population"] %>% sum() / pcol_needs_gap_gorey$data$population %>% sum())` of the population (`r label_number(big.mark=',')(pcol_needs_gap_gorey$data[7:12, "population"] %>% sum())` people) are in the upper half of need-gap categories (yellow to dark red), including the `r label_percent()(pcol_needs_gap_gorey$data[12, "population"]/ pcol_needs_gap_gorey$data$population %>% sum())` of the population (`r label_number(big.mark=',')(pcol_needs_gap_gorey$data[12, "population"])` people) have Very High needs, but Zero Supply (dark red). 
+
+Differences between Enniscorthy and New Ross appear to be less pronounced, but are still statistically significant^[`r colour_by_sa_enniscorthy_gorey_test$method`, p=`r label_number(accuracy = 0.001)(colour_by_sa_enniscorthy_gorey_test$p.value)`.]. In Enniscorthy `r label_percent()(pcol_needs_gap_enniscorthy$data[7:12, "population"] %>% sum() / pcol_needs_gap_enniscorthy$data$population %>% sum())` of the population (`r label_number(big.mark=',')(pcol_needs_gap_enniscorthy$data[7:12, "population"] %>% sum())` people) are in the upper half of need-gap categories (yellow to dark red), whereas for New Ross it is `r label_percent()(pcol_needs_gap_new_ross$data[7:12, "population"] %>% sum() / pcol_needs_gap_new_ross$data$population %>% sum())` of the population (`r label_number(big.mark=',')(pcol_needs_gap_new_ross$data[7:12, "population"] %>% sum())` people). 
+
+```{r needs_gaps_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, ncol = 1, fig.height = 2.5, fig.cap="Needs-gap by population"}
+ 
+
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev()
+
+ggplot(si_wexford_250423_day_aggregated$si_by_area %>% 
+         st_drop_geometry() %>%
+         filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "New Ross" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "Enniscorthy"),
+       aes(x=SA_URBAN_AREA_NAME, y=population, fill=gap_colour)) + 
+  theme_tufte(base_size=14, ticks=F) +
+  geom_bar(width=0.25, stat = "identity", position = "stack") + 
+  theme(axis.title=element_blank(),
+        legend.position = "none") + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+  scale_y_continuous(labels = comma)
+  
+```
+
+```{r needs_gaps_graph_percent, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, ncol = 1, fig.height = 2.5, fig.cap="Needs-gap by share of population (bottom)"}
+
+ggplot(si_wexford_250423_day_aggregated$si_by_area %>% 
+         st_drop_geometry() %>%
+         filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "New Ross" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "Enniscorthy"),
+       aes(x=SA_URBAN_AREA_NAME, y=population, fill=gap_colour)) + 
+  theme_tufte(base_size=14, ticks=F) +
+  geom_bar(width=0.25, stat = "identity", position = "fill") + 
+  theme(axis.title=element_blank(),
+        legend.position = "none") + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+   scale_y_continuous(labels = label_percent())
+  
+si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_aggregated$si_by_area$gap_colour %>% fct_rev()
+
+```
+
 
 
 ```{r needs_gaps_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top-left), Gorey (bottom-left) and New Ross (right): Needs-gap by Small Area"}
@@ -2496,6 +2551,7 @@ needs_gap_plot_wexford / needs_gap_plot_gorey
 needs_gap_plot_new_ross
 
 ```
+
 
 \newpage
 
