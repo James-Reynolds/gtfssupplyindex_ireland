@@ -70,47 +70,39 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 # Introduction
-The CONUNDRUM project relates to sustainable transport,
-community mobility 
-and co-creation,
-and is using Enniscorthy 
-in County Wexford, Ireland, 
-as a test bed. 
-However, 
-assessments and mapping of 
-social needs for transport, 
-and public transport supply 
-provided in Enniscorthy, 
-and how these compare to other places in Ireland, 
-do not appear to be publically available.  
 Currie et al[-@Currie2003Hobart; -@Currie2004Gap; -@Currie2007Identifying; @currie2010identifying] 
 developed a methodology for assessing 
-spatial gaps between social needs 
-and transit supply 
-An R package^[See
-https://github.com/James-Reynolds/gtfssupplyindex] 
-has recently been developed 
-that facilitates 
-the calculation of the 
-transit supply levels 
-from General Transit Feed Specification (GTFS) 
-datasets. 
+spatial gaps between social needs for transport 
+and transit supply, suggesting this would be "substantially more useful than the presentation of anecdotal evidence, which is the most common means of identifying transport needs in local transport studies through the world" (Currie 2010). 
+While Currie et al reported results for Adelaide, Melbourn and Hobart in Australia, this appoach does not appear to have been widely adopted 
+or used in many other places to assess the extent to which public transport 
+service provision is meeting communities' needs for transport. 
 
-This note presents results 
-obtained by applying 
-the gtfssupply index R package 
-to Ireland's GTFS dataset,  
-with an emphasis on Enniscorthy 
-in county Wexford.
+The CONUNDRUM project relates to sustainable transport,
+community mobility 
+and co-creation, and is using Enniscorthy 
+in County Wexford, Ireland,
+as a test bed. 
+It does not appear that the Currie et al[-@Currie2003Hobart; -@Currie2004Gap; -@Currie2007Identifying; @currie2010identifying] 
+methodology has been used in Ireland.  
+This note, therefore, applies the Currie et al methodology to Enniscorthy and County Wexford, using a recently developed package of software tools^[See
+https://github.com/James-Reynolds/gtfssupplyindex] that enable this analysis approach to be undertaken using General Transit Feed Specification (GTFS) data as an input. 
+The next section of this note outlines the background, and describes the Transit Supply Index (SI) and categorisations, and Social Needs Index and categorisations 
+developed by Currie et al.  The methodology used for this analysis is then described, followed by the presentation of results. These include mapping and other reporting of transit supply and scoial need for 
 
 
 # Background
 
+The Currie et al social needs-gap approach involves the calculation of three components for a particular area of interest: 
+
+- A Transit Supply Index (SI), based on the frequency and coverage of public transport services; 
+- A Social Needs Index, based on the combination of various indicators relating to the population living in each area of interest, and the disctance between the area of interest and the centre of major urban areas; 
+- Categorising of each area of interest's SI and Social Needs Index scores based on city/county/state/district averages^[Transit supply categories: Zero Supply, three equal categories with lower than the average SI score (Very Low, Low and Below Average) and three equal categories with higher than the average SI score (Above Average, High and Very High). Social Needs Index scores are similarly categorised into six groups (excluding the zero category).] so that areas with Very High social needs for transit, but Zero or Very Low levels of transit supply can be identified.  
+
+The SI score, Social Needs Index and other further details are described in the following. 
+
 ## Transit supply
-The social needs-gap 
-analysis methodology
-involves calculating 
-a Supply Index (SI) 
+Supply Index (SI) scores are
 based on the 
 number of transit service arrivals 
 at stops in and around 
@@ -139,38 +131,33 @@ where:
 As such, 
 the SI combines
 coverage (accessibility to transit) 
-and service frequency (accibility by transit). The 
-SI is a relative index, 
+and service frequency (accessibility by transit) into a single indicator. 
+It is a relative index, 
 allowing comparison between 
 different areas of interest, 
 based on transit supplied over a 
 specific time period. In the results reported in 
-@currie2010identifying 
+Currie (2010)
 transit supply was 
 assessed based on 
 an entire week, 
 and compared across 
 Census Collection Districts (CCDs)
 within Greater Melbourne. 
-CCDs were clasify into 
-seven groups 
-based on SI scores^[ 
-being those with: 
-zero supply; 
-very low, 
-low, 
-or below average supply; 
-and above average, 
-high 
-or very high supply.  
-CCDs with above and below average
-SIs were evenly split into each of the 
-three sub-groups, respectively.]. 
+Figure 1 shows the resulting map of transit supply across Greater Melbourne. In general, 
+areas of higher transit supply tended to be located in central areas and close to the suburban railway lines
 
-## Transport needs
-Transport needs were similarly 
-assessed using a index score, 
-based on various metrics
+```{r Currie_map_SI, fig.fullwidth = FALSE, fig.cap = "Melbourne 2006: distribution of transit supply", out.width="100%", echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+
+knitr::include_graphics("graphics/Currie2010SI.png") 
+
+```
+
+
+## Social needs for transport 
+In Currie (2010) the Social Needs Index was similarly 
+calculated for CCDs within Greater Melbourne, 
+and was based on various metrics
 available from the Australian Bureau of Statistics (ABS). 
 These included 
 the Index of Relative Socio-Economic Advantage/Disadvantage (IRSAD), 
@@ -186,34 +173,33 @@ low income households (0.10),
 adults not in the labour force (0.09), 
 students (0.09) and 
 persons 5-9 years (0.12).] 
-was also included, 
-with scores 
-categorised based on 
-three groups below 
-and three groups above 
-the average score across all of Melbourne.  
+was also included.  
 
-Clearly, 
-the approach used to assess
-social needs for transport 
-might need to be adjusted 
-to reflect different data availability 
-in different locations 
-or from different editions of a census.  
+Figure 2 shows the resultant map of social needs for transport across Greater Melbourne. In general social needs tended to ba higher in the middle northern, western and south-eastern suburbs, and in the outer north-east, south-east and south. 
+
+
+
+```{r Currie_map_needs, fig.fullwidth = FALSE, fig.cap = "Melbourne 2006: social needs for transport", out.width="100%",echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+
+
+knitr::include_graphics("graphics/Currie2010Needs.png") 
+
+```
+
+
 
 ## Needs-gaps
-
 The final step was to compare 
 social needs for transport 
 with 
 the amount of transit 
 supplied 
-in each area of interest. A key finding was that 
+in each area of interest. Figure 3 maps CCDs with Very High needs, but Zero or Very Low supply, which tended to be in the outer north-west, south-east and south, and in the middle northern and western suburbs. A key finding was that 
 "8.2% of Melbourne residents ha(d) ‘very high’ needs but
 ‘zero’, ‘low’ or ‘very low’ public transport supply", 
 reflective of 
 areas of greater need 
-often being in places 
+and least supply often being in places 
 on urban fringes 
 or otherwise often remote from 
 transit infrastructure and services.  
@@ -224,16 +210,37 @@ anecdotal evidence which is the most common means
 of identifying transport needs in local transport studies throughout the
 world``[@currie2010identifying].
 
-# Methodology
-# Supply Index
 
-This analysis used the all-Ireland GTFS 
-dataset, downloaded on April 23, 2025 
-and reporting scores for transit services 
-provided on that same date (the first Wednesday after Easter). The "Small Area" National Statistical Boundaries from 2022 
-were adopted as the areas of interest, 
-with the indexing of supply based on 
-the average score across the County of Wexford.  
+```{r Currie_map_needs_gap, fig.margin = TRUE, fig.cap = "Melbourne 2006: CCDs with Very High needs and Very Low or Zero supply. Source: Currie (2010)", out.width="100%", echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+
+
+knitr::include_graphics("graphics/Currie2010gap.png")
+```
+
+
+## R Package: gtfssupplyindex
+
+Results for reported by Currie et al were based on applying the SI and needs-gap analysis approaches to public transport timetable data, including a database provided by the Melbourne transit operator. This required bespoke data cleaning and analysis. However, in the intervening years public transport timetable and spatial data has become much more widely available because of the development of the General Transit Feed Specification (GTFS), which supports online route planning systems (such as Google Maps) and other analysis. GTFS provides a standardized format in which transit systems can release timetable, spatial and other data, which has been widely adopted around the world.  
+
+A set of software tools that allow GTFS datasets to be used as an input to SI and needs-gap calcluation has recently been developed, and is reported in @Reynolds2025gtfsmainpaper. The tools are writing in the R programming language^[See
+https://github.com/James-Reynolds/gtfssupplyindex]. Figure 4 shows an example of the output, being the transit supply across Greater Melbourne as it was in 2021. 
+
+Applying these software tools to the Ireland GTFS data provides the motivation for this work note, as discussed in the following section. 
+
+
+```{r Melbourne_2021_SI, fig.fullwidth = TRUE, fig.cap = "Melbourne 2006: CCDs with Very High needs and Very Low or Zero supply. Source: Currie (2010)", out.width="100%", echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+
+
+knitr::include_graphics("graphics/MelbourneSI2021.png")
+```
+
+
+
+# Methodology
+This analysis uses the all-Ireland GTFS 
+dataset, as downloaded on April 23, 2025. It reports scores for transit services 
+provided on that same date^[Being the first Wednesday after Easter] with the "Small Area" National Statistical Boundaries from 2022 adopted as the areas of interest. 
+Results for County Wexford are reported, with the allocation of scores to categories based on the average SI score across all of the Small Areas within the county. 
 
 
 ```{r load_ireland_gtfs, eval = FALSE, echo = FALSE}
@@ -296,11 +303,7 @@ write.csv(si_wexford_250423_day_aggregated, "results/si_wexford_250423_day_aggre
 ```
 
 
-## Needs
-
-The Irish Census (2022) reports various indicators for "Small Area", but these do not match those used in the Currie (2007) or other previous needs-gap analyses.  However, there are some that are similar^[Item T15_1_NC is the number of households without a motor car. Items T1_1_AGE60-64T, T1_1_AGE65-69T, ... T1_1_AGE80-84T and T1_1_AGE85T report persons aged 60 years and older; T8_1_UTWSDT reports the total number of people unable to work due to permanent sickness or disability; T8_1_TT reports the total population aged 15 years and over, while T8_1_WT reports the total at work, thereby allowing calculation of the number of adults (15+) not in the labour force; T8_1_ST reports the number of people aged 15 years and over who are students; and T1_1AGE5T, T1_1AGE6T ... T1_1AGE9T report the number of people aged 5 through 9. There does not appear to be any data available about low income households at the "Small Area" geographic area.], but there does not appear to be a IRSAD or similar socio-economic indicator available. 
-
-As such, this analysis adapts the Currie (2007) approach and uses the same weighting for the following indicators: households without cars (0.19); distance to Wexford (0.15); persons aged 60 years and over (0.14), persons unable to work due to permant sickness or disability (0.12), those aged 15 years or older who are not at work; students (0.09) and people aged 5-9 years (0.12).  Each of these indicators were normalised across all of the Small Areas in County Wexford, weighted as indicated to develop an combined value that was then weighted by the total population in each Small Area to produce the combined indicator of social need for transport used in this analysis. 
+Assessment of social needs for transport for Small Areas within County Wexford is based on various indicators reported in the 2022 Irish Census. Unfortunately the avaialable indicators do not match those used in the Currie et al analyses, which were drawn from Australian censuses. However, there are some indicators that are similar^[Item T15_1_NC is the number of households without a motor car. Items T1_1_AGE60-64T, T1_1_AGE65-69T, ... T1_1_AGE80-84T and T1_1_AGE85T report persons aged 60 years and older; T8_1_UTWSDT reports the total number of people unable to work due to permanent sickness or disability; T8_1_TT reports the total population aged 15 years and over, while T8_1_WT reports the total at work, thereby allowing calculation of the number of adults (15+) not in the labour force; T8_1_ST reports the number of people aged 15 years and over who are students; and T1_1AGE5T, T1_1AGE6T ... T1_1AGE9T report the number of people aged 5 through 9. There does not appear to be any data available about low income households at the "Small Area" geographic area. As well, there does not appear to be a IRSAD or similar socio-economic indicator available.]. As such, this analysis adapts the Currie (2007) approach and uses the same weighting for the following indicators: households without cars (0.19); distance to Wexford (0.15); persons aged 60 years and over (0.14), persons unable to work due to permant sickness or disability (0.12), those aged 15 years or older who are not at work; students (0.09) and people aged 5-9 years (0.12).  Each of these indicators were normalised across all of the Small Areas in County Wexford, weighted as indicated to develop an combined value that was then weighted by the total population in each Small Area to the produce the indicator of social need for transport used in this analysis. 
 
 
 ```{r read_census_data_2021, fig.show="hold", eval= TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=TRUE, fig.fullwidth = TRUE, fig.cap="SI scores by SA3, census day 2016 and 2021"}
@@ -592,9 +595,9 @@ pcol_si_wexford_county <- si_wexford_250423_day_aggregated$si_by_area %>%
   na.omit() %>%
   ggplot() + 
   geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
-  scale_y_continuous(limits = c(0,.6)) +
+  scale_y_continuous(limits = c(0,.75)) +
   geom_hline(yintercept = 0)  + 
-  geom_text(aes(transit_supply,  0.5, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1) +
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1) +
    coord_flip() + 
 scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
   scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
@@ -1341,9 +1344,9 @@ pcol_needs_gap_wexford_county <- si_wexford_250423_day_aggregated$si_by_area %>%
   na.omit() %>%
   ggplot() + 
   geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
-  scale_y_continuous(limits = c(0,.4)) +
+  scale_y_continuous(limits = c(0,.5)) +
   geom_hline(yintercept = 0)  + 
-  geom_text(aes(gap_colour,  0.3, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1) +
+  geom_text(aes(gap_colour,  0.4, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 1) +
    coord_flip() + 
  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
   scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
@@ -1468,9 +1471,9 @@ pcol_si_enniscorthy <- si_wexford_250423_day_aggregated$si_by_area %>%
   na.omit() %>%
   ggplot() + 
   geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
-  scale_y_continuous(limits = c(0,.6)) +
+  scale_y_continuous(limits = c(0,.75)) +
   geom_hline(yintercept = 0)  + 
-  geom_text(aes(transit_supply,  0.5, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
    coord_flip() + 
 scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
   scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
@@ -1962,9 +1965,9 @@ pcol_needs_gap_enniscorthy <- si_wexford_250423_day_aggregated$si_by_area %>%
   na.omit() %>%
   ggplot() + 
   geom_col(aes(gap_colour, perc, fill = gap_colour), colour="black") +
-  scale_y_continuous(limits = c(0,.4)) +
+  scale_y_continuous(limits = c(0,.5)) +
   geom_hline(yintercept = 0)  + 
-  geom_text(aes(gap_colour,  0.3, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+  geom_text(aes(gap_colour,  0.4, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
    coord_flip() + 
  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
   scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
@@ -2026,145 +2029,14 @@ needs_gap_plot
 
 
 ## Comparing Enniscorthy to other urban areas
+
 Figures 3 and 4, above, have provided some comparisons between transit suppply in different urban areas. This section, however, compares transit service and needs-gaps in Enniscorthy with those in Wexford (population `r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Wexford") %>% select(population) %>% as.numeric())`), Gorey (`r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% as.numeric())`) and New Ross (`r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "New Ross") %>% select(population) %>% as.numeric())`). Together with Enniscorthy these urban areas are home to `r label_number(big.mark=",")(si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% select(population) %>% sum())` people, which is `r label_percent()((si_pop_by_urban_area %>% filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% select(population) %>% sum()) / si_pop_by_urban_area %>% select(population) %>% sum())` of the total county population.` 
 
-Figure 18 shows the share of population in each transit supply category in Weford, Gorey and New Ross, while Figure 19 shows maps of the transit supply for Small Areas in each town. Table 5 shows summary statistics. 
-
-
-```{r SI_other_places_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol =3, out.width="33%", fig.cap="Wexford (l), Gorey (c) and New Ross (r): Transit Supply by population"}
+TRANSIT SUPPLY: Figure 18 shows maps of the transit supply for Small Areas in Weford, Gorey and New Ross, while Figure 19 shows the share of population in each transit supply category. Table 5 shows summary statistics. 
 
 
 
-pcol_si_wexford <- si_wexford_250423_day_aggregated$si_by_area %>%
-  filter(SA_URBAN_AREA_NAME == "Wexford") %>%
-  st_drop_geometry() %>%
-  aggregate(population ~ transit_supply, sum) %>%
-  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
-  replace_na(list(population = 0)) %>%
-  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
-  arrange(transit_supply) %>%
-  mutate(perc=population/sum(population)) %>% 
-  na.omit() %>%
-  ggplot() + 
-  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
-  scale_y_continuous(limits = c(0,.75)) +
-  geom_hline(yintercept = 0)  + 
-  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
-   coord_flip() + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
-  guides(fill = "none", color = "none") +
-  labs(
-    title = "Transit supply category by population",
-    x = NULL,
-    y = NULL
-  ) +
-  theme_void() +
-  theme(
-    panel.grid = element_blank(),
-    plot.title = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_blank()
-  ) 
-
-pcol_si_gorey <- si_wexford_250423_day_aggregated$si_by_area %>%
-  filter(SA_URBAN_AREA_NAME == "Gorey") %>%
-  st_drop_geometry() %>%
-  aggregate(population ~ transit_supply, sum) %>%
-  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
-  replace_na(list(population = 0)) %>%
-  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
-  arrange(transit_supply) %>%
-  mutate(perc=population/sum(population)) %>% 
-  na.omit() %>%
-  ggplot() + 
-  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
-  scale_y_continuous(limits = c(0,.75)) +
-  geom_hline(yintercept = 0)  + 
-  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
-   coord_flip() + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
-  guides(fill = "none", color = "none") +
-  labs(
-    title = "Transit supply category by population",
-    x = NULL,
-    y = NULL
-  ) +
-  theme_void() +
-  theme(
-    panel.grid = element_blank(),
-    plot.title = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_blank()
-  ) 
-
-pcol_si_new_ross <- si_wexford_250423_day_aggregated$si_by_area %>%
-  filter(SA_URBAN_AREA_NAME == "New Ross") %>%
-  st_drop_geometry() %>%
-  aggregate(population ~ transit_supply, sum) %>%
-  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
-  replace_na(list(population = 0)) %>%
-  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
-  arrange(transit_supply) %>%
-  mutate(perc=population/sum(population)) %>% 
-  na.omit() %>%
-  ggplot() + 
-  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
-  scale_y_continuous(limits = c(0,.75)) +
-  geom_hline(yintercept = 0)  + 
-  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
-   coord_flip() + 
-scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
-  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
-  guides(fill = "none", color = "none") +
-  labs(
-    title = "Transit supply category by population",
-    x = NULL,
-    y = NULL
-  ) +
-  theme_void() +
-  theme(
-    panel.grid = element_blank(),
-    plot.title = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_blank()
-  ) 
-pcol_si_wexford
-pcol_si_gorey
-pcol_si_new_ross
-```
-
-```{marginfigure}
-Table 5: Enniscorthy, Gorey, New Ross and Wexford: Summary statistics.
-```
-
-
-
-```{r comparison_si_table_summary, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="Enniscorthy, Gorey, New Ross and Wexford: population living in Small Areas, by transit supply category"}
-
-theme_gtsummary_compact()
-si_wexford_250423_day_aggregated$si_by_area %>% 
-  st_drop_geometry() %>% 
-  filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% 
-  select(SI, transit_supply, population, SA_URBAN_AREA_NAME) %>%
-   tbl_summary(
-    by = SA_URBAN_AREA_NAME,
-    digits = SI ~ 1,
-    type = all_continuous() ~ "continuous2",
-     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{p100}", "{sum}")
-   )) %>%
-    add_overall() %>% 
-  add_p() %>%
-  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4") ~ "**Urban Area**") %>%
-  as_kable_extra()
-
-
-```
-
-
-
-```{r SI_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top-left), Gorey (bottom-left) and New Ross (right): Transit Supply by Small Area"}
+```{r SI_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top), Gorey (centre) and New Ross (bottom): Transit Supply by Small Area"}
 
 
 #Set boundings box
@@ -2304,6 +2176,193 @@ lorenz_new_ross <- Lc(x=lorenz_new_ross$SI, n=lorenz_new_ross$population)
 
 ```
 
+```{r SI_other_places_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol =3, out.width="33%", fig.cap="Wexford (l), Gorey (c) and New Ross (r): Transit Supply by population"}
+
+
+
+pcol_si_wexford <- si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "Wexford") %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
+  scale_y_continuous(limits = c(0,.75)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Transit supply category by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+pcol_si_gorey <- si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "Gorey") %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
+  scale_y_continuous(limits = c(0,.75)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Transit supply category by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+pcol_si_new_ross <- si_wexford_250423_day_aggregated$si_by_area %>%
+  filter(SA_URBAN_AREA_NAME == "New Ross") %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_wexford_250423_day_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, perc, fill = transit_supply), colour="black") +
+  scale_y_continuous(limits = c(0,.75)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  0.6, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Transit supply category by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+pcol_si_wexford
+pcol_si_gorey
+pcol_si_new_ross
+
+```
+
+```{marginfigure}
+Table 5: Enniscorthy, Gorey, New Ross and Wexford: Summary statistics.
+```
+
+
+
+```{r comparison_si_table_summary, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="Enniscorthy, Gorey, New Ross and Wexford: population living in Small Areas, by transit supply category"}
+
+theme_gtsummary_compact()
+si_wexford_250423_day_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Wexford" | SA_URBAN_AREA_NAME == "Enniscorthy" | SA_URBAN_AREA_NAME == "Gorey" | SA_URBAN_AREA_NAME == "New Ross") %>% 
+  select(SI, transit_supply, population, SA_URBAN_AREA_NAME) %>%
+   tbl_summary(
+    by = SA_URBAN_AREA_NAME,
+    digits = SI ~ 1,
+    type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{p100}", "{sum}")
+   )) %>%
+  add_p() %>%
+  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4") ~ "**Urban Area**") %>%
+  as_kable_extra()
+
+
+```
+
+
+
+
+
+```{r needs_gaps_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top-left), Gorey (bottom-left) and New Ross (right): Needs-gap by Small Area"}
+
+
+needs_gap_plot_wexford <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Wexford"),
+          aes(fill =  gap_colour), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+    ggspatial::annotation_scale(location = 'br') 
+
+
+needs_gap_plot_gorey <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Gorey"),
+          aes(fill =  gap_colour), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+    ggspatial::annotation_scale(location = 'br') 
+
+
+needs_gap_plot_new_ross <- ggplot()+ 
+  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "New Ross"),
+          aes(fill =  gap_colour), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
+    ggspatial::annotation_scale(location = 'br') 
+
+
+needs_gap_plot_wexford / needs_gap_plot_gorey
+needs_gap_plot_new_ross
+
+```
 
 
 Despite have similar populations, the aggregate SI score for Gorey is only `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(SI) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(SI) %>% sum())` of that for Enniscorthy. New Ross, in contrast, has an aggregate SI score that is `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "New Ross") %>% select(SI) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(SI) %>% sum())` of that Enniscorthy, despite having only a population that is `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Enniscorthy") %>% select(population) %>% sum())` of the size of Enniscorthy. 
@@ -2334,7 +2393,7 @@ si_wexford_250423_day_aggregated$si_by_area %>%
 scale_colour_manual(values = c("Enniscorthy" = "black", "Gorey" = "#F29C33", "New Ross" = "darkgreen", "Wexford" = "lightgreen")) 
 ```
 
-The geographic distribution of transit supply appears to be similar that that in Ennicorthy for the other three urban areas shown in Figure 19, with outer areas generally having less transit. However, Gorey for having 12 Small Areas withno transit supply at all, despite these areas being home to `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum())` of its population. In general, transit supply appears to be unevenly distributed to the population, especially in Gorey, as shown in the Lorenz Curves in Figure 20^[Gini co-efficients are New Ross `r label_number(accuracy = 0.001)(lorenz_new_ross$Gini)`, Wexford `r label_number(accuracy = 0.001)(lorenz_wexford_town$Gini)`, Enniscorthy `r label_number(accuracy = 0.001)(lorenz_values$Gini)` and Gorey `r label_number(accuracy = 0.001)(lorenz_gorey$Gini)`.]. 
+The geographic distribution of transit supply appears to be similar that that in Ennicorthy for the other three urban areas shown in Figure 19, with outer areas generally having less transit. However, Gorey for having 12 Small Areas withno transit supply at all, despite these areas being home to `r label_percent()((si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% sum()) / si_wexford_250423_day_aggregated$si_by_area %>% st_drop_geometry %>% filter(SA_URBAN_AREA_NAME == "Gorey") %>% select(population) %>% sum())` of its population. In general, transit supply appears to be unevenly distributed to the population, especially in Gorey, as shown in the Lorenz Curves in Figure 20. The Gini co-efficient is lowest in New Ross (`r label_number(accuracy = 0.001)(lorenz_new_ross$Gini)`), followed by  Wexford (`r label_number(accuracy = 0.001)(lorenz_wexford_town$Gini)`) and Enniscorthy (`r label_number(accuracy = 0.001)(lorenz_values$Gini)`) and highest in Gorey (`r label_number(accuracy = 0.001)(lorenz_gorey$Gini)`). 
 
 
 Figure 21 shows the distibution of population to each of the needs-gaps groups, while Figure 22 shows maps for Wexford, Gorey and New Ross.  
@@ -2480,7 +2539,7 @@ ggplot(si_wexford_250423_day_aggregated$si_by_area %>%
   
 ```
 
-```{r needs_gaps_graph_percent, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, ncol = 1, fig.height = 2.5, fig.cap="Needs-gap by share of population (bottom)"}
+```{r needs_gaps_graph_percent, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, ncol = 1, fig.height = 2.5, fig.cap="Needs-gap by share of population (bottom)"}
 
 ggplot(si_wexford_250423_day_aggregated$si_by_area %>% 
          st_drop_geometry() %>%
@@ -2497,60 +2556,6 @@ si_wexford_250423_day_aggregated$si_by_area$gap_colour <- si_wexford_250423_day_
 
 ```
 
-
-
-```{r needs_gaps_map_other_towns, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = FALSE, ncol = 2, out.width="50%", fig.height = 2.5, fig.cap="Wexford (top-left), Gorey (bottom-left) and New Ross (right): Needs-gap by Small Area"}
-
-
-needs_gap_plot_wexford <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Wexford"),
-          aes(fill =  gap_colour), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none"
-  ) +
-    #    legend.text = element_text(size = 4), 
-    #    legend.title = element_text(size = 5)) + 
-  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
-    ggspatial::annotation_scale(location = 'br') 
-
-
-needs_gap_plot_gorey <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "Gorey"),
-          aes(fill =  gap_colour), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none"
-  ) +
-    #    legend.text = element_text(size = 4), 
-    #    legend.title = element_text(size = 5)) + 
-  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
-    ggspatial::annotation_scale(location = 'br') 
-
-
-needs_gap_plot_new_ross <- ggplot()+ 
-  geom_sf(data=si_wexford_250423_day_aggregated$si_by_area %>% filter(SA_URBAN_AREA_NAME == "New Ross"),
-          aes(fill =  gap_colour), colour=NA) +
-  theme(axis.text.x=element_blank(), #remove x axis labels
-        axis.ticks.x=element_blank(), #remove x axis ticks
-        axis.text.y=element_blank(),  #remove y axis labels
-        axis.ticks.y=element_blank(), #remove y axis ticks
-        legend.position="none"
-  ) +
-    #    legend.text = element_text(size = 4), 
-    #    legend.title = element_text(size = 5)) + 
-  scale_fill_manual(values = c(a = "#a50026", b = "#d73027", c ="#f46d43", d="#fdae61", e="#fee090", f="#ffffbf", g="#e0f3f8", h="#abd9e9", i= "#74add1", j="#4575b4", k="#313695", l="#9400d3")) +
-    ggspatial::annotation_scale(location = 'br') 
-
-
-needs_gap_plot_wexford / needs_gap_plot_gorey
-needs_gap_plot_new_ross
-
-```
 
 
 \newpage
@@ -2588,7 +2593,7 @@ wexford_small_area_supply_by_urban_area_table %>%
         caption = "County Wexford: urban populations in each Transit Supply grouping",
         col.names = c("Urban area", 
                     "Zero Supply", "Very Low", "Low",
-                    "Below average", "Above average", 
+                    "Below av.", "Above av.", 
                     "High", "Very High",
                   "Total")) %>% 
   add_header_above(c(" " = 1, "Transit Supply category" = 7, " " = 1)) %>%
