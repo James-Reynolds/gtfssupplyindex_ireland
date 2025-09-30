@@ -74,30 +74,29 @@ Currie et al[-@Currie2003Hobart; -@Currie2004Gap; -@Currie2007Identifying; @curr
 developed a methodology for assessing 
 spatial gaps between social needs for transport 
 and transit supply, suggesting this would be "substantially more useful than the presentation of anecdotal evidence, which is the most common means of identifying transport needs in local transport studies through the world" (Currie 2010). 
-While Currie et al reported results for Adelaide, Melbourn and Hobart in Australia, this appoach does not appear to have been widely adopted 
-or used in many other places to assess the extent to which public transport 
-service provision is meeting communities' needs for transport. 
+While Currie et al reported results for Adelaide, Melbourne and Hobart in Australia, this approach does not appear to have been widely adopted 
+or used elsewhere. 
 
 The CONUNDRUM project relates to sustainable transport,
-community mobility 
-and co-creation, and is using Enniscorthy 
+and community mobility, and is using Enniscorthy 
 in County Wexford, Ireland,
 as a test bed. 
-It does not appear that the Currie et al[-@Currie2003Hobart; -@Currie2004Gap; -@Currie2007Identifying; @currie2010identifying] 
-methodology has been used in Ireland.  
-This note, therefore, applies the Currie et al methodology to Enniscorthy and County Wexford, using a recently developed package of software tools^[See
+
+This note reports results from applying the Currie et al methodology to Enniscorthy and County Wexford, using a recently developed package of software tools^[See
 https://github.com/James-Reynolds/gtfssupplyindex] that enable this analysis approach to be undertaken using General Transit Feed Specification (GTFS) data as an input. 
-The next section of this note outlines the background, and describes the Transit Supply Index (SI) and categorisations, and Social Needs Index and categorisations 
-developed by Currie et al.  The methodology used for this analysis is then described, followed by the presentation of results. These include mapping and other reporting of transit supply and scoial need for 
+
+
+The next section of this note outlines the background, and describes the Transit Supply Index (SI), Social Needs Index and categorisations 
+developed by Currie et al.  The methodology used for this analysis is then described, followed by the presentation of results. A brief discussion and summary of findings then conclude the note. 
 
 
 # Background
 
-The Currie et al social needs-gap approach involves the calculation of three components for a particular area of interest: 
+The social needs-gaps assessment methodology developed in Currie et al involves: 
 
-- A Transit Supply Index (SI), based on the frequency and coverage of public transport services; 
-- A Social Needs Index, based on the combination of various indicators relating to the population living in each area of interest, and the disctance between the area of interest and the centre of major urban areas; 
-- Categorising of each area of interest's SI and Social Needs Index scores based on city/county/state/district averages^[Transit supply categories: Zero Supply, three equal categories with lower than the average SI score (Very Low, Low and Below Average) and three equal categories with higher than the average SI score (Above Average, High and Very High). Social Needs Index scores are similarly categorised into six groups (excluding the zero category).] so that areas with Very High social needs for transit, but Zero or Very Low levels of transit supply can be identified.  
+- calculating transit Supply Index (SI) scores for the areas of interest^[Based on the frequency and coverage of public transport services]; 
+- calculating Social Needs Index scores for the areas of interest^[Based on the combination of various indicators relating to the people living in each area of interest, and the distance between each area of interest urban centres]; and
+- categorising each area of interest based on the SI and Social Needs Index scores, based on the averages across all of the examined areas^[Transit supply categories: Zero Supply, three equal categories with lower than the average SI score (Very Low, Low and Below Average) and three equal categories with higher than the average SI score (Above Average, High and Very High). Social Needs Index scores are similarly categorised, but into six groups (as there is no 'zero' category).] so that areas with higher social needs for transport, but limited or no transit supply can be identified.  
 
 The SI score, Social Needs Index and other further details are described in the following. 
 
@@ -129,23 +128,18 @@ where:
 -   $SL_{n,time}$ is the number of transit arrivals for each stop within the given time period.
 
 As such, 
-the SI combines
-coverage (accessibility to transit) 
-and service frequency (accessibility by transit) into a single indicator. 
-It is a relative index, 
-allowing comparison between 
-different areas of interest, 
-based on transit supplied over a 
-specific time period. In the results reported in 
-Currie (2010)
+the SI provides a combined measure of 
+accessibility to and by transit (i.e. coverage and frequency) within a single indicator. 
+In the results reported in 
+@currie2010identifying
 transit supply was 
 assessed based on 
-an entire week, 
+the services provided across an entire week, 
 and compared across 
 Census Collection Districts (CCDs)
 within Greater Melbourne. 
-Figure 1 shows the resulting map of transit supply across Greater Melbourne. In general, 
-areas of higher transit supply tended to be located in central areas and close to the suburban railway lines
+Figure 1 shows the resulting map of transit supply across Greater Melbourne. As might be expected, 
+areas of higher transit supply tended to be located in central areas and close to the suburban railway lines.
 
 ```{r Currie_map_SI, fig.fullwidth = FALSE, fig.cap = "Melbourne 2006: distribution of transit supply", out.width="100%", echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 
@@ -155,25 +149,25 @@ knitr::include_graphics("graphics/Currie2010SI.png")
 
 
 ## Social needs for transport 
-In Currie (2010) the Social Needs Index was similarly 
+In @currie2010identifying the Social Needs Index was similarly 
 calculated for CCDs within Greater Melbourne, 
 and was based on various metrics
-available from the Australian Bureau of Statistics (ABS). 
+available from the Australian Bureau of Statistics (ABS)^[
 These included 
 the Index of Relative Socio-Economic Advantage/Disadvantage (IRSAD), 
 which is reported directly 
 by the ABS 
 based on 31 weighted indicators 
 and data collected during the census. A transport-specific need index, 
-based on eight weighted indicators^[Adults without cars (0.19), 
+was also included, based on eight weighted indicators: adults without cars (0.19), 
 distance to the Melbourne Central Business District (0.15), 
 persons aged over 60 years (0.14), 
 persons on a disability pension (0.12), 
 low income households (0.10), 
 adults not in the labour force (0.09), 
 students (0.09) and 
-persons 5-9 years (0.12).] 
-was also included.  
+persons 5-9 years (0.12).
+The IRSAD and transport-specific needs index were then weighted by population and combined to form the Social Needs Index.]
 
 Figure 2 shows the resultant map of social needs for transport across Greater Melbourne. In general social needs tended to ba higher in the middle northern, western and south-eastern suburbs, and in the outer north-east, south-east and south. 
 
