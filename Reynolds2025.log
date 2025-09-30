@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  13 JUN 2025 16:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.15)  30 SEP 2025 12:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -901,7 +901,7 @@ LaTeX Warning: Marginpar on page 4 moved.
 <graphics/Currie2010gap.png, id=60, 840.13875pt x 564.60938pt>
 File: graphics/Currie2010gap.png Graphic file (type png)
 <use graphics/Currie2010gap.png>
-Package pdftex.def Info: graphics/Currie2010gap.png  used on input line 252.
+Package pdftex.def Info: graphics/Currie2010gap.png  used on input line 253.
 (pdftex.def)             Requested size: 144.00108pt x 96.77492pt.
 
 LaTeX Warning: Marginpar on page 4 moved.
@@ -918,10 +918,10 @@ LaTeX Warning: Marginpar on page 4 moved.
 <graphics/MelbourneSI2021.png, id=62, 445.665pt x 480.29437pt>
 File: graphics/MelbourneSI2021.png Graphic file (type png)
 <use graphics/MelbourneSI2021.png>
-Package pdftex.def Info: graphics/MelbourneSI2021.png  used on input line 283.
+Package pdftex.def Info: graphics/MelbourneSI2021.png  used on input line 284.
 (pdftex.def)             Requested size: 480.00537pt x 517.30307pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 283--284
+Underfull \hbox (badness 10000) in paragraph at lines 284--285
 
  []
 
@@ -933,7 +933,7 @@ LaTeX Warning: Marginpar on page 4 moved.
 LaTeX Warning: Marginpar on page 6 moved.
 
 
-Overfull \hbox (173.06393pt too wide) in paragraph at lines 340--376
+Overfull \hbox (173.06393pt too wide) in paragraph at lines 341--377
  [][] 
  []
 
@@ -943,10 +943,10 @@ File: Reynolds2025_files/figure-latex/wexford_si_map-1.pdf Graphic file (type p
 df)
 <use Reynolds2025_files/figure-latex/wexford_si_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_si_map-1.pdf  
-used on input line 379.
+used on input line 380.
 (pdftex.def)             Requested size: 466.97937pt x 616.09888pt.
 
-LaTeX Warning: Float too large for page by 6.09888pt on input line 380.
+LaTeX Warning: Float too large for page by 6.09888pt on input line 381.
 
 [6] [7 <./Reynolds2025_files/figure-latex/wexford_si_map-1.pdf>]
 <Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf, id=97, 195.73125pt x 1
@@ -955,7 +955,7 @@ File: Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf Graphic file (type
  pdf)
 <use Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_gglorenz-1.pdf
-  used on input line 388.
+  used on input line 389.
 (pdftex.def)             Requested size: 144.00856pt x 127.02293pt.
 
 LaTeX Warning: Marginpar on page 8 moved.
@@ -966,10 +966,10 @@ File: Reynolds2025_files/figure-latex/wexford_si_pop_histogram-1.pdf Graphic fi
 le (type pdf)
 <use Reynolds2025_files/figure-latex/wexford_si_pop_histogram-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_si_pop_histogr
-am-1.pdf  used on input line 408.
+am-1.pdf  used on input line 409.
 (pdftex.def)             Requested size: 312.02032pt x 192.09792pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 408--409
+Underfull \hbox (badness 10000) in paragraph at lines 409--410
 
  []
 
@@ -979,10 +979,10 @@ File: Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf Graphic file
 (type pdf)
 <use Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_towns_boxplot-
-1.pdf  used on input line 412.
+1.pdf  used on input line 413.
 (pdftex.def)             Requested size: 480.01611pt x 283.17497pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 412--413
+Underfull \hbox (badness 10000) in paragraph at lines 413--414
 
  []
 
@@ -1003,7 +1003,7 @@ File: Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf Graphic file (typ
 e pdf)
 <use Reynolds2025_files/figure-latex/wexford_needs_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_needs_map-1.pd
-f  used on input line 436.
+f  used on input line 437.
 (pdftex.def)             Requested size: 144.00757pt x 189.36427pt.
 
 LaTeX Warning: Marginpar on page 9 moved.
@@ -1014,7 +1014,7 @@ File: Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf Graphic file
 (type pdf)
 <use Reynolds2025_files/figure-latex/wexford_needs_pop_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/wexford_needs_pop_map-
-1.pdf  used on input line 440.
+1.pdf  used on input line 441.
 (pdftex.def)             Requested size: 144.00441pt x 93.24025pt.
 
 LaTeX Warning: Marginpar on page 9 moved.
@@ -1022,7 +1022,7 @@ LaTeX Warning: Marginpar on page 9 moved.
 [9 <./Reynolds2025_files/figure-latex/wexford_towns_boxplot-1.pdf> <./Reynolds2
 025_files/figure-latex/wexford_needs_map-1.pdf> <./Reynolds2025_files/figure-la
 tex/wexford_needs_pop_map-1.pdf>]
-Overfull \hbox (173.41592pt too wide) in paragraph at lines 465--505
+Overfull \hbox (173.41592pt too wide) in paragraph at lines 466--506
  [][] 
  []
 
@@ -1032,10 +1032,10 @@ File: Reynolds2025_files/figure-latex/Wexford_needs_gap_boxplot-1.pdf Graphic f
 ile (type pdf)
 <use Reynolds2025_files/figure-latex/Wexford_needs_gap_boxplot-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_boxp
-lot-1.pdf  used on input line 508.
+lot-1.pdf  used on input line 509.
 (pdftex.def)             Requested size: 312.01025pt x 182.94125pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 508--509
+Underfull \hbox (badness 10000) in paragraph at lines 509--510
 
  []
 
@@ -1047,13 +1047,13 @@ LaTeX Warning: Marginpar on page 10 moved.
 LaTeX Warning: Marginpar on page 11 moved.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 529--529
+Underfull \hbox (badness 10000) in paragraph at lines 530--530
 []\T1/pplj/m/n/8 Table 1: []County Wex-ford, pop-u-la-tion in each Tran-sit Sup
 -ply and Com-bined
  []
 
 
-Overfull \hbox (104.09341pt too wide) in alignment at lines 528--545
+Overfull \hbox (104.09341pt too wide) in alignment at lines 529--546
  [] [] [] [] [] [] [] [] 
  []
 
@@ -1063,17 +1063,17 @@ File: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf Graphi
 c file (type pdf)
 <use Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/Wexford_needs_gap_map_
-graphs-1.pdf  used on input line 549.
+graphs-1.pdf  used on input line 550.
 (pdftex.def)             Requested size: 466.97937pt x 616.09888pt.
 
-LaTeX Warning: Float too large for page by 6.09888pt on input line 550.
+LaTeX Warning: Float too large for page by 6.09888pt on input line 551.
 
 
 LaTeX Warning: Marginpar on page 11 moved.
 
 [11] [12 <./Reynolds2025_files/figure-latex/Wexford_needs_gap_map_graphs-1.pdf>
 ]
-Overfull \hbox (27.87318pt too wide) in paragraph at lines 590--626
+Overfull \hbox (27.87318pt too wide) in paragraph at lines 591--627
  [][] 
  []
 
@@ -1083,7 +1083,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_si_map-1.pdf Graphic file (ty
 pe pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_si_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_si_map-1.p
-df  used on input line 629.
+df  used on input line 630.
 (pdftex.def)             Requested size: 144.00458pt x 168.17317pt.
 <Reynolds2025_files/figure-latex/enniscorthy_si_population-1.pdf, id=188, 270.0
 0874pt x 180.675pt>
@@ -1091,7 +1091,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_si_population-1.pdf Graphic f
 ile (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_si_population-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_si_populat
-ion-1.pdf  used on input line 633.
+ion-1.pdf  used on input line 634.
 (pdftex.def)             Requested size: 144.0021pt x 96.35828pt.
 
 LaTeX Warning: Marginpar on page 13 moved.
@@ -1102,7 +1102,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_gglorenz-1.pdf Graphic file (
 type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_gglorenz-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_gglorenz-1
-.pdf  used on input line 644.
+.pdf  used on input line 645.
 (pdftex.def)             Requested size: 144.00856pt x 127.02293pt.
 
 LaTeX Warning: Marginpar on page 13 moved.
@@ -1113,10 +1113,10 @@ File: Reynolds2025_files/figure-latex/enniscorthy_si_pop_histogram-1.pdf Graphi
 c file (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_si_pop_histogram-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_si_pop_his
-togram-1.pdf  used on input line 657.
+togram-1.pdf  used on input line 658.
 (pdftex.def)             Requested size: 312.02032pt x 190.98752pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 657--658
+Underfull \hbox (badness 10000) in paragraph at lines 658--659
 
  []
 
@@ -1132,7 +1132,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_needs_map-1.pdf Graphic file
 (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_needs_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_map-
-1.pdf  used on input line 677.
+1.pdf  used on input line 678.
 (pdftex.def)             Requested size: 144.00458pt x 168.17317pt.
 
 LaTeX Warning: Marginpar on page 14 moved.
@@ -1143,7 +1143,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_needs_pop_map-1.pdf Graphic f
 ile (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_needs_pop_map-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_pop_
-map-1.pdf  used on input line 681.
+map-1.pdf  used on input line 682.
 (pdftex.def)             Requested size: 144.00458pt x 94.25754pt.
 
 LaTeX Warning: Marginpar on page 14 moved.
@@ -1151,22 +1151,22 @@ LaTeX Warning: Marginpar on page 14 moved.
 [14 <./Reynolds2025_files/figure-latex/enniscorthy_si_pop_histogram-1.pdf> <./R
 eynolds2025_files/figure-latex/enniscorthy_needs_map-1.pdf> <./Reynolds2025_fil
 es/figure-latex/enniscorthy_needs_pop_map-1.pdf>]
-Overfull \hbox (159.41592pt too wide) in paragraph at lines 705--741
+Overfull \hbox (159.41592pt too wide) in paragraph at lines 706--742
  [][] 
  []
 
 LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
-(Font)              scaled to size 8.50006pt on input line 743.
+(Font)              scaled to size 8.50006pt on input line 744.
 <Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_boxplot-1.pdf, id=251, 2
 78.03876pt x 163.61125pt>
 File: Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_boxplot-1.pdf Graph
 ic file (type pdf)
 <use Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_boxplot-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/Enniscorthy_needs_gap_
-boxplot-1.pdf  used on input line 748.
+boxplot-1.pdf  used on input line 749.
 (pdftex.def)             Requested size: 312.00371pt x 183.59784pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 748--749
+Underfull \hbox (badness 10000) in paragraph at lines 749--750
 
  []
 
@@ -1178,13 +1178,13 @@ LaTeX Warning: Marginpar on page 15 moved.
 LaTeX Warning: Marginpar on page 16 moved.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 768--768
+Underfull \hbox (badness 10000) in paragraph at lines 769--769
 []\T1/pplj/m/n/8 Table 2: []En-nis-cor-thy, pop-u-la-tion in each Tran-sit Sup-
 ply and Com-bined Needs
  []
 
 
-Overfull \hbox (47.1879pt too wide) in alignment at lines 767--784
+Overfull \hbox (47.1879pt too wide) in alignment at lines 768--785
  [] [] [] [] [] [] [] [] 
  []
 
@@ -1195,7 +1195,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_poplation-1.pdf
 <use Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_poplation-1.pdf>
 
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_
-map_poplation-1.pdf  used on input line 797.
+map_poplation-1.pdf  used on input line 798.
 (pdftex.def)             Requested size: 144.00443pt x 108.00331pt.
 <Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.pdf, id=266
 , 143.53625pt x 167.62625pt>
@@ -1203,7 +1203,7 @@ File: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.pdf Gr
 aphic file (type pdf)
 <use Reynolds2025_files/figure-latex/enniscorthy_needs_gap_map_graphs-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/enniscorthy_needs_gap_
-map_graphs-1.pdf  used on input line 801.
+map_graphs-1.pdf  used on input line 802.
 (pdftex.def)             Requested size: 144.00458pt x 168.17317pt.
 
 LaTeX Warning: Marginpar on page 16 moved.
@@ -1214,7 +1214,7 @@ File: Reynolds2025_files/figure-latex/SI_map_other_towns-1.pdf Graphic file (ty
 pe pdf)
 <use Reynolds2025_files/figure-latex/SI_map_other_towns-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_map_other_towns-1.p
-df  used on input line 820.
+df  used on input line 821.
 (pdftex.def)             Requested size: 240.01888pt x 465.22179pt.
 <Reynolds2025_files/figure-latex/SI_map_other_towns-2.pdf, id=268, 103.38625pt 
 x 167.62625pt>
@@ -1222,15 +1222,15 @@ File: Reynolds2025_files/figure-latex/SI_map_other_towns-2.pdf Graphic file (ty
 pe pdf)
 <use Reynolds2025_files/figure-latex/SI_map_other_towns-2.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_map_other_towns-2.p
-df  used on input line 820.
+df  used on input line 821.
 (pdftex.def)             Requested size: 240.02504pt x 389.16681pt.
 
-Overfull \hbox (2.95392pt too wide) in paragraph at lines 820--821
+Overfull \hbox (2.95392pt too wide) in paragraph at lines 821--822
 [][] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 820--821
+Underfull \hbox (badness 10000) in paragraph at lines 821--822
 
  []
 
@@ -1240,7 +1240,7 @@ File: Reynolds2025_files/figure-latex/SI_other_places_population-1.pdf Graphic
 file (type pdf)
 <use Reynolds2025_files/figure-latex/SI_other_places_population-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_other_places_popula
-tion-1.pdf  used on input line 824.
+tion-1.pdf  used on input line 825.
 (pdftex.def)             Requested size: 158.40634pt x 118.80475pt.
 <Reynolds2025_files/figure-latex/SI_other_places_population-2.pdf, id=270, 240.
 9pt x 180.675pt>
@@ -1248,7 +1248,7 @@ File: Reynolds2025_files/figure-latex/SI_other_places_population-2.pdf Graphic
 file (type pdf)
 <use Reynolds2025_files/figure-latex/SI_other_places_population-2.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_other_places_popula
-tion-2.pdf  used on input line 824.
+tion-2.pdf  used on input line 825.
 (pdftex.def)             Requested size: 158.40634pt x 118.80475pt.
 <Reynolds2025_files/figure-latex/SI_other_places_population-3.pdf, id=271, 240.
 9pt x 180.675pt>
@@ -1256,15 +1256,15 @@ File: Reynolds2025_files/figure-latex/SI_other_places_population-3.pdf Graphic
 file (type pdf)
 <use Reynolds2025_files/figure-latex/SI_other_places_population-3.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/SI_other_places_popula
-tion-3.pdf  used on input line 824.
+tion-3.pdf  used on input line 825.
 (pdftex.def)             Requested size: 158.40634pt x 118.80475pt.
 
-Overfull \hbox (1.03903pt too wide) in paragraph at lines 824--825
+Overfull \hbox (1.03903pt too wide) in paragraph at lines 825--826
 [][] [] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 824--825
+Underfull \hbox (badness 10000) in paragraph at lines 825--826
 
  []
 
@@ -1281,7 +1281,7 @@ File: Reynolds2025_files/figure-latex/needs_gaps_map_other_towns-1.pdf Graphic
 file (type pdf)
 <use Reynolds2025_files/figure-latex/needs_gaps_map_other_towns-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/needs_gaps_map_other_t
-owns-1.pdf  used on input line 891.
+owns-1.pdf  used on input line 892.
 (pdftex.def)             Requested size: 240.01888pt x 465.22179pt.
 <Reynolds2025_files/figure-latex/needs_gaps_map_other_towns-2.pdf, id=315, 103.
 38625pt x 167.62625pt>
@@ -1289,15 +1289,15 @@ File: Reynolds2025_files/figure-latex/needs_gaps_map_other_towns-2.pdf Graphic
 file (type pdf)
 <use Reynolds2025_files/figure-latex/needs_gaps_map_other_towns-2.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/needs_gaps_map_other_t
-owns-2.pdf  used on input line 891.
+owns-2.pdf  used on input line 892.
 (pdftex.def)             Requested size: 240.02504pt x 389.16681pt.
 
-Overfull \hbox (2.95392pt too wide) in paragraph at lines 891--892
+Overfull \hbox (2.95392pt too wide) in paragraph at lines 892--893
 [][] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 891--892
+Underfull \hbox (badness 10000) in paragraph at lines 892--893
 
  []
 
@@ -1312,7 +1312,7 @@ File: Reynolds2025_files/figure-latex/other_gglorenz-1.pdf Graphic file (type p
 df)
 <use Reynolds2025_files/figure-latex/other_gglorenz-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/other_gglorenz-1.pdf  
-used on input line 900.
+used on input line 901.
 (pdftex.def)             Requested size: 144.00856pt x 127.02293pt.
 
 LaTeX Warning: Marginpar on page 20 moved.
@@ -1323,7 +1323,7 @@ File: Reynolds2025_files/figure-latex/needs_gap_other_places_population-1.pdf G
 raphic file (type pdf)
 <use Reynolds2025_files/figure-latex/needs_gap_other_places_population-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/needs_gap_other_places
-_population-1.pdf  used on input line 917.
+_population-1.pdf  used on input line 918.
 (pdftex.def)             Requested size: 158.40634pt x 118.80475pt.
 <Reynolds2025_files/figure-latex/needs_gap_other_places_population-2.pdf, id=36
 4, 240.9pt x 180.675pt>
@@ -1331,7 +1331,7 @@ File: Reynolds2025_files/figure-latex/needs_gap_other_places_population-2.pdf G
 raphic file (type pdf)
 <use Reynolds2025_files/figure-latex/needs_gap_other_places_population-2.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/needs_gap_other_places
-_population-2.pdf  used on input line 917.
+_population-2.pdf  used on input line 918.
 (pdftex.def)             Requested size: 158.40634pt x 118.80475pt.
 <Reynolds2025_files/figure-latex/needs_gap_other_places_population-3.pdf, id=36
 5, 240.9pt x 180.675pt>
@@ -1339,15 +1339,15 @@ File: Reynolds2025_files/figure-latex/needs_gap_other_places_population-3.pdf G
 raphic file (type pdf)
 <use Reynolds2025_files/figure-latex/needs_gap_other_places_population-3.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/needs_gap_other_places
-_population-3.pdf  used on input line 917.
+_population-3.pdf  used on input line 918.
 (pdftex.def)             Requested size: 158.40634pt x 118.80475pt.
 
-Overfull \hbox (1.03903pt too wide) in paragraph at lines 917--918
+Overfull \hbox (1.03903pt too wide) in paragraph at lines 918--919
 [][] [] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 917--918
+Underfull \hbox (badness 10000) in paragraph at lines 918--919
 
  []
 
@@ -1363,7 +1363,7 @@ File: Reynolds2025_files/figure-latex/needs_gaps_population-1.pdf Graphic file
 (type pdf)
 <use Reynolds2025_files/figure-latex/needs_gaps_population-1.pdf>
 Package pdftex.def Info: Reynolds2025_files/figure-latex/needs_gaps_population-
-1.pdf  used on input line 938.
+1.pdf  used on input line 939.
 (pdftex.def)             Requested size: 144.0026pt x 89.17084pt.
 
 LaTeX Warning: Marginpar on page 20 moved.
@@ -1373,37 +1373,37 @@ les/figure-latex/needs_gap_other_places_population-1.pdf> <./Reynolds2025_files
 /figure-latex/needs_gap_other_places_population-2.pdf> <./Reynolds2025_files/fi
 gure-latex/needs_gap_other_places_population-3.pdf> <./Reynolds2025_files/figur
 e-latex/needs_gaps_population-1.pdf>]
-Overfull \hbox (2.23288pt too wide) in paragraph at lines 961--961
+Overfull \hbox (2.23288pt too wide) in paragraph at lines 962--962
 []|\T1/pplj/m/n/8 Castlebridge|  
  []
 
 
-Overfull \hbox (6.32887pt too wide) in paragraph at lines 966--966
+Overfull \hbox (6.32887pt too wide) in paragraph at lines 967--967
 []|\T1/pplj/m/n/8 Kilmuckridge|  
  []
 
 
-Overfull \hbox (0.97685pt too wide) in paragraph at lines 990--990
+Overfull \hbox (0.97685pt too wide) in paragraph at lines 991--991
 []|\T1/pplj/m/n/8 Adamstown|  
  []
 
 
-Overfull \hbox (0.60887pt too wide) in paragraph at lines 999--999
+Overfull \hbox (0.60887pt too wide) in paragraph at lines 1000--1000
 []|\T1/pplj/m/n/8 Ballycullane|  
  []
 
 
-Overfull \hbox (1.60086pt too wide) in paragraph at lines 1004--1004
+Overfull \hbox (1.60086pt too wide) in paragraph at lines 1005--1005
 []|\T1/pplj/m/n/8 Duncormick|  
  []
 
 
-Overfull \hbox (3.43285pt too wide) in paragraph at lines 1006--1006
+Overfull \hbox (3.43285pt too wide) in paragraph at lines 1007--1007
 []|\T1/pplj/m/n/8 Arthurstown|  
  []
 
 
-Overfull \hbox (218.52225pt too wide) in alignment at lines 947--1010
+Overfull \hbox (218.52225pt too wide) in alignment at lines 948--1011
  [] [] [] [] [] [] [] [] [] 
  []
 
@@ -1439,7 +1439,7 @@ texmf-dist/fonts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2024/texmf-di
 st/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2024/texmf-dist/font
 s/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1
 /urw/palatino/uplri8a.pfb>
-Output written on Reynolds2025.pdf (22 pages, 6377290 bytes).
+Output written on Reynolds2025.pdf (22 pages, 6377123 bytes).
 PDF statistics:
  479 PDF objects out of 1000 (max. 8388607)
  336 compressed objects within 4 object streams
