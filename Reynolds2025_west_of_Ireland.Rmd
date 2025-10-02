@@ -696,6 +696,30 @@ si_region_of_interest_aggregated$si_by_area$population_density <-  si_region_of_
 ```
 
 
+```{marginfigure}
+Table 1: Summary statistics; SI score by transit supply category, by Small Area.
+```
+
+```{r summary_table_west_ireland, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
+
+theme_gtsummary_compact()
+si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population, transit_supply) %>%
+   tbl_summary(
+    by = transit_supply,
+    digits = SI ~ 1,
+    type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
+   )) %>%
+    add_overall() %>% 
+  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
+  as_kable_extra()
+
+```
+
+
+
 
 ```{r SI_map_region_of_interest_county_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
 
@@ -1190,11 +1214,15 @@ st_write(county_boundaries, "data/west_ireland_county_boundaries.shp")
 
 ```
 
+
+
 ```{r load_county_boundaries, fig.show="hold", eval = TRUE, include = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across the west of Ireland, by Small Area and by population"}
 
 county_boundaries <- st_read("data/west_ireland_county_boundaries.shp")
 
 ```
+
+
 
 
 ```{r SI_map_region_of_interest_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across the west of Ireland, by Small Area and by population"}
@@ -1249,7 +1277,198 @@ county_region_of_interest_map +
   inset_element(pcol_si_county_sligo, left = 0.325, bottom = 0.6, right = 0.82, top =0.75) 
 
 ```
+
+
+
+Table 1 shows summary statistics for SI scores and the population, overall for all of the west of Ireland and split by transit supply category. The total population of the west of Ireland is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
+
+
+
 Figure \ref{fig:SI_map_region_of_interest_county} shows transit Supply Index (SI) categories by Small Areas across the west of Ireland. It also shows to the
 population living in Small Areas in each category for both the entire west of Ireland and for each county. 
+In general, there appear to be large areas of 
+the west of Ireland with SI scores below the average, or with no transit supply at all. Also, as might be expected, Small Areas where SI scores are higher than the average (of those with non-zero scores) appears to be located in very small and scattered geographic areas (at population centers).
+
+
+Table 2 summarises the Small Area populations in each County by transit supply category, shown as a share of the total west of Ireland population. Table 3 shows SI scores and transit supply categories by County, weighted by population. 
+
+
+```{marginfigure}
+Table 2: County Small Area populations, by transit supply catergory.
+```
+
+
+```{r west_of_ireland_population_by_county, eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+
+
+small_area_supply_by_county <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>%
+  select(transit_supply, population, COUNTY_ENGLISH) %>%
+  aggregate(population ~ transit_supply +  COUNTY_ENGLISH , sum)
+
+small_area_supply_by_county_table <- small_area_supply_by_county %>% 
+  pivot_wider(names_from = transit_supply, values_from = population) %>%
+  mutate_all(~replace(., is.na(.), 0)) 
+
+small_area_supply_by_county_table$total <- small_area_supply_by_county_table[,2:8] %>% rowSums()
+
+
+small_area_supply_by_county_table <- small_area_supply_by_county_table[order(small_area_supply_by_county_table$total, decreasing = TRUE),]
+
+small_area_supply_by_county_table <- small_area_supply_by_county_table [,1:8]
+
+small_area_supply_by_county_table %>% 
+  adorn_totals(where = c("row","col")) %>%
+  adorn_percentages(denominator = "all") %>%
+  adorn_pct_formatting() %>% 
+  adorn_ns() %>% 
+  select(COUNTY_ENGLISH, `Zero Supply`, `Very Low`, Low, `Below average`,`Above average`, `High`, `Very High`, Total) %>%
+  kable(align = "lrrrrrrrr", 
+        caption = "West of Ireland: County Small Area populations by Transit Supply grouping",
+        col.names = c("County", 
+                      "Zero Supply", "Very Low", "Low",
+                      "Below av.", "Above av.", 
+                      "High", "Very High",
+                      "Total")) %>% 
+  add_header_above(c(" " = 1, "Transit Supply category" = 7, " " = 1)) %>%
+  kable_styling(font_size = 8) %>%
+  kableExtra::column_spec(1, width = "1.60cm") %>% 
+  kableExtra::column_spec(2, width = "1.3cm") %>%
+  kableExtra::column_spec(3, width = "1.3cm") %>%
+  kableExtra::column_spec(4, width = "1.3cm") %>%
+  kableExtra::column_spec(5, width = "1.3cm") %>%
+  kableExtra::column_spec(6, width = "1.3cm")  %>%
+  kableExtra::column_spec(7, width = "1.3cm") %>%
+  kableExtra::column_spec(8, width = "1.3cm") %>% 
+  kableExtra::column_spec(9, width = "1.3cm") 
+
+```
+
+As shown in Table 2, the largest shares of the total population of the west of Ireland are the `r label_number(big.mark=",")(small_area_supply_by_county %>% filter(COUNTY_ENGLISH == "GALWAY") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% as.numeric())`, `r label_number(big.mark=",")(small_area_supply_by_county %>% filter(COUNTY_ENGLISH == "DONEGAL") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% as.numeric())` and
+`r label_number(big.mark=",")(small_area_supply_by_county %>% filter(COUNTY_ENGLISH == "MAYO") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% as.numeric())` people living in County Galway, County Donegal and County Mayo in Small Areas with no transit at all.  
+
+
+
+```{marginfigure}
+Table 3: SI score \& transit supply category by County, weighted by population.
+```
+
+```{r summary_table_by_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
+
+#ggbarstats(si_region_of_interest_aggregated$si_by_area %>% 
+#  st_drop_geometry() %>% 
+#  select(SI, population, transit_supply, COUNTY_ENGLISH) %>%
+#  as.tibble(), 
+#  y = COUNTY_ENGLISH, 
+#  x = transit_supply
+#  ) + 
+#  scale_fill_manual(values = c("Very High" = "darkgreen",
+#                               "High" = "#53A212", 
+#                               "Above average" = "lightgreen", 
+#                               "Below average" = "#F29C33",
+#                               "Low" = "#F7C387", 
+#                               "Very Low" = "#F9D8B1", 
+#                               "Zero Supply" = "#FFFFFF" )) +  
+#  theme(legend.position="bottom")
+
+
+theme_gtsummary_compact()
+si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population, transit_supply, COUNTY_ENGLISH) %>%
+  as.tibble() |>
+  survey::svydesign(data = _, ids = ~1, weights = ~population) %>%
+   tbl_svysummary(
+    by = COUNTY_ENGLISH,
+    include = c("SI", "transit_supply"),
+    digits = SI ~ 1,
+   type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
+   )) %>%
+  # add_overall() %>% 
+  #  add_p() %>%
+#  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
+  as_kable_extra()
+
+```
+
+
+There is a statistically significant variation between Counties in the share of Small Areas in each transit supply category (`r prmisc::print_chi2(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% tabyl(transit_supply, COUNTY_ENGLISH) %>% chisq.test())`). Table 3 indicates that Mayo and Roscommon have higher shares of their population living in Small Areas with no transit supply (over two people in every five), whereas Sligo has the lowest (close to one in eight). Close to one-third of people living in Sligo live in Small Areas with SI scores above the average (not including areas with no transit), followed by a little under one in four in Clare and around one in seven in Roscommon. At the other end of the spectrum, only around one in twelve people in Mayo and Leitrim live in areas with above the average SI scores, while for Donegal it is only one in twenty. 
+
+
+```{r gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="West of Ireland: Lorenz curves"}
+
+
+
+text <- si_region_of_interest_aggregated$thresholds[6]
+numbers <- regmatches(text,gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+  unlist() %>% 
+  as.numeric()
+max <- numbers[2]
+very_high_limit <- numbers[1] / max
+
+#regmatches(si_wexford_250423_day_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+#  unlist() %>% 
+#  as.numeric()
+
+perc_population <- pcol_si_region_of_interest$data %>% 
+  select(transit_supply, population) %>%
+  adorn_percentages(denominator = "col") 
+
+perc_population$cumulative_pop <- perc_population$population %>% cumsum()
+
+
+si_region_of_interest_aggregated$si_by_area %>%
+  ggplot(aes(x = SI, n = population)) +
+  stat_lorenz(desc = FALSE) +
+  coord_fixed() +
+  geom_abline(linetype = "dashed") +
+  theme_minimal() +
+  hrbrthemes::scale_x_percent() +
+  hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+       y = "Cumulative share of SI score") + 
+  geom_textvline(xintercept = perc_population[6,3], color = "darkgreen", label = "") +
+  geom_textvline(xintercept = perc_population[5,3], color = "#53A212", label = "") +
+  geom_textvline(xintercept = perc_population[4,3], color = "lightgreen", label = "Above Average") +
+  geom_textvline(xintercept = perc_population[3,3], vjust=1, color = "#F29C33", label = "Below Average") +
+  geom_textvline(xintercept = perc_population[2,3], vjust=1.5, color = "#F7C387", label = "Low") +
+  geom_textvline(xintercept = perc_population[1,3], vjust=1.5, color = "#F9D8B1", label = "Very Low")
+
+lorenz_values <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population)
+lorenz_values <- Lc(lorenz_values$SI, lorenz_values$population)
+
+```
+
+
+A Lorenz Curve of distribution of the west of Ireland's transit supply to the population is shown in Figure 2. The Gini co-efficient is `r Gini(si_region_of_interest_aggregated$si_by_area$SI, weights = si_region_of_interest_aggregated$si_by_area$population, unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.01)()`, indicating a relatively unequal distribution. In total, the SI score across all of the west of Ireland is approximately `r label_number(big.mark=",", accuracy = 1000)(si_region_of_interest_aggregated$si_by_area$SI %>% sum())`, but `r label_percent(digits=2)(1-lorenz_values$L[2520])` of this goes to Small Areas that are home to just `r label_percent(digits=2)(1-lorenz_values$p[2520])` of the total population. `r label_percent(digits=2)(lorenz_values$p[2800])` of the population live in Small Areas that, in combination, receive just `r label_percent(digits=2)(lorenz_values$L[2830])` of the total supply. This is perhaps not surprising, given that providing transit services in rural and low density areas is challenging. 
+
+Figure \ref{fig:gglorenz_county} shows Lorenz curves for each of the Counties. Gini co-efficients range from `r  Gini(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "SLIGO") %>% select(SI) %>% unlist() %>% as.numeric(), weights = si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "SLIGO") %>% select(population) %>% unlist() %>% as.numeric(), unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.01)()` for Sligo, through to `r  Gini(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "ROSCOMMON") %>% select(SI) %>% unlist() %>% as.numeric(), weights = si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "ROSCOMMON") %>% select(population) %>% unlist() %>% as.numeric(), unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.01)()` for Roscommon. This suggests that there is some variation, but in general transit supply is unequally distributed to the population across all of the Counties in the west of Ireland. 
+
+
+```{r gglorenz_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="West of Ireland: Lorenz curves by County"}
+
+si_region_of_interest_aggregated$si_by_area %>%
+  ggplot(aes(x = SI, n = population, colour = COUNTY_ENGLISH)) +
+  stat_lorenz(desc = FALSE) +
+  coord_fixed() +
+  geom_abline(linetype = "dashed") +
+  theme_minimal() +
+  hrbrthemes::scale_x_percent() +
+  hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+       y = "Cumulative share of SI score") +
+  scale_color_brewer(palette = "Dark2") +
+  theme(legend.text = element_text(size = 5), 
+        legend.title = element_blank(),
+        axis.title = element_text(size = 5),
+        axis.text = element_text(size = 4)
+        ) 
+
+
+```
+
 
 
