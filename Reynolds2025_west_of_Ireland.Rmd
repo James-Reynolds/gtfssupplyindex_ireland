@@ -64,6 +64,7 @@ library(ggExtra)
 library(ggthemes)
 library(geomtextpath)
 library(ggrepel)
+#library(memisc, warn.conflicts = FALSE, quietly=TRUE)
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 
@@ -293,6 +294,35 @@ where:
 -   $Area_{area}$ is the area of each *area of interest*; and
 
 -   $SL_{i,time}$ is the number of transit arrivals for each stop (i) within the given time period.
+
+Based on the SI scores @currie2010identifying grouped 
+areas of interest into seven categories.
+The first category includes areas of interest 
+with zero SI scores, 
+i.e. those areas without 
+any transit services at all. 
+The remaining areas of interest 
+are than categorised into 
+three even groups 
+(Very Low, Low and Below Average)
+across those with 
+areas with SI scores below average, 
+and three even groups above the average^[Based on only including areas of interest with non-zero scores]
+(Above Average, High and Very High). 
+This approach, 
+which was also used in 
+@Reynolds2025gtfsmainpaper, 
+has been used in this paper as well 
+so as to maintain consistency with the previous research.
+
+The areas of interest adopted 
+in this study 
+at the 
+2022 definition of *Small Areas*, 
+used in the 
+Irish Census.  
+
+
 
 ## GTFS data
 
@@ -701,7 +731,7 @@ pcol_si_region_of_interest <- si_region_of_interest_aggregated$si_by_area %>%
   geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
   scale_y_continuous(limits = c(0,500000)) +
   geom_hline(yintercept = 0)  + 
-  geom_text(aes(transit_supply,  population+130000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
    coord_flip() + 
 scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
   scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
@@ -719,13 +749,455 @@ scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "L
     axis.text.x = element_blank()
   ) 
 
+pcol_si_region_of_interest_blank <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "All west of Ireland (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.5),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
 
 
 
 ```
 
-```{r SI_map_region_of_interest_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply across the west of Ireland, by Small Area"}
 
+```{r SI_map_region_of_interest_county_clare, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_clare <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "CLARE") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "County Clare (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+```{r SI_map_region_of_interest_county_galway, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_galway <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "GALWAY") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "County Galway (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+```{r SI_map_region_of_interest_county_leitrim, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_leitrim <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "LEITRIM") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "County Leitrim (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+```{r SI_map_region_of_interest_county_mayo, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_mayo <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "MAYO") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "County Mayo (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+```{r SI_map_region_of_interest_county_roscommon, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_roscommon <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "ROSCOMMON") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "County Roscommon (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+```{r SI_map_region_of_interest_county_sligo, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_sligo <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "SLIGO") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "County Sligo (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+```{r SI_map_region_of_interest_county_donegal, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_donegal <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "DONEGAL") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "County Donegal (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+
+```{r county_boundaries, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across the west of Ireland, by Small Area and by population"}
+
+county_boundaries <- region_of_interest  %>% 
+    group_by(COUNTY_ENGLISH) %>%
+    summarise(geometry = sf::st_union(geometry)) %>%
+    ungroup()
+
+st_write(county_boundaries, "data/west_ireland_county_boundaries.shp")
+
+```
+
+```{r load_county_boundaries, fig.show="hold", eval = TRUE, include = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across the west of Ireland, by Small Area and by population"}
+
+county_boundaries <- st_read("data/west_ireland_county_boundaries.shp")
+
+```
+
+
+```{r SI_map_region_of_interest_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across the west of Ireland, by Small Area and by population"}
 
 #Set boundings box
 bbox_list <- region_of_interest %>%
@@ -735,7 +1207,7 @@ bbox_list <- region_of_interest %>%
 
 
 lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
-lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+lon = c(bbox_list["xmin"] %>% as.numeric() - 0.2*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()), bbox_list["xmax"] %>% as.numeric() )
 
 Poly_Coord_df = data.frame(lon, lat)
 
@@ -761,13 +1233,23 @@ county_region_of_interest_map <- ggplot()+
 scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
     coord_sf(xlim = c(lon[1],lon[2]), 
            ylim = c(lat[1], lat[2])) +  
-  ggspatial::annotation_north_arrow(location = 'bl', height = unit(0.3, "cm"), width = unit(0.3, "cm")) + 
+  ggspatial::annotation_north_arrow(location = 'tr', height = unit(0.1, "cm"), width = unit(0.3, "cm")) + 
   ggspatial::annotation_scale(location = 'br', height = (unit(0.05, "cm")), text_cex = 0.25) 
 
 county_region_of_interest_map + 
-inset_element(pcol_si_region_of_interest, left = 0.0, bottom = 0.7, right = 0.40, top =1.0) 
+  geom_sf(data=county_boundaries, fill = NA, linewidth = 0.05) +
+  inset_element(pcol_si_region_of_interest, left = 0.0, bottom = 0.8, right = 0.60, top =1.0) + 
+#  inset_element(pcol_si_region_of_interest_blank, left = 0.105, bottom = 0.6, right = 0.60, top =0.8) + 
+  inset_element(pcol_si_county_clare, left = 0.005, bottom = 0.0, right = 0.50, top =0.15) + 
+  inset_element(pcol_si_county_donegal, left = 0.75, bottom = 0.6, right = 1.245, top =0.75) + 
+  inset_element(pcol_si_county_galway, left = 0.005, bottom = 0.15, right = 0.50, top =0.3) + 
+  inset_element(pcol_si_county_leitrim, left = 0.75, bottom = 0.35, right = 1.245, top =0.50) + 
+  inset_element(pcol_si_county_mayo, left = 0.105, bottom = 0.65, right = 0.60, top =0.8) + 
+  inset_element(pcol_si_county_roscommon, left = 0.750, bottom = 0.2, right = 1.245, top =0.35) + 
+  inset_element(pcol_si_county_sligo, left = 0.325, bottom = 0.6, right = 0.82, top =0.75) 
 
 ```
+Figure \ref{fig:SI_map_region_of_interest_county} shows transit Supply Index (SI) categories by Small Areas across the west of Ireland. It also shows to the
+population living in Small Areas in each category for both the entire west of Ireland and for each county. 
 
-NEXT STEPS - Disaggregate by region SA2_NUTS, and County 
 
