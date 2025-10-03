@@ -418,7 +418,7 @@ region_of_interest <- Small_Area_National_Statistical_Boundaries_2022 %>%
            COUNTY_ENGLISH == "MAYO" |
            COUNTY_ENGLISH == "ROSCOMMON" |
            COUNTY_ENGLISH == "SLIGO" | 
-           COUNTY_ENGLISH == "GALWAY_CITY")
+           COUNTY_ENGLISH == "GALWAY CITY")
 return(region_of_interest)}
 ```
 
