@@ -417,7 +417,8 @@ region_of_interest <- Small_Area_National_Statistical_Boundaries_2022 %>%
            COUNTY_ENGLISH == "LEITRIM" |
            COUNTY_ENGLISH == "MAYO" |
            COUNTY_ENGLISH == "ROSCOMMON" |
-           COUNTY_ENGLISH == "SLIGO" )
+           COUNTY_ENGLISH == "SLIGO" | 
+           COUNTY_ENGLISH == "GALWAY_CITY")
 return(region_of_interest)}
 ```
 
@@ -922,6 +923,67 @@ scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "L
 ```
 
 
+```{r SI_map_region_of_interest_county_galway_city, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
+
+
+#Set boundings box
+bbox_list <- region_of_interest %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+pcol_si_county_galway_city <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(COUNTY_ENGLISH == "GALWAY CITY") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,500000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+80000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Galway City (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+```
+
+
+
+
+
+
+
 ```{r SI_map_region_of_interest_county_leitrim, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across west of Ireland, by population"}
 
 
@@ -1270,10 +1332,11 @@ county_region_of_interest_map +
 #  inset_element(pcol_si_region_of_interest_blank, left = 0.105, bottom = 0.6, right = 0.60, top =0.8) + 
   inset_element(pcol_si_county_clare, left = 0.005, bottom = 0.0, right = 0.50, top =0.15) + 
   inset_element(pcol_si_county_donegal, left = 0.75, bottom = 0.6, right = 1.245, top =0.75) + 
-  inset_element(pcol_si_county_galway, left = 0.005, bottom = 0.15, right = 0.50, top =0.3) + 
-  inset_element(pcol_si_county_leitrim, left = 0.75, bottom = 0.35, right = 1.245, top =0.50) + 
+  inset_element(pcol_si_county_galway, left = 0.750, bottom = 0.1, right = 1.245, top =0.25) +  
+  inset_element(pcol_si_county_galway_city, left = 0.005, bottom = 0.15, right = 0.50, top =0.3) +
+  inset_element(pcol_si_county_leitrim, left = 0.75, bottom = 0.4, right = 1.245, top =0.55) + 
   inset_element(pcol_si_county_mayo, left = 0.105, bottom = 0.65, right = 0.60, top =0.8) + 
-  inset_element(pcol_si_county_roscommon, left = 0.750, bottom = 0.2, right = 1.245, top =0.35) + 
+  inset_element(pcol_si_county_roscommon, left = 0.750, bottom = 0.25, right = 1.245, top =0.4) + 
   inset_element(pcol_si_county_sligo, left = 0.325, bottom = 0.6, right = 0.82, top =0.75) 
 
 ```
@@ -1469,6 +1532,122 @@ si_region_of_interest_aggregated$si_by_area %>%
 
 
 ```
+
+
+## Urban areas
+Approximately `r label_percent(accuracy = 10)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(population) %>% sum())` of the west of Ireland's population (close to `r label_number(big.mark = ",", accuracy = 1000)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum())` people) live in Small Areas that are within one of the `r si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(SA_URBAN_AREA_NAME) %>% unique() %>% nrow()` named 'urban areas' within the west. Figure \ref{fig:urban_si_pop_histogram} shows the total population and aggregate SI scores for each urban area, while Figure \ref{fig:urban_si_pop_histogram_county} shows the same data, but grouped by County
+
+
+```{r urban_si_pop_histogram, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="West of Ireland pop. vs SI, aggregated by urban areas"}
+
+si_pop_by_urban_area <- si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% aggregate(cbind(SI, population) ~ SA_URBAN_AREA_NAME, sum)
+
+si_pop_by_urban_area <- left_join(si_pop_by_urban_area, 
+                                  si_region_of_interest_aggregated$si_by_area %>% 
+                                    st_drop_geometry() %>% 
+                                    select(SA_URBAN_AREA_NAME, COUNTY_ENGLISH)) %>% 
+                                    unique()
+
+p <- ggplot(si_pop_by_urban_area, aes(population, SI, colour = COUNTY_ENGLISH)) + 
+  geom_point()  + 
+  geom_text_repel(label = si_pop_by_urban_area$SA_URBAN_AREA_NAME, size = 2) +
+  theme_tufte(ticks=F) + 
+  scale_x_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_y_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(legend.position = "bottom", 
+        legend.title = element_blank()) 
+  
+ggMarginal(p, type = "histogram", fill="transparent") 
+
+
+
+
+
+```
+
+```{r urban_si_pop_histogram_by_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="West of Ireland pop. vs SI, aggregated by urban areas"}
+
+
+p <- ggplot(si_pop_by_urban_area, aes(population, SI, colour = COUNTY_ENGLISH)) + 
+  geom_point()  + 
+  geom_text_repel(label = si_pop_by_urban_area$SA_URBAN_AREA_NAME, size = 2) +
+  theme_tufte(ticks=F) + 
+  scale_x_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_y_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_color_brewer(palette = "Dark2") +
+  facet_grid(rows="COUNTY_ENGLISH") + 
+  theme(legend.position = "blank")
+
+p
+
+#  ggMarginal(p, type = "histogram", fill="transparent") 
+
+```
+
+
+
+
+
+Boxplots of the SI scores for Small Areas within each of the various urban areas are shown in Figure \ref{fig:urban_towns_boxplot}, again grouped by County. 
+
+
+```{r urban_towns_boxplot, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="West of Ireland urban areas: boxplot of Small Area SI scores, ordered by population size"}
+
+lower_thresholds <- tibble(very_low = regmatches(si_region_of_interest_aggregated$thresholds[1],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           low = regmatches(si_region_of_interest_aggregated$thresholds[2],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           below_average = regmatches(si_region_of_interest_aggregated$thresholds[3],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           above_average = regmatches(si_region_of_interest_aggregated$thresholds[4],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           high = regmatches(si_region_of_interest_aggregated$thresholds[5],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           very_high = regmatches(si_region_of_interest_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1))
+
+
+new_order <- with(si_region_of_interest_aggregated$si_by_area %>%
+                    st_drop_geometry() %>%
+                    select(SI, population, SA_URBAN_AREA_NAME) %>% 
+                    filter(SA_URBAN_AREA_NAME != "NA"), 
+                  reorder(SA_URBAN_AREA_NAME, population, sum)) 
+
+
+si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  select(SI, SA_URBAN_AREA_NAME, COUNTY_ENGLISH) %>% 
+  filter(SA_URBAN_AREA_NAME != "NA") %>%
+  ggplot(aes(SA_URBAN_AREA_NAME %>% factor(levels = new_order %>% levels()) ,SI)) + 
+  theme_tufte() + 
+  geom_texthline(yintercept=lower_thresholds$very_high, label = "Very High", vjust=-1,color = "darkgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$high, label = "High", vjust=-1,color = "#53A212", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$above_average, label = "Above Average", vjust=-0.5,color = "lightgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$below_average, label = "Below Average", vjust=-0.5,color = "#F29C33", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$low, label = "Low",vjust=-1, color = "#F7C387", size = 2) + 
+  geom_texthline(yintercept=lower_thresholds$very_low, label = "Very Low", vjust=-1,color = "#F9D8B1", size = 2) + 
+  scale_y_log10(limits = c(1, 4000)) +
+  theme(axis.text.y = element_text(size = 4), 
+        axis.text.x = element_text(size = 4, angle = 90, hjus = 0.95, vjust=0.2),
+        axis.title=element_blank()) +
+  geom_tufteboxplot(outlier.colour="transparent") + 
+  theme() +
+  coord_flip() + 
+  facet_grid(rows="COUNTY_ENGLISH", scales = "free_y", space = "free_y"
+             )
+
+```
+
+
+
+
 
 
 
