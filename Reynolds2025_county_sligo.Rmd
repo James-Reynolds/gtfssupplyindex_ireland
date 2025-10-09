@@ -1,0 +1,1639 @@
+---
+title: "Comparing social needs for transport, gaps in transit service and the Mobility Index for the County Sligo"
+runningheader: "The County Sligo:transit needs-gaps" # only for pdf output
+author: "Dr James Reynolds"
+date: "`r Sys.Date()`"
+bibliography: References.bib
+csl: https://www.zotero.org/styles/chicago-fullnote-bibliography-16th-edition
+suppress-bibliography: yes
+output:
+#  tufte::tufte_html: default
+  tufte::tufte_handout:
+#    citation_package: natbib
+#    latex_engine: xelatex
+#  tufte::tufte_book:
+#    citation_package: natbib
+#    latex_engine: xelatex
+
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tidytransit)
+library(sp)
+library(strayr)
+library(ptinpoly)
+library(magrittr)
+library(ggplot2)
+library(sf)
+library(ASGS.foyer)
+library(raster)
+library(ggmap)
+library(units)
+library(janitor)
+library(mapview)
+library(ggstatsplot)
+library(gtsummary)
+library(moments)
+library(scales)
+library(gtfstools)
+library(lubridate)
+library(kableExtra)
+library(knitr)
+library(readxl)
+library(readr)
+library(dplyr)
+library(devtools)
+library(gtfssupplyindex)
+library(readabs)
+library(gglorenz)
+library(DescTools)
+library(RColorBrewer)
+library(lsr)
+library(ggpubr)
+library(viridis)
+library(geosphere)
+library(png)
+library(absmapsdata)
+library(tidytransit)
+library(patchwork)
+library(ggmapinset)
+library(tufte)
+library(gglorenz)
+library(ggExtra)
+library(ggthemes)
+library(geomtextpath)
+library(ggrepel)
+#library(memisc, warn.conflicts = FALSE, quietly=TRUE)
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+
+```
+
+# Introduction
+
+# Research Background
+
+## GTFS data
+
+<!---
+Data for this paper was sourced from
+@Transit-Mobility-Data:2025aa 
+a repository of GTFS feeds. 
+The Irish Rail, 
+and Transport for Ireland 
+feeds^[Dublin Bus, Go Ahead Ireland GTFS and LUAS GTFS] 
+that would cover the 
+week before the 2022 census^[Held on Sunday April 3[@Central-Statistics-Office:2025aa], with Good Friday 
+having fallen on April 15 in that year] 
+were used. 
+
+
+
+```{r wrangle_ireland_gtfs, eval = FALSE, echo = FALSE}
+
+irish_rail_220328 <- tidytransit::::read_gtfs("data/220403_week_of_census/Irish_Rail_220328.zip")
+TFI_Dublin_Bus_220330 <- tidytransit::read_gtfs("data/220403_week_of_census/TFI_Dublin_Bus_220330.zip")
+TFI_Go_Ahead_Ireland_220330 <- tidytransit::read_gtfs("data/220403_week_of_census/TFI_Go_Ahead_Ireland_220330.zip")
+TFI_LUAC_220316 <- tidytransit::read_gtfs("data/220403_week_of_census/TFI_LUAC_220316.zip")
+
+irish_rail_220328 %>% class()
+TFI_Dublin_Bus_220330 %>% class()
+TFI_Go_Ahead_Ireland_220330 %>% class()
+TFI_LUAC_220316 %>% class()
+# all successfully load as tidygtfs class
+
+
+#irish_rail_220328 <- gtfstools::read_gtfs("data/220403_week_of_census/Irish_Rail_220328.zip")
+#TFI_Dublin_Bus_220330 <- gtfstools::read_gtfs("data/220403_week_of_census/TFI_Dublin_Bus_220330.zip")
+#TFI_Go_Ahead_Ireland_220330 <- gtfstools::read_gtfs("data/220403_week_of_census/TFI_Go_Ahead_Ireland_220330.zip")
+#TFI_LUAC_220316 <- gtfstools::read_gtfs("data/220403_week_of_census/TFI_LUAC_220316.zip")
+
+#irish_rail_220328 %>% class()
+#TFI_Dublin_Bus_220330 %>% class()
+#TFI_Go_Ahead_Ireland_220330 %>% class()
+#TFI_LUAC_220316 %>% class()
+# all successfully load as dt_gtfs class
+
+all_feeds_census_week <- list(
+  irish_rail_220328,
+  TFI_Dublin_Bus_220330,
+  TFI_Go_Ahead_Ireland_220330,
+  TFI_LUAC_220316
+  ) %>% 
+  merge_gtfs() 
+  
+all_feeds_census_week %>% class()
+
+all_feeds_census_week %>% write_gtfs(path = "data/220403_week_of_census/all_feeds_census_week.zip")
+
+```
+
+```{r load_ireland_gtfs_testing, eval = FALSE, echo = FALSE}
+all_feeds_census_week <- tidytransit::read_gtfs("data/220403_week_of_census/all_feeds_census_week.zip")
+
+all_feeds_census_week %>% class()
+
+#WELL, that didn't work.  Let's just got with today's feed for now (Oct1, 2025)
+
+```
+
+--->
+
+Data for this paper was sourced from
+@Transport-for-Ireland:0aa on October 1, 2025^[Selecting the "All GTFS Operators" feed]. 
+The analysis was run for the week starting October 1. 
+
+
+
+```{r load_ireland_gtfs, eval = FALSE, echo = FALSE}
+
+## Check feed loads as tidytransit
+#TFI_GTFS_All_251001 <- tidytransit::read_gtfs("data/251001/TFI_GTFS_All_251001.zip")
+#TFI_GTFS_All_251001 %>% class()
+## Yes feed loads successfully
+
+TFI_GTFS_All_251001_list_gtfs <- gtfssupplyindex::gtfs_by_route_type("data/251001/TFI_GTFS_All_251001.zip")
+
+```
+
+```{r load_region_of_interest_function, eval = TRUE, echo = FALSE}
+
+load_region_of_interest <- function(){
+region_of_interest <- Small_Area_National_Statistical_Boundaries_2022 %>% 
+  filter(COUNTY_ENGLISH == "SLIGO")
+return(region_of_interest)}
+```
+
+```{r run_for_all_modes_ireland_, eval = FALSE, echo = FALSE}
+
+list_gtfs = TFI_GTFS_All_251001_list_gtfs
+
+
+Small_Area_National_Statistical_Boundaries_2022 <- st_read("data/Small_Area_National_Statistical_Boundaries_2022_Ungeneralised_view_-7354763930310470674.gpkg")
+st_geometry(Small_Area_National_Statistical_Boundaries_2022) <- "SHAPE"
+
+region_of_interest <- load_region_of_interest()
+
+region_of_interest <- st_set_geometry(region_of_interest, "SHAPE")
+
+
+#Load region_of_interest codes
+areas_of_interest <- load_areas_of_interest(region_of_interest,  
+  area_id_field = "SA_PUB2022")
+
+areas_of_interest <- st_set_geometry(areas_of_interest, "geometry")
+
+
+stops_in_or_near_areas <- gtfssupplyindex:::stops_in_walk_dist(
+  list_gtfs = list_gtfs, 
+  areas_of_interest = areas_of_interest,
+  EPSG_for_transform = 2157,
+  verbose = FALSE
+)
+
+
+
+si_west_ireland_week_251001_by_day_hour_route <- SI_by_day_hour_and_route_type(
+     list_gtfs = list_gtfs, 
+stops_in_or_near_areas = stops_in_or_near_areas,
+ start_date_ymd = "2025-10-01", 
+ end_date_ymd = "2025-10-07",
+verbose = TRUE)
+
+write.csv(si_west_ireland_week_251001_by_day_hour_route, "results/si_west_ireland_week_251001_by_day_hour_route.csv")
+
+
+si_west_ireland_week_251001_aggregated <- si_west_ireland_week_251001_by_day_hour_route %>% 
+           group_by(area_id) %>%    
+           summarize(SI = sum(SI))
+
+write.csv(si_west_ireland_week_251001_aggregated, "results/si_west_ireland_week_251001_aggregated.csv")
+
+
+```
+
+
+# Results
+
+
+```{r threshold_function, fig.show="hold", out.width="100%", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE,  cache=FALSE, results='hide'}
+
+## FUNCTION to define thresholds and return Very High, High etc. 
+# as per Currie2010 Table 3 and page 34. 
+# the approach appears to be to first identify zones that have zero supply 
+# the remainder are then split into those above and below the average SI value
+# these two groups are then each split into three groups of roughly equal size. 
+set_thresholds <-function(si_by_area_dataframe){ 
+
+## Define Very High, High etc thresholds
+cuts_lower_groups <- si_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(SI !=0) %>%
+  filter(SI <= SI %>% mean()) %>% 
+  select(SI) %>% unlist() %>% 
+  as.vector() %>% 
+  quantileCut(3)
+
+cuts_upper_groups <- si_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(SI !=0) %>%
+  filter(SI > SI %>% mean()) %>%
+  select(SI) %>% unlist() %>% 
+  as.vector() %>% 
+  quantileCut(3)
+
+# Recode lower_group factors
+allocation_lower_groups <- cuts_lower_groups %>% fct_recode(
+  "Very Low" = levels(cuts_lower_groups)[1], 
+  "Low" = levels(cuts_lower_groups)[2], 
+  "Below average" = levels(cuts_lower_groups)[3])
+
+# Recode upper_group factors
+allocation_upper_groups <- cuts_upper_groups %>% fct_recode(
+  "Above average" = levels(cuts_upper_groups)[1], 
+  "High" = levels(cuts_upper_groups)[2], 
+  "Very High" = levels(cuts_upper_groups)[3])
+
+
+# Join back to lower_group SIs and areas_of_interest
+si_by_area_dataframe_below_average <- si_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(SI !=0) %>%
+  filter(SI <= SI %>% mean()) 
+si_by_area_dataframe_below_average$transit_supply <- allocation_lower_groups
+
+# Join back to upper_group SIs and areas_of_interest
+si_by_area_dataframe_above_average <- si_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(SI !=0) %>%
+  filter(SI > SI %>% mean()) 
+si_by_area_dataframe_above_average$transit_supply <- allocation_upper_groups
+
+# combine upper and lower groups
+  
+si_by_area_dataframe_non_zero <- add_row(si_by_area_dataframe_below_average, 
+                                         si_by_area_dataframe_above_average)
+
+#join back to dataframe, and put "Zero" in N/A
+si_by_area_dataframe <- full_join(
+  si_by_area_dataframe %>% 
+    st_drop_geometry(), 
+  si_by_area_dataframe_non_zero
+)
+
+si_by_area_dataframe$transit_supply <- si_by_area_dataframe$transit_supply %>% 
+  fct_explicit_na(na_level = "Zero Supply") %>% 
+  fct_shift(n = -1)
+
+#return dataframe and information about level cut offs
+si_by_area_dataframe_and_cuts_dataframe <- list(
+  si_by_area_dataframe,
+  c(levels(cuts_lower_groups), levels(cuts_upper_groups))
+  )
+return(si_by_area_dataframe_and_cuts_dataframe)
+}
+# END FUNCTION
+
+## FUNCTION to set thresholds and return tibble, plot output and thresholds
+si_thresholds_and_plot_function <- function(si_by_area, areas_of_interest){
+# Set column names
+names(si_by_area) <- c("area_id", "SI")
+names(areas_of_interest) <- c("area_id", "geometry")
+  
+si_by_area$area_id <- si_by_area$area_id %>% 
+  as.character()
+
+
+##Join to areas_of_interest so as to identify (and enumerate as zero) 
+# those areas of interest that have no SI score 
+
+si_by_area <- full_join(
+  areas_of_interest,
+  si_by_area)
+si_by_area[is.na(si_by_area)] <- 0
+
+si_by_area_thresholds <- set_thresholds(si_by_area_dataframe = si_by_area)
+si_by_area <- si_by_area_thresholds[[1]]
+
+
+si_by_area <- left_join(
+  areas_of_interest, 
+  si_by_area)
+
+output_plot <- ggplot()+ 
+  geom_sf(data=si_by_area %>% na.omit(),
+          aes(fill = transit_supply), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none",
+#        legend.text = element_text(size = 4), 
+#        legend.title = element_text(size = 5), 
+#        legend.key.size = unit(0.08, 'cm')
+        ) + 
+  scale_fill_manual(values = c("white", "#F9D8B1", "#F7C387", "#F29C33", "lightgreen", "#53A212", "darkgreen")) 
+
+
+  outputs <- list("si_by_area" = si_by_area, 
+                  "output_plot" = output_plot, 
+                  "thresholds" = si_by_area_thresholds[[2]])
+  return(outputs)
+}
+
+```
+
+```{r region_of_interest_2025, fig.show="hold", out.width="100%", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE,  cache=FALSE, results='hide'}
+
+### Load 2025 results
+si_by_area <- read.csv("results/si_west_ireland_week_251001_aggregated.csv") %>% 
+  as_tibble()
+si_by_area <- si_by_area[,2:3]
+
+
+#Load region_of_interest codes
+Small_Area_National_Statistical_Boundaries_2022 <- st_read("data/Small_Area_National_Statistical_Boundaries_2022_Ungeneralised_view_-7354763930310470674.gpkg")
+st_geometry(Small_Area_National_Statistical_Boundaries_2022) <- "SHAPE"
+
+
+#run load_region_of_interest function
+
+region_of_interest <- load_region_of_interest()
+
+
+#Change NA SA_URBAN_AREA_NAME to "non-urban"
+#region_of_interest$SA_URBAN_AREA_NAME <- region_of_interest$SA_URBAN_AREA_NAME %>% 
+#  replace_na("non-urban")
+
+
+region_of_interest <- region_of_interest %>%
+  select(SA_GUID_2022, SA_PUB2022, SA_URBAN_AREA_NAME, SA_NUTS2_NAME, SA_NUTS3_NAME)
+
+names(region_of_interest) <- c("SA_GUID_2022", "SA_PUB2022", "SA_URBAN_AREA_NAME", "SA_NUTS2_NAME", "SA_NUTS3_NAME", "geometry" )
+region_of_interest <- region_of_interest %>% st_set_geometry("geometry")
+
+#Load region_of_interest codes
+areas_of_interest <- load_areas_of_interest(region_of_interest,  
+  area_id_field = "SA_PUB2022")
+
+si_region_of_interest_aggregated <- si_thresholds_and_plot_function(si_by_area, areas_of_interest)
+
+## Connect SI results to area definitions
+si_region_of_interest_aggregated$si_by_area <- left_join(
+  si_region_of_interest_aggregated$si_by_area,
+  region_of_interest %>% st_drop_geometry(), 
+  by=join_by("area_id" == "SA_PUB2022"))
+
+
+## Import population data
+## T1_1AGETT is total population field.  
+# GUID is identification field
+SAPS_2022_Small_Area_UR_171024 <- read_csv("data/SAPS_2022_Small_Area_UR_171024.csv") %>% select(GUID, T1_1AGETT) 
+
+names(SAPS_2022_Small_Area_UR_171024) <- c("GUID", "population")
+
+si_region_of_interest_aggregated$si_by_area <- left_join(
+  si_region_of_interest_aggregated$si_by_area,
+  SAPS_2022_Small_Area_UR_171024, 
+  by=join_by("SA_GUID_2022" == "GUID"))
+
+# Categorise population into Very High, High groups etc.
+region_of_interest_population <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(area_id, population)
+names(region_of_interest_population) <- c("area_id", "SI")
+region_of_interest_population <- set_thresholds(region_of_interest_population)
+names(region_of_interest_population[[1]]) <- c("area_id", "population", "population_category")
+
+si_region_of_interest_aggregated$si_by_area$population_category <- 
+  region_of_interest_population[[1]]$population_category
+
+si_region_of_interest_aggregated$si_by_area$population_category <- 
+  si_region_of_interest_aggregated$si_by_area$population_category %>%
+  factor(levels=c("Very Low", "Low", "Below average", "Above average", "High", "Very High"))
+
+#Calculate population density
+si_region_of_interest_aggregated$si_by_area$population_density <- 
+  si_region_of_interest_aggregated$si_by_area$population %>% st_drop_geometry() /
+  si_region_of_interest_aggregated$si_by_area %>% st_area()
+#Categorise population density  
+region_of_interest_population_density <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(area_id, population_density)
+names(region_of_interest_population_density) <- c("area_id", "SI")
+region_of_interest_population_density$SI <- region_of_interest_population_density$SI %>%
+  as.numeric()
+  
+region_of_interest_population_density <- set_thresholds(region_of_interest_population_density)
+names(region_of_interest_population_density[[1]]) <- c("area_id", "population_density", "density_category")
+
+si_region_of_interest_aggregated$si_by_area$density_category <- 
+  region_of_interest_population_density[[1]]$density_category
+
+si_region_of_interest_aggregated$si_by_area$density_category <- 
+  si_region_of_interest_aggregated$si_by_area$density_category %>%
+  factor(levels=c("Very Low", "Low", "Below average", "Above average", "High", "Very High"))
+
+
+si_region_of_interest_aggregated$si_by_area$population_density <-  si_region_of_interest_aggregated$si_by_area$population_density %>% as.numeric()
+
+```
+
+
+```{marginfigure}
+Table 1: Summary statistics; SI score by transit supply category, by Small Area.
+```
+
+```{r summary_table, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
+
+theme_gtsummary_compact()
+si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population, transit_supply, SA_URBAN_AREA_NAME) %>%
+  mutate(SA_URBAN_AREA_NAME=replace_na(SA_URBAN_AREA_NAME, "Non-urban")) %>% 
+    mutate(SA_URBAN_AREA_NAME = ifelse(SA_URBAN_AREA_NAME == "Sligo" | 
+             SA_URBAN_AREA_NAME == "Tubbercurry" |
+             SA_URBAN_AREA_NAME == "Strandhill" |
+             SA_URBAN_AREA_NAME == "Collooney" |
+             SA_URBAN_AREA_NAME == "Ballysadare" |
+             SA_URBAN_AREA_NAME == "Ballymote" |
+             SA_URBAN_AREA_NAME == "Enniscrone" |
+             SA_URBAN_AREA_NAME == "Coolaney" |
+             SA_URBAN_AREA_NAME == "Rosses Point" |
+             SA_URBAN_AREA_NAME == "Grange" |
+             SA_URBAN_AREA_NAME == "Cliffony" | 
+             SA_URBAN_AREA_NAME == "Non-urban", 
+             SA_URBAN_AREA_NAME, "Other")) %>%
+   mutate(SA_URBAN_AREA_NAME = factor(SA_URBAN_AREA_NAME, levels = c(
+     "Sligo", "Tubbercurry", "Strandhill", "Collooney", "Ballysadare", "Ballymote", "Enniscrone", "Coolaney", "Rosses Point", "Grange", "Cliffony", "Other", "Non-urban")))  %>% 
+  mutate(Urban_area = SA_URBAN_AREA_NAME) %>%
+  select(SI, population, transit_supply, Urban_area) %>%
+   tbl_summary(
+    by = transit_supply,
+    digits = SI ~ 1,
+    type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
+   )) %>%
+    add_overall() %>% 
+  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
+  as_kable_extra()
+
+```
+
+
+```{r sligo_urban_boundaries, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across the County Sligo, by Small Area and by population"}
+
+urban_boundaries <- region_of_interest  %>% 
+    filter(SA_URBAN_AREA_NAME == "Sligo" | 
+             SA_URBAN_AREA_NAME == "Tubbercurry" |
+             SA_URBAN_AREA_NAME == "Strandhill" |
+             SA_URBAN_AREA_NAME == "Collooney" |
+             SA_URBAN_AREA_NAME == "Ballysadare" |
+             SA_URBAN_AREA_NAME == "Ballymote" |
+             SA_URBAN_AREA_NAME == "Enniscrone" |
+             SA_URBAN_AREA_NAME == "Coolaney" |
+             SA_URBAN_AREA_NAME == "Rosses Point" |
+             SA_URBAN_AREA_NAME == "Grange" |
+             SA_URBAN_AREA_NAME == "Cliffony") %>%
+    group_by(SA_URBAN_AREA_NAME) %>%
+    summarise(geometry = sf::st_union(geometry)) %>%
+    ungroup()
+
+st_write(urban_boundaries, "data/county_silgo_urban_boundaries.shp")
+
+```
+
+
+
+```{r load_sligo_urban_boundaries, fig.show="hold", eval = TRUE, include = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across the County Sligo, by Small Area and by population"}
+
+urban_boundaries <- st_read("data/county_silgo_urban_boundaries.shp")
+
+```
+
+
+
+```{marginfigure}
+Table 1: Summary statistics; SI score by transit supply category, by Small Area.
+```
+
+```{r summary_table_sligo, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
+
+theme_gtsummary_compact()
+si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population, transit_supply) %>%
+   tbl_summary(
+    by = transit_supply,
+    digits = SI ~ 1,
+    type = all_continuous() ~ "continuous2",
+    statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
+   )) %>%
+    add_overall() %>% 
+  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
+  as_kable_extra()
+
+```
+
+
+
+
+```{r SI_map_sligo_county_population, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across County Sligo, by population"}
+
+pcol_si_region_of_interest <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "All County Sligo (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.5),
+    axis.text.y = element_text(size = 1.5, hjust = 1),
+    axis.text.x = element_blank()
+  ) 
+
+pcol_si_region_of_interest_blank <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "All County Sligo (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.5),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+
+
+```
+
+
+```{r SI_map_sligo_county_sligo, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across County Sligo, by population"}
+
+
+pcol_si_urban_sligo <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Sligo") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Sligo (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_tubbercurry <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Tubbercurry") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Tubbercurry (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_strandhill <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Strandhill") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Strandhill (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_collooney <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Collooney") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Collooney (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_ballysadare <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Ballysadare") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Ballysadare (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+
+pcol_si_urban_ballymote <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Ballymote") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Ballymote (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_enniscrone <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Enniscrone") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Enniscrone (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_coolaney <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Coolaney") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Coolany (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_rosses_point <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Rosses Point") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Rosses Point (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_grange <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Grange") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Grange (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+pcol_si_urban_cliffony <- si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  filter(SA_URBAN_AREA_NAME == "Cliffony") %>%
+  aggregate(population ~ transit_supply, sum) %>%
+  right_join(tibble(transit_supply = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(transit_supply=factor(transit_supply, levels = si_region_of_interest_aggregated$si_by_area$transit_supply %>% levels())) %>%
+  arrange(transit_supply) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(transit_supply, population, fill = transit_supply), colour="black", size=0.2) +
+  scale_y_continuous(limits = c(0,20000)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(transit_supply,  population+5000, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})")), size = 0.75) +
+   coord_flip() + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Cliffony (by pop.)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 2.0),
+    axis.text.y = element_blank(),
+    axis.text.x = element_blank()
+  ) 
+
+
+
+```
+
+
+
+
+```{r SI_map_county_sligo, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, ncol = 1, out.width="100%", fig.cap="Transit Supply Index categories across County Sligo, by Small Area and by population (for urban areas with > 500 people"}
+
+#Set boundings box
+bbox_list <- region_of_interest %>%
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric() - 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()), bbox_list["xmax"] %>% as.numeric() )
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+
+county_region_of_interest_map <- ggplot()+ 
+  geom_sf(data=si_region_of_interest_aggregated$si_by_area,
+          aes(fill = transit_supply), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none",
+#        legend.text = element_text(size = 4), 
+#        legend.title = element_text(size = 5), 
+#        legend.key.size = unit(0.08, 'cm')
+        ) + 
+scale_fill_manual(values = c("Zero Supply" = "white", "Very Low" = "#F9D8B1", "Low" = "#F7C387", "Below average" = "#F29C33", "Above average" = "lightgreen", "High" = "#53A212", "Very High" = "darkgreen")) +
+    coord_sf(xlim = c(lon[1],lon[2]), 
+           ylim = c(lat[1], lat[2])) +  
+  ggspatial::annotation_north_arrow(location = 'tr', height = unit(0.1, "cm"), width = unit(0.3, "cm")) + 
+  ggspatial::annotation_scale(location = 'bl', height = (unit(0.05, "cm")), text_cex = 0.25) 
+
+county_region_of_interest_map + 
+ geom_sf(data=urban_boundaries, fill = NA, linewidth = 0.05) +
+  inset_element(pcol_si_region_of_interest, left = 0.0, bottom = 0.8, right = 0.30, top =1.0) + 
+#  inset_element(pcol_si_region_of_interest_blank, left = 0.083, bottom = 0.6, right = 0.30, top =0.8) + 
+  inset_element(pcol_si_urban_sligo, left = 0.683, bottom = 0.63, right = 0.9, top =0.78)  + 
+  inset_element(pcol_si_urban_tubbercurry, left = 0.43, bottom = 0.15, right = 0.62, top =0.3)  + 
+  inset_element(pcol_si_urban_strandhill, left = 0.43, bottom = 0.5, right = 0.62, top =0.65)  + 
+  inset_element(pcol_si_urban_collooney, left = 0.703, bottom = 0.35, right = 0.92, top =0.5)  + 
+  inset_element(pcol_si_urban_ballysadare, left = 0.683, bottom = 0.48, right = 0.9, top =0.63)  + 
+  inset_element(pcol_si_urban_ballymote, left = 0.633, bottom = 0.2, right = 0.85, top =0.35)  + 
+  inset_element(pcol_si_urban_enniscrone, left = 0.083, bottom = 0.4, right = 0.3, top =0.55)  + 
+  inset_element(pcol_si_urban_coolaney, left = 0.483, bottom = 0.33, right = 0.7, top =0.47)  + 
+  inset_element(pcol_si_urban_rosses_point, left = 0.483, bottom = 0.65, right = 0.7, top =0.8)  + 
+  inset_element(pcol_si_urban_grange, left = 0.483, bottom = 0.8, right = 0.7, top =0.95) + 
+  inset_element(pcol_si_urban_cliffony, left = 0.703, bottom = 0.85, right = 0.92, top =1.0)
+```
+
+
+
+Table X shows summary statistics for SI scores and the population, overall for all of the County Sligo and split by transit supply category. The total population of County Sligo is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
+
+
+
+Figure \ref{fig:SI_map_county_sligo} shows transit Supply Index (SI) categories by Small Areas across County Sligo. It also shows to the
+population living in Small Areas in each category for both the entire County and for various urban areas. 
+In general, there appear to be large areas of 
+County Sligo with SI scores below the average, or with no transit supply at all. Also, as might be expected, Small Areas where SI scores are higher than the average (of those with non-zero scores) appears to be located in very small and scattered geographic areas (at population centers).
+
+
+Table 2 summarises the Small Area populations by Urban Area in County Sligo by transit supply category, shown as a share of the total County population. Table 3 shows SI scores and transit supply categories by Urban Area, weighted by population. 
+
+
+```{marginfigure}
+Table 2: County Sligo Urban Area Small Area populations, by transit supply catergory.
+```
+
+
+```{r county_sligo_by_urban_area, eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+
+
+small_area_supply_by_urban_area <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>%
+  select(transit_supply, population, SA_URBAN_AREA_NAME) %>%
+  aggregate(population ~ transit_supply +  SA_URBAN_AREA_NAME, sum)
+
+small_area_supply_by_urban_area_table <- small_area_supply_by_urban_area %>% 
+  pivot_wider(names_from = transit_supply, values_from = population) %>%
+  mutate_all(~replace(., is.na(.), 0)) 
+
+small_area_supply_by_urban_area_table$total <- small_area_supply_by_urban_area_table[,2:8] %>% rowSums()
+
+
+small_area_supply_by_urban_area_table <- small_area_supply_by_urban_area_table[order(small_area_supply_by_urban_area_table$total, decreasing = TRUE),]
+
+small_area_supply_by_urban_area_table <- small_area_supply_by_urban_area_table [,1:8]
+
+small_area_supply_by_urban_area_table %>% 
+  adorn_totals(where = c("row","col")) %>%
+  adorn_percentages(denominator = "all") %>%
+  adorn_pct_formatting() %>% 
+  adorn_ns() %>% 
+  select(SA_URBAN_AREA_NAME, `Zero Supply`, `Very Low`, Low, `Below average`,`Above average`, `High`, `Very High`, Total) %>%
+  kable(align = "lrrrrrrrr", 
+        caption = "County Sligo: Urban Area Small Area populations by Transit Supply grouping",
+        col.names = c("Urban Area", 
+                      "Zero Supply", "Very Low", "Low",
+                      "Below av.", "Above av.", 
+                      "High", "Very High",
+                      "Total")) %>% 
+  add_header_above(c(" " = 1, "Transit Supply category" = 7, " " = 1)) %>%
+  kable_styling(font_size = 8) %>%
+  kableExtra::column_spec(1, width = "1.60cm") %>% 
+  kableExtra::column_spec(2, width = "1.3cm") %>%
+  kableExtra::column_spec(3, width = "1.3cm") %>%
+  kableExtra::column_spec(4, width = "1.3cm") %>%
+  kableExtra::column_spec(5, width = "1.3cm") %>%
+  kableExtra::column_spec(6, width = "1.3cm")  %>%
+  kableExtra::column_spec(7, width = "1.3cm") %>%
+  kableExtra::column_spec(8, width = "1.3cm") %>% 
+  kableExtra::column_spec(9, width = "1.3cm") 
+
+```
+
+```{marginfigure}
+Table 3:County Silgo: SI score \& transit supply category by Urban Area, weighted by population.
+```
+
+```{r summary_table_by_urban_area_county_galway, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
+
+#ggbarstats(si_region_of_interest_aggregated$si_by_area %>% 
+#  st_drop_geometry() %>% 
+#  select(SI, population, transit_supply, COUNTY_ENGLISH) %>%
+#  as.tibble(), 
+#  y = COUNTY_ENGLISH, 
+#  x = transit_supply
+#  ) + 
+#  scale_fill_manual(values = c("Very High" = "darkgreen",
+#                               "High" = "#53A212", 
+#                               "Above average" = "lightgreen", 
+#                               "Below average" = "#F29C33",
+#                               "Low" = "#F7C387", 
+#                               "Very Low" = "#F9D8B1", 
+#                               "Zero Supply" = "#FFFFFF" )) +  
+#  theme(legend.position="bottom")
+
+
+theme_gtsummary_compact()
+si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry()  %>% 
+  filter(!is.na(SA_URBAN_AREA_NAME)) %>%
+  select(SI, population, transit_supply, SA_URBAN_AREA_NAME) %>%
+  as.tibble() |>
+  survey::svydesign(data = _, ids = ~1, weights = ~population) %>%
+   tbl_svysummary(
+    by = SA_URBAN_AREA_NAME,
+    include = c("SI", "transit_supply"),
+    digits = SI ~ 1,
+   type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
+   )) %>%
+  # add_overall() %>% 
+  #  add_p() %>%
+#  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
+  as_kable_extra()
+
+```
+
+
+There is a statistically significant variation between Counties in the share of Small Areas in each transit supply category (`r prmisc::print_chi2(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% tabyl(transit_supply, SA_URBAN_AREA_NAME) %>% chisq.test())`). Table 3 indicates that Mayo and Roscommon have higher shares of their population living in Small Areas with no transit supply (over two people in every five), whereas Sligo has the lowest (close to one in eight). Close to one-third of people living in Sligo live in Small Areas with SI scores above the average (not including areas with no transit), followed by a little under one in four in Clare and around one in seven in Roscommon. At the other end of the spectrum, only around one in twelve people in Mayo and Leitrim live in areas with above the average SI scores, while for Donegal it is only one in twenty. 
+
+
+```{r gglorenz_county_sligo, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Sligo: Lorenz curves"}
+
+
+
+text <- si_region_of_interest_aggregated$thresholds[6]
+numbers <- regmatches(text,gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+  unlist() %>% 
+  as.numeric()
+max <- numbers[2]
+very_high_limit <- numbers[1] / max
+
+#regmatches(si_wexford_250423_day_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+#  unlist() %>% 
+#  as.numeric()
+
+perc_population <- pcol_si_region_of_interest$data %>% 
+  select(transit_supply, population) %>%
+  adorn_percentages(denominator = "col") 
+
+perc_population$cumulative_pop <- perc_population$population %>% cumsum()
+
+
+si_region_of_interest_aggregated$si_by_area %>% 
+  ggplot(aes(x = SI, n = population)) +
+  stat_lorenz(desc = FALSE) +
+  coord_fixed() +
+  geom_abline(linetype = "dashed") +
+  theme_minimal() +
+  hrbrthemes::scale_x_percent() +
+  hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+       y = "Cumulative share of SI score") + 
+  geom_textvline(xintercept = perc_population[6,3], color = "darkgreen", label = "") +
+  geom_textvline(xintercept = perc_population[5,3], color = "#53A212", label = "") +
+  geom_textvline(xintercept = perc_population[4,3], color = "lightgreen", label = "Above Average") +
+  geom_textvline(xintercept = perc_population[3,3], vjust=1, color = "#F29C33", label = "Below Average") +
+  geom_textvline(xintercept = perc_population[2,3], vjust=1.5, color = "#F7C387", label = "Low") +
+  geom_textvline(xintercept = perc_population[1,3], vjust=1.5, color = "#F9D8B1", label = "Very Low")
+
+lorenz_values <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population)
+lorenz_values <- Lc(lorenz_values$SI, lorenz_values$population)
+
+```
+
+
+
+```{r gglorenz_sligo_urban_areas, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Sligo: Lorenz curves by Urban Areas"}
+
+si_region_of_interest_aggregated$si_by_area %>% 
+  ggplot(aes(x = SI, n = population, colour = SA_URBAN_AREA_NAME)) +
+  stat_lorenz(desc = FALSE) +
+  coord_fixed() +
+  geom_abline(linetype = "dashed") +
+  theme_minimal() +
+  hrbrthemes::scale_x_percent() +
+  hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+       y = "Cumulative share of SI score") +
+  scale_color_brewer(palette = "Dark2") +
+  theme(legend.text = element_text(size = 5), 
+        legend.title = element_blank(),
+        axis.title = element_text(size = 5),
+        axis.text = element_text(size = 4)
+        ) 
+
+
+```
+
+
+*Urban areas*
+
+
+Approximately `r label_percent(accuracy = 10)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(population) %>% sum())` of County Sligo's population (close to `r label_number(big.mark = ",", accuracy = 1000)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum())` people) live in Small Areas that are within one of the `r si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(SA_URBAN_AREA_NAME) %>% unique() %>% nrow()` named 'urban areas' within County Sligo. Figure \ref{fig:urban_si_pop_histogram_sligo} shows the total population and aggregate SI scores for each urban area.
+
+
+```{r urban_si_pop_histogram_sligo, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="County Sligo pop. vs SI, aggregated by urban areas"}
+
+si_pop_by_urban_area <- si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% aggregate(cbind(SI, population) ~ SA_URBAN_AREA_NAME, sum)
+
+si_pop_by_urban_area <- left_join(si_pop_by_urban_area, 
+                                  si_region_of_interest_aggregated$si_by_area %>% 
+                                    st_drop_geometry() %>% 
+                                    select(SA_URBAN_AREA_NAME, SA_URBAN_AREA_NAME)) %>% 
+                                    unique()
+
+p <- ggplot(si_pop_by_urban_area, aes(population, SI, colour = SA_URBAN_AREA_NAME)) + 
+  geom_point()  + 
+  geom_text_repel(label = si_pop_by_urban_area$SA_URBAN_AREA_NAME, size = 2) +
+  theme_tufte(ticks=F) + 
+  scale_x_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_y_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(legend.position = "bottom", 
+        legend.title = element_blank()) 
+  
+ggMarginal(p, type = "histogram", fill="transparent") 
+
+
+
+
+
+```
+
+
+Boxplots of the SI scores for Small Areas within each of the various urban areas are shown in Figure \ref{fig:urban_towns_boxplot}, again grouped by County. 
+
+
+```{r urban_towns_boxplot_sligo, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="County Sligo urban areas: boxplot of Small Area SI scores, ordered by population size"}
+
+lower_thresholds <- tibble(very_low = regmatches(si_region_of_interest_aggregated$thresholds[1],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           low = regmatches(si_region_of_interest_aggregated$thresholds[2],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           below_average = regmatches(si_region_of_interest_aggregated$thresholds[3],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           above_average = regmatches(si_region_of_interest_aggregated$thresholds[4],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           high = regmatches(si_region_of_interest_aggregated$thresholds[5],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           very_high = regmatches(si_region_of_interest_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1))
+
+
+new_order <- with(si_region_of_interest_aggregated$si_by_area %>%
+                    st_drop_geometry() %>%
+                    select(SI, population, SA_URBAN_AREA_NAME) %>% 
+                    filter(SA_URBAN_AREA_NAME != "NA"), 
+                  reorder(SA_URBAN_AREA_NAME, population, sum)) 
+
+
+si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>% 
+  select(SI, SA_URBAN_AREA_NAME, SA_URBAN_AREA_NAME) %>% 
+  filter(SA_URBAN_AREA_NAME != "NA") %>%
+  ggplot(aes(SA_URBAN_AREA_NAME %>% factor(levels = new_order %>% levels()) ,SI)) + 
+  theme_tufte() + 
+  geom_texthline(yintercept=lower_thresholds$very_high, label = "Very High", vjust=-1,color = "darkgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$high, label = "High", vjust=-1,color = "#53A212", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$above_average, label = "Above Average", vjust=-0.5,color = "lightgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$below_average, label = "Below Average", vjust=-0.5,color = "#F29C33", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$low, label = "Low",vjust=-1, color = "#F7C387", size = 2) + 
+  geom_texthline(yintercept=lower_thresholds$very_low, label = "Very Low", vjust=-1,color = "#F9D8B1", size = 2) + 
+  scale_y_log10(limits = c(1, 12000)) +
+  theme(axis.text.y = element_text(size = 4), 
+        axis.text.x = element_text(size = 4, angle = 90, hjus = 0.95, vjust=0.2),
+        axis.title=element_blank()) +
+  geom_tufteboxplot(outlier.colour="transparent") + 
+  theme() +
+  coord_flip() 
+
+```
+
+
+
+
+Table 1 shows summary statistics for SI scores and the population, overall for all of the County Sligo and split by transit supply category. The total population of the County Sligo is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
+
+
+
+Figure \ref{fig:SI_map_region_of_interest_county} shows transit Supply Index (SI) categories by Small Areas across the County Sligo. It also shows to the
+population living in Small Areas in each category for both the entire County Sligo and for each county. 
+In general, there appear to be large areas of 
+the County Sligo with SI scores below the average, or with no transit supply at all. Also, as might be expected, Small Areas where SI scores are higher than the average (of those with non-zero scores) appears to be located in very small and scattered geographic areas (at population centers).
+
+
+Table 2 summarises the Small Area populations in each County by transit supply category, shown as a share of the total County Sligo population. Table 3 shows SI scores and transit supply categories by County, weighted by population. 
+
+
+```{marginfigure}
+Table 2: County Small Area populations, by transit supply catergory.
+```
+
+
+```{r west_of_ireland_population_by_county, eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+
+
+small_area_supply_by_county <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>%
+  select(transit_supply, population, SA_URBAN_AREA_NAME) %>%
+  aggregate(population ~ transit_supply +  SA_URBAN_AREA_NAME , sum)
+
+small_area_supply_by_county_table <- small_area_supply_by_county %>% 
+  pivot_wider(names_from = transit_supply, values_from = population) %>%
+  mutate_all(~replace(., is.na(.), 0)) 
+
+small_area_supply_by_county_table$total <- small_area_supply_by_county_table[,2:8] %>% rowSums()
+
+
+small_area_supply_by_county_table <- small_area_supply_by_county_table[order(small_area_supply_by_county_table$total, decreasing = TRUE),]
+
+small_area_supply_by_county_table <- small_area_supply_by_county_table [,1:8]
+
+small_area_supply_by_county_table %>% 
+  adorn_totals(where = c("row","col")) %>%
+  adorn_percentages(denominator = "all") %>%
+  adorn_pct_formatting() %>% 
+  adorn_ns() %>% 
+  select(SA_URBAN_AREA_NAME, `Zero Supply`, `Very Low`, Low, `Below average`,`Above average`, `High`, `Very High`, Total) %>%
+  kable(align = "lrrrrrrrr", 
+        caption = "County Sligo: County Small Area populations by Transit Supply grouping",
+        col.names = c("County", 
+                      "Zero Supply", "Very Low", "Low",
+                      "Below av.", "Above av.", 
+                      "High", "Very High",
+                      "Total")) %>% 
+  add_header_above(c(" " = 1, "Transit Supply category" = 7, " " = 1)) %>%
+  kable_styling(font_size = 8) %>%
+  kableExtra::column_spec(1, width = "1.60cm") %>% 
+  kableExtra::column_spec(2, width = "1.3cm") %>%
+  kableExtra::column_spec(3, width = "1.3cm") %>%
+  kableExtra::column_spec(4, width = "1.3cm") %>%
+  kableExtra::column_spec(5, width = "1.3cm") %>%
+  kableExtra::column_spec(6, width = "1.3cm")  %>%
+  kableExtra::column_spec(7, width = "1.3cm") %>%
+  kableExtra::column_spec(8, width = "1.3cm") %>% 
+  kableExtra::column_spec(9, width = "1.3cm") 
+
+```
+
+As shown in Table 2, the largest shares of the total population of the County Sligo are the ....
+
+
+
+```{marginfigure}
+Table 3: SI score \& transit supply category by County, weighted by population.
+```
+
+```{r summary_table_by_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
+
+#ggbarstats(si_region_of_interest_aggregated$si_by_area %>% 
+#  st_drop_geometry() %>% 
+#  select(SI, population, transit_supply, COUNTY_ENGLISH) %>%
+#  as.tibble(), 
+#  y = COUNTY_ENGLISH, 
+#  x = transit_supply
+#  ) + 
+#  scale_fill_manual(values = c("Very High" = "darkgreen",
+#                               "High" = "#53A212", 
+#                               "Above average" = "lightgreen", 
+#                               "Below average" = "#F29C33",
+#                               "Low" = "#F7C387", 
+#                               "Very Low" = "#F9D8B1", 
+#                               "Zero Supply" = "#FFFFFF" )) +  
+#  theme(legend.position="bottom")
+
+
+theme_gtsummary_compact()
+si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population, transit_supply, SA_URBAN_AREA_NAME) %>% 
+  mutate(SA_URBAN_AREA_NAME=replace_na(SA_URBAN_AREA_NAME, "Non-urban")) %>% 
+  mutate(SA_URBAN_AREA_NAME = ifelse(SA_URBAN_AREA_NAME == "Sligo" | 
+             SA_URBAN_AREA_NAME == "Tubbercurry" |
+             SA_URBAN_AREA_NAME == "Strandhill" |
+             SA_URBAN_AREA_NAME == "Collooney" |
+             SA_URBAN_AREA_NAME == "Ballysadare" |
+  #           SA_URBAN_AREA_NAME == "Ballymote" |
+  #           SA_URBAN_AREA_NAME == "Enniscrone" |
+  #           SA_URBAN_AREA_NAME == "Coolaney" |
+  #           SA_URBAN_AREA_NAME == "Rosses Point" |
+  #           SA_URBAN_AREA_NAME == "Grange" |
+  #           SA_URBAN_AREA_NAME == "Cliffony" | 
+             SA_URBAN_AREA_NAME == "Non-urban", 
+             SA_URBAN_AREA_NAME, "Other")) %>%
+   mutate(SA_URBAN_AREA_NAME = factor(SA_URBAN_AREA_NAME, levels = c(
+     "Sligo", "Tubbercurry", "Strandhill", "Collooney", "Ballysadare", "Ballymote", "Enniscrone", "Coolaney", "Rosses Point", "Grange", "Cliffony", "Other", "Non-urban"))) %>%
+  as.tibble() |>
+  survey::svydesign(data = _, ids = ~1, weights = ~population) %>%
+   tbl_svysummary(
+    by = SA_URBAN_AREA_NAME,
+    include = c("SI", "transit_supply"),
+    digits = SI ~ 1,
+   type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
+   )) %>%
+   add_overall() %>% 
+  #  add_p() %>%
+#  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
+  as_kable_extra()
+
+```
+
+
+There is a statistically significant variation between Counties in the share of Small Areas in each transit supply category (`r prmisc::print_chi2(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% tabyl(transit_supply, SA_URBAN_AREA_NAME) %>% chisq.test())`). Table 3 indicates that Mayo and Roscommon have higher shares of their population living in Small Areas with no transit supply (over two people in every five), whereas Sligo has the lowest (close to one in eight). Close to one-third of people living in Sligo live in Small Areas with SI scores above the average (not including areas with no transit), followed by a little under one in four in Clare and around one in seven in Roscommon. At the other end of the spectrum, only around one in twelve people in Mayo and Leitrim live in areas with above the average SI scores, while for Donegal it is only one in twenty. 
+
+
+```{r gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="County Sligo: Lorenz curves"}
+
+
+
+text <- si_region_of_interest_aggregated$thresholds[6]
+numbers <- regmatches(text,gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+  unlist() %>% 
+  as.numeric()
+max <- numbers[2]
+very_high_limit <- numbers[1] / max
+
+#regmatches(si_wexford_250423_day_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+#  unlist() %>% 
+#  as.numeric()
+
+perc_population <- pcol_si_region_of_interest$data %>% 
+  select(transit_supply, population) %>%
+  adorn_percentages(denominator = "col") 
+
+perc_population$cumulative_pop <- perc_population$population %>% cumsum()
+
+
+si_region_of_interest_aggregated$si_by_area %>%
+  ggplot(aes(x = SI, n = population)) +
+  stat_lorenz(desc = FALSE) +
+  coord_fixed() +
+  geom_abline(linetype = "dashed") +
+  theme_minimal() +
+  hrbrthemes::scale_x_percent() +
+  hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+       y = "Cumulative share of SI score") + 
+  geom_textvline(xintercept = perc_population[6,3], color = "darkgreen", label = "") +
+  geom_textvline(xintercept = perc_population[5,3], color = "#53A212", label = "") +
+  geom_textvline(xintercept = perc_population[4,3], color = "lightgreen", label = "Above Average") +
+  geom_textvline(xintercept = perc_population[3,3], vjust=1, color = "#F29C33", label = "Below Average") +
+  geom_textvline(xintercept = perc_population[2,3], vjust=1.5, color = "#F7C387", label = "Low") +
+  geom_textvline(xintercept = perc_population[1,3], vjust=1.5, color = "#F9D8B1", label = "Very Low")
+
+lorenz_values <- si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population)
+lorenz_values <- Lc(lorenz_values$SI, lorenz_values$population)
+
+```
+
+
+A Lorenz Curve of distribution of the County Sligo's transit supply to the population is shown in Figure 2. The Gini co-efficient is `r Gini(si_region_of_interest_aggregated$si_by_area$SI, weights = si_region_of_interest_aggregated$si_by_area$population, unbiased = TRUE, conf.level = NA, R = 10000, type = "bca", na.rm = FALSE) %>% label_number(accuracy=0.01)()`, indicating a relatively unequal distribution. In total, the SI score across all of the County Sligo is approximately `r label_number(big.mark=",", accuracy = 1000)(si_region_of_interest_aggregated$si_by_area$SI %>% sum())`, but `r label_percent(digits=2)(1-lorenz_values$L[2520])` of this goes to Small Areas that are home to just `r label_percent(digits=2)(1-lorenz_values$p[2520])` of the total population. `r label_percent(digits=2)(lorenz_values$p[2800])` of the population live in Small Areas that, in combination, receive just `r label_percent(digits=2)(lorenz_values$L[2830])` of the total supply. This is perhaps not surprising, given that providing transit services in rural and low density areas is challenging. 
+
+Figure \ref{fig:gglorenz_county} shows Lorenz curves for each of the named urban areas. Gini co-efficients range from ....
+
+
+```{r gglorenz_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.fullwidth = TRUE, fig.cap="County Sligo: Lorenz curves by County"}
+
+si_region_of_interest_aggregated$si_by_area %>%
+  ggplot(aes(x = SI, n = population, colour = SA_URBAN_AREA_NAME)) +
+  stat_lorenz(desc = FALSE) +
+  coord_fixed() +
+  geom_abline(linetype = "dashed") +
+  theme_minimal() +
+  hrbrthemes::scale_x_percent() +
+  hrbrthemes::scale_y_percent() +
+  labs(x = "Cumulative share of population ",
+       y = "Cumulative share of SI score") +
+  scale_color_brewer(palette = "Dark2") +
+  theme(legend.text = element_text(size = 5), 
+        legend.title = element_blank(),
+        axis.title = element_text(size = 5),
+        axis.text = element_text(size = 4)
+        ) 
+
+
+```
+
+
+*Urban areas*
+Approximately `r label_percent(accuracy = 10)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(population) %>% sum())` of the County Sligo's population (close to `r label_number(big.mark = ",", accuracy = 1000)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(population) %>% sum())` people) live in Small Areas that are within one of the `r si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% select(SA_URBAN_AREA_NAME) %>% unique() %>% nrow()` named 'urban areas' within the west. Figure \ref{fig:urban_si_pop_histogram} shows the total population and aggregate SI scores for each urban area, while Figure \ref{fig:urban_si_pop_histogram_county} shows the same data, but grouped by County
+
+
+```{r urban_si_pop_histogram, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="County Sligo pop. vs SI, aggregated by urban areas"}
+
+si_pop_by_urban_area <- si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% aggregate(cbind(SI, population) ~ SA_URBAN_AREA_NAME, sum)
+
+si_pop_by_urban_area <- left_join(si_pop_by_urban_area, 
+                                  si_region_of_interest_aggregated$si_by_area %>% 
+                                    st_drop_geometry() %>% 
+                                    select(SA_URBAN_AREA_NAME, SA_URBAN_AREA_NAME)) %>% 
+                                    unique()
+
+p <- ggplot(si_pop_by_urban_area, aes(population, SI, colour = SA_URBAN_AREA_NAME)) + 
+  geom_point()  + 
+  geom_text_repel(label = si_pop_by_urban_area$SA_URBAN_AREA_NAME, size = 2) +
+  theme_tufte(ticks=F) + 
+  scale_x_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_y_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(legend.position = "bottom", 
+        legend.title = element_blank()) 
+  
+ggMarginal(p, type = "histogram", fill="transparent") 
+
+
+
+
+
+```
+
+```{r urban_si_pop_histogram_by_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="County Sligo pop. vs SI, aggregated by urban areas"}
+
+
+p <- ggplot(si_pop_by_urban_area, aes(population, SI, colour = SA_URBAN_AREA_NAME)) + 
+  geom_point()  + 
+  geom_text_repel(label = si_pop_by_urban_area$SA_URBAN_AREA_NAME, size = 2) +
+  theme_tufte(ticks=F) + 
+  scale_x_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_y_log10(labels = scales::label_number(big.mark = ",")) + 
+  scale_color_brewer(palette = "Dark2") +
+  facet_grid(rows="SA_URBAN_AREA_NAME") + 
+  theme(legend.position = "blank")
+
+p
+
+#  ggMarginal(p, type = "histogram", fill="transparent") 
+
+```
+
+
+
+
+
+Boxplots of the SI scores for Small Areas within each of the various urban areas are shown in Figure \ref{fig:urban_towns_boxplot}, again grouped by County. 
+
+
+```{r urban_towns_boxplot, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="County Sligo urban areas: boxplot of Small Area SI scores, ordered by population size"}
+
+lower_thresholds <- tibble(very_low = regmatches(si_region_of_interest_aggregated$thresholds[1],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           low = regmatches(si_region_of_interest_aggregated$thresholds[2],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           below_average = regmatches(si_region_of_interest_aggregated$thresholds[3],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           above_average = regmatches(si_region_of_interest_aggregated$thresholds[4],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           high = regmatches(si_region_of_interest_aggregated$thresholds[5],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1),
+                           very_high = regmatches(si_region_of_interest_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
+                             unlist() %>% 
+                             as.numeric() %>% head(n=1))
+
+
+new_order <- with(si_region_of_interest_aggregated$si_by_area %>%
+                    st_drop_geometry() %>%
+                    select(SI, population, SA_URBAN_AREA_NAME) %>% 
+                    filter(SA_URBAN_AREA_NAME != "NA"), 
+                  reorder(SA_URBAN_AREA_NAME, population, sum)) 
+
+
+si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  select(SI, SA_URBAN_AREA_NAME, SA_URBAN_AREA_NAME) %>% 
+  filter(SA_URBAN_AREA_NAME != "NA") %>%
+  ggplot(aes(SA_URBAN_AREA_NAME %>% factor(levels = new_order %>% levels()) ,SI)) + 
+  theme_tufte() + 
+  geom_texthline(yintercept=lower_thresholds$very_high, label = "Very High", vjust=-1,color = "darkgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$high, label = "High", vjust=-1,color = "#53A212", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$above_average, label = "Above Average", vjust=-0.5,color = "lightgreen", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$below_average, label = "Below Average", vjust=-0.5,color = "#F29C33", size = 2) +
+  geom_texthline(yintercept=lower_thresholds$low, label = "Low",vjust=-1, color = "#F7C387", size = 2) + 
+  geom_texthline(yintercept=lower_thresholds$very_low, label = "Very Low", vjust=-1,color = "#F9D8B1", size = 2) + 
+  scale_y_log10(limits = c(1, 12000)) +
+  theme(axis.text.y = element_text(size = 4), 
+        axis.text.x = element_text(size = 4, angle = 90, hjus = 0.95, vjust=0.2),
+        axis.title=element_blank()) +
+  geom_tufteboxplot(outlier.colour="transparent") + 
+  theme() +
+  coord_flip() + 
+  facet_grid(rows="SA_URBAN_AREA_NAME", scales = "free_y", space = "free_y"
+             )
+
+```
+
+
+## County Sligo
+
+
+
