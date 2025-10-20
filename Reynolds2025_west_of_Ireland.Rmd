@@ -73,7 +73,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 # Introduction
 
 # Research Background
-A wide selection of 
+Many
 indexes, 
 metrics 
 and other indicators 
@@ -81,9 +81,10 @@ have been developed by
 researchers, 
 practitioners 
 and others 
-to assess 
-transport 
-and related factors. 
+to examine 
+transport,
+land use 
+and related topics. 
 Examples include: 
 *Walk Score* and *Transit Score*[@WalkScore:2023tg], which rate a location out of 100 for walkability and 
 transit accessibility respectively; 
@@ -95,56 +96,71 @@ and the Public Transport Accessibility Index (PTAI)[@Saghapour:2016aa]
 What may sometimes 
 be lacking is 
 comparison of 
-the results obtained 
-using one set of indicators 
-versus others.
+the results from 
+one set of indicators 
+to another other.
 In part this can be because of the 
 variability in data availability. 
-For example, 
-national censuses often provide a 
+Censuses often provide a 
 key resource for 
 understanding transport-related issues, 
 yet the collection practices used, 
 questions asked and 
-other characteristics 
-tend to be highly variable from 
+other elements 
+tend vary significantly from 
 one jurisdiction to another. 
-As well, 
-some indicators 
-have been developed for specific contexts, 
-for example 
-McHenry et al. (2023)[@McHenry:2023aa] 
-recently developed 
-a Mobility Index (MI) 
-for rural centres in the west of Ireland/ 
-This differs from other MIs, 
-which may tend to be focused on 
-urbanised locations.  
+Likewise, 
+transport agencies, 
+government departments 
+and other sources of data 
+might have different 
+approaches with respect 
+to data sharing, 
+open data policies 
+or variability in 
+what datasets they collect 
+or produce 
+in the first place. 
+
+
+
+Amongst the many 
+indicators, metrics and 
+similar 
+it might also 
+not always be clear 
+why one should be selected over another, 
+or why new ones have 
+been developed by researchers 
+or others. 
+That said,  
+many indicators 
+have been developed 
+for specific contexts. 
+An example is the 
+recently reported
+a Mobility Index (MI)[@McHenry:2023aa] 
+for rural centres in the west of Ireland, 
+developed because other MIs 
+tend to be for more urbanised locations
+where origins and destinations 
+tend to be closer together.
 
 Finally, 
 some indicators are 
 difficult or impossible 
 to calculate independently. 
-Some are closed-source, 
-in that they may be propitiatory
-or otherwise only available from a single website^[e.g. WalkScore and Transit Score cannot be independently calculated, and the exact algorithm remains unpublished].
+Some, such as *Walk Score* and *Transit Score* are closed-source 
+and can only be obtained from a single entity^[e.g. WalkScore and Transit Score cannot be independently calculated and the exact algorithm remains unpublished].
 Others may just be challenging to calculate 
-due to a lack of tools.  
-Some research progress is being made on this, 
-however, with 
-(for example) 
-@Wong:2013aa reporting the development of a 
-set of software tools 
-that allow many of the TCQSM indicators 
-to be calculated from 
-General Transit Feed Specification (GTFS) datasets.  
-@Wong:2013aa shows results comparing 
-50 USA transit operators, 
-but has also published 
-the code base (on github) 
-to allow others to 
-undertake similar comparisons in 
-other places or at other times.  
+due to a lack of, 
+or free access to, 
+software tools. 
+In response, Wong (2013) [@Wong:2013aa] 
+developed 
+software, which is publicshed on github, 
+to calculate many of the *TCQSM* indicators from 
+General Transit Feed Specification (GTFS) datasets. 
 
 While censuses 
 and the collection of 
@@ -173,16 +189,18 @@ This was originally developed
 to support the provision of transit 
 directions in Google Maps, 
 but has since been adopted by 
-over 10,000 agencies[@GTFS]. 
+over 10,000 agencies[@GTFS] 
 Hence, software tools 
 that take GTFS data 
 as inputs 
 can generally be adapted 
 easily and rapidly 
 to many systems and 
-locations. 
+locations, 
+and this is why Wong (2013) 
+was also able report results for 50 USA transit operators. 
 
-One such recently developed 
+Another such recently developed 
 software tool is the 
 *gtfssupplyindex* 
 R package [@Reynolds2025gtfsmainpaper],
@@ -193,34 +211,71 @@ including
 and *tidytransit* [@R-tidytransit]. 
 The *gtfssupplyindex* can 
 be used to calculate a 
-transit Supply Index, 
-developed by 
-@Currie2003Hobart, 
-@Currie2004Gap, 
-@Currie2007Identifying 
-and @currie2010identifying 
+transit Supply Index (SI), 
+developed
 in research related 
 to identifying 
 gaps in public transport services 
-on the basis of social needs for transport. 
+on the basis of social needs for transport 
+[@Currie2003Hobart, @Currie2004Gap, @Currie2007Identifying, @currie2010identifying]. 
+The SI equation is:
+
+$$SI_{area, time} = \sum_{i=1}^{n}{\frac{Area_{Bi}}{Area_{area}}SL_{i, time}}$$
+
+where:
+
+-   $SI_{area, time}$ is the Supply Index for the *area of interest* and a given period of time;
+
+-   $Area_{Bi}$ is the amount of the buffer zone for each stop (i) that is within the *area of interest*^[In @currie2010identifying this buffer zone was based on a radius of 400 metres for bus and tram stops, and 800 metres for railway stations. The same definition is used here.];
+
+-   $Area_{area}$ is the area of each *area of interest*; and
+
+-   $SL_{i,time}$ is the number of transit arrivals for each stop (i) within the given time period.
+
+
+Based on the SI scores @currie2010identifying grouped 
+areas of interest into seven categories.
+The first category includes areas of interest 
+with zero SI scores, 
+i.e. those areas without 
+any transit services at all. 
+The remaining areas of interest 
+are than categorised into 
+three even groups 
+(Very Low, Low and Below Average)
+across those with 
+areas with SI scores below average, 
+and three even groups above the average^[Based on only including areas of interest with non-zero scores]
+(Above Average, High and Very High). 
+
+Currie (2010)[@currie2010identifying] 
+also used a Composite Social Needs Index, 
+based mostly on census data including measures 
+related to income, age, car ownership and other 
+indicators related to the extent to which 
+those living in each area of interest might 
+have higher or lower needs for public transport.  
+The final step of the Currie (2010) social needs-gap approach involved identifying those 
+areas of interest that had 
+Very High Composite Social Needs Index scores, 
+but Very Low or Zero transit supply, 
+with those
+being where an increase in
+services levels might have a comparatively larger impact. 
 This approach, 
 and its potential application 
-to route and service planning, 
-and for policy making 
+to policy-making, 
+route design 
+and service planning 
 was suggested to be 
 “substantially more useful than the presentation of anecdotal evidence, which is the most common means of identifying transport needs in local transport studies throughout the world”[@currie2010identifying]. 
 However, 
 its development predated the GTFS, 
-and the results presented in 
-@currie2010identifying 
-for Melbourne, Australia, 
-in 2006 
-had required 
+and analysis required 
 bespoke cleaning 
 and processing 
 of data obtained directly 
 from the transit agency. 
-
 With the *gtfssupplyindex* 
 package, 
 however, 
@@ -239,9 +294,7 @@ or to more rural locations.
 Also unclear is how 
 such results might compare 
 to other transport-related indicators, 
-including those developed 
-for rural areas 
-(such as the @McHenry:2023aa MI).  
+including that developed by McHenry et al (2023)[@McHenry:2023aa]
 
 
 In the following sections, 
@@ -251,11 +304,10 @@ reports the application
 of the *gtfssupplyindex* 
 package to the west of Ireland, 
 adopting the same 
-case and context as 
-@McHenry:2023aa. 
-Results from a needs-gap 
+case and context as McHenry et al (2023). 
+Results from a social needs-gap 
 analysis are compared to 
-those from @McHenry:2023aa 
+those of McHenry et al (2023) 
 so as to provide insights 
 into the differences 
 between these indicators. 
@@ -269,69 +321,29 @@ to this case,
 so as to allow 
 deeper understandings 
 of both transport in the west of Ireland, 
-but also how well 
+but also of how well 
 existing techniques 
 might help 
 researchers, 
 practitioners and policy-makers 
 understand and 
-improve networks.  
+improve rural transport networks.  
 
 # Methodology
-
-## The transit Supply Index (SI)
-
-@Reynolds2025gtfsmainpaper provide a generalized form of the @currie2010identifying SI equation, which is:
-
-$$SI_{area, time} = \sum_{i=1}^{n}{\frac{Area_{Bi}}{Area_{area}}SL_{i, time}}$$
-
-where:
-
--   $SI_{area, time}$ is the Supply Index for the *area of interest* and a given period of time;
-
--   $Area_{Bi}$ is the amount of the buffer zone for each stop (i) that is within the *area of interest*^[In @currie2010identifying this burffer zone was based on a radius of 400 metres for bus and tram stops, and 800 metres for railway stations. The same definition is used here.];
-
--   $Area_{area}$ is the area of each *area of interest*; and
-
--   $SL_{i,time}$ is the number of transit arrivals for each stop (i) within the given time period.
-
-Based on the SI scores @currie2010identifying grouped 
-areas of interest into seven categories.
-The first category includes areas of interest 
-with zero SI scores, 
-i.e. those areas without 
-any transit services at all. 
-The remaining areas of interest 
-are than categorised into 
-three even groups 
-(Very Low, Low and Below Average)
-across those with 
-areas with SI scores below average, 
-and three even groups above the average^[Based on only including areas of interest with non-zero scores]
-(Above Average, High and Very High). 
-This approach, 
-which was also used in 
-@Reynolds2025gtfsmainpaper, 
-has been used in this paper as well 
-so as to maintain consistency with the previous research.
-
-The areas of interest adopted 
+The *areas of interest* adopted 
 in this study 
-at the 
+are the 
 2022 definition of *Small Areas*, 
-used in the 
-Irish Census. 
-However, 
+as used in the 
+Irish Census^[However, 
 data from the Irish Census 
 is reported seperately 
-for Galway City and the rest of County Galway^["Galway City" is included as an additional county in the COUNTY_ENGLISH field], 
+for Galway City and the rest of County Galway("Galway City" is included as an additional county in the COUNTY_ENGLISH field), 
 whereas in this analysis 
 Small Areas within Galway City 
-are reported as part of County Galway
+are reported as part of County Galway.]
 
 
-
-## GTFS data
 
 <!---
 Data for this paper was sourced from
@@ -397,9 +409,9 @@ all_feeds_census_week %>% class()
 
 --->
 
-Data for this paper was sourced from
+GTFS data for this paper was sourced from
 @Transport-for-Ireland:0aa on October 1, 2025^[Selecting the "All GTFS Operators" feed]. 
-The analysis was run for the week starting October 1. 
+The time period selected was the seven days starting October 1, 2025. 
 
 
 
@@ -480,8 +492,12 @@ write.csv(si_west_ireland_week_251001_aggregated, "results/si_west_ireland_week_
 
 # Results
 
-## All of the west of Ireland
+## SI scores and categories
 
+
+Table 1 shows summary statistics for SI scores and the population, overall for all of the west of Ireland and split by transit supply category. 
+Figure \ref{fig:SI_map_region_of_interest_county} shows transit Supply Index (SI) categories by Small Areas across the west of Ireland. It also shows to the
+population living in Small Areas in each category for both the entire west of Ireland and for each county. 
 
 
 ```{r threshold_function, fig.show="hold", out.width="100%", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE,  cache=FALSE, results='hide'}
@@ -553,10 +569,28 @@ si_by_area_dataframe$transit_supply <- si_by_area_dataframe$transit_supply %>%
   fct_explicit_na(na_level = "Zero Supply") %>% 
   fct_shift(n = -1)
 
+#define thresholds as numeric using https://stackoverflow.com/questions/39387745/cut-extracting-the-minimum-and-maximum-of-cut-levels-as-columns-in-data-frame
+thresholds <- tibble(cuts_lower_groups %>% as_tibble()  %>% 
+  mutate(x_tmp = str_sub(value, 2, -2)) %>% 
+  separate(x_tmp, c("min", "max"), sep = ",") %>% 
+  mutate_at(c("min", "max"), as.double) %>% 
+  select(max) %>% unique() %>%
+  arrange(max)
+)
+
+thresholds <- rbind(thresholds, cuts_upper_groups %>% as_tibble()  %>% 
+  mutate(x_tmp = str_sub(value, 2, -2)) %>% 
+  separate(x_tmp, c("min", "max"), sep = ",") %>% 
+  mutate_at(c("min", "max"), as.double) %>% 
+  select(max) %>% unique() %>%
+  arrange(max)
+)
+
 #return dataframe and information about level cut offs
 si_by_area_dataframe_and_cuts_dataframe <- list(
-  si_by_area_dataframe,
-  c(levels(cuts_lower_groups), levels(cuts_upper_groups))
+  si_by_area = si_by_area_dataframe,
+  thresholds_text = c(levels(cuts_lower_groups), levels(cuts_upper_groups)), 
+  thresholds_values = thresholds
   )
 return(si_by_area_dataframe_and_cuts_dataframe)
 }
@@ -605,7 +639,8 @@ output_plot <- ggplot()+
 
   outputs <- list("si_by_area" = si_by_area, 
                   "output_plot" = output_plot, 
-                  "thresholds" = si_by_area_thresholds[[2]])
+                  "thresholds" = si_by_area_thresholds[[2]], 
+                  "thresholds_values" = si_by_area_thresholds[[3]])
   return(outputs)
 }
 
@@ -1297,13 +1332,12 @@ county_region_of_interest_map +
 ```
 
 
+SI score `r si_region_of_interest_aggregated$thresholds `
 
-Table 1 shows summary statistics for SI scores and the population, overall for all of the west of Ireland and split by transit supply category. The total population of the west of Ireland is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
+The total population of the west of Ireland is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
 
 
 
-Figure \ref{fig:SI_map_region_of_interest_county} shows transit Supply Index (SI) categories by Small Areas across the west of Ireland. It also shows to the
-population living in Small Areas in each category for both the entire west of Ireland and for each county. 
 In general, there appear to be large areas of 
 the west of Ireland with SI scores below the average, or with no transit supply at all. Also, as might be expected, Small Areas where SI scores are higher than the average (of those with non-zero scores) appears to be located in very small and scattered geographic areas (at population centers).
 
@@ -1549,32 +1583,6 @@ Boxplots of the SI scores for Small Areas within each of the various urban areas
 
 ```{r urban_towns_boxplot, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.height = 10.5, fig.width = 7.5, fig.fullwidth = TRUE, fig.cap="West of Ireland urban areas: boxplot of Small Area SI scores, ordered by population size"}
 
-lower_thresholds <- tibble(very_low = regmatches(si_region_of_interest_aggregated$thresholds[1],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-                             unlist() %>% 
-                             as.numeric() %>% head(n=1),
-                           low = regmatches(si_region_of_interest_aggregated$thresholds[2],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-                             unlist() %>% 
-                             as.numeric() %>% head(n=1),
-                           below_average = regmatches(si_region_of_interest_aggregated$thresholds[3],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-                             unlist() %>% 
-                             as.numeric() %>% head(n=1),
-                           above_average = regmatches(si_region_of_interest_aggregated$thresholds[4],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-                             unlist() %>% 
-                             as.numeric() %>% head(n=1),
-                           high = regmatches(si_region_of_interest_aggregated$thresholds[5],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-                             unlist() %>% 
-                             as.numeric() %>% head(n=1),
-                           very_high = regmatches(si_region_of_interest_aggregated$thresholds[6],gregexpr("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?",text)) %>% 
-                             unlist() %>% 
-                             as.numeric() %>% head(n=1))
-
-
-new_order <- with(si_region_of_interest_aggregated$si_by_area %>%
-                    st_drop_geometry() %>%
-                    select(SI, population, SA_URBAN_AREA_NAME) %>% 
-                    filter(SA_URBAN_AREA_NAME != "NA"), 
-                  reorder(SA_URBAN_AREA_NAME, population, sum)) 
-
 
 si_region_of_interest_aggregated$si_by_area %>%
   st_drop_geometry() %>%
@@ -1600,6 +1608,11 @@ si_region_of_interest_aggregated$si_by_area %>%
 
 ```
 
+
+```{r, include=FALSE}
+knitr::write_bib(file = 'packages.bib')
+```
+ 
 
 
 
