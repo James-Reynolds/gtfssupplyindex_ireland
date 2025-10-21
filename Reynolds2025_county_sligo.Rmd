@@ -3,7 +3,7 @@ title: "Comparing social needs for transport, gaps in transit service and the Mo
 runningheader: "The County Sligo:transit needs-gaps" # only for pdf output
 author: "Dr James Reynolds"
 date: "`r Sys.Date()`"
-bibliography: References.bib
+bibliography: References.bib, packages.bib
 csl: https://www.zotero.org/styles/chicago-fullnote-bibliography-16th-edition
 suppress-bibliography: yes
 output:
@@ -1633,7 +1633,8 @@ si_region_of_interest_aggregated$si_by_area %>%
 ```
 
 
-## County Sligo
-
-
+```{r, include=FALSE}
+knitr::write_bib(file = 'packages.bib')
+```
+ 
 
