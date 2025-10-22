@@ -1,0 +1,171 @@
+---
+title: "Comparing social needs for transport, gaps in transit service and the Mobility Index for the south of Ireland"
+runningheader: "The south of Ireland:transit needs-gaps" # only for pdf output
+author: "Dr James Reynolds"
+date: "`r Sys.Date()`"
+bibliography: References.bib
+csl: https://www.zotero.org/styles/chicago-fullnote-bibliography-16th-edition
+suppress-bibliography: yes
+output:
+#  tufte::tufte_html: default
+  tufte::tufte_handout:
+#    citation_package: natbib
+#    latex_engine: xelatex
+#  tufte::tufte_book:
+#    citation_package: natbib
+#    latex_engine: xelatex
+
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tidytransit)
+library(sp)
+library(strayr)
+library(ptinpoly)
+library(magrittr)
+library(ggplot2)
+library(sf)
+library(ASGS.foyer)
+library(raster)
+library(ggmap)
+library(units)
+library(janitor)
+library(mapview)
+library(ggstatsplot)
+library(gtsummary)
+library(moments)
+library(scales)
+library(gtfstools)
+library(lubridate)
+library(kableExtra)
+library(knitr)
+library(readxl)
+library(readr)
+library(dplyr)
+library(devtools)
+library(gtfssupplyindex)
+library(readabs)
+library(gglorenz)
+library(DescTools)
+library(RColorBrewer)
+library(lsr)
+library(ggpubr)
+library(viridis)
+library(geosphere)
+library(png)
+library(absmapsdata)
+library(tidytransit)
+library(patchwork)
+library(ggmapinset)
+library(tufte)
+library(gglorenz)
+library(ggExtra)
+library(ggthemes)
+library(geomtextpath)
+library(ggrepel)
+#library(memisc, warn.conflicts = FALSE, quietly=TRUE)
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+
+```
+
+# Introduction
+
+# Research Background
+
+# Methodology
+The *areas of interest* adopted 
+in this study 
+are the 
+2022 definition of *Small Areas*, 
+as used in the 
+Irish Census
+
+GTFS data for this paper was sourced from
+@Transport-for-Ireland:0aa on October 1, 2025^[Selecting the "All GTFS Operators" feed]. 
+The time period selected was the seven days starting October 1, 2025. 
+
+
+
+```{r load_ireland_gtfs, eval = FALSE, echo = FALSE}
+
+## Check feed loads as tidytransit
+#TFI_GTFS_All_251001 <- tidytransit::read_gtfs("data/251001/TFI_GTFS_All_251001.zip")
+#TFI_GTFS_All_251001 %>% class()
+## Yes feed loads successfully
+
+TFI_GTFS_All_251001_list_gtfs <- gtfssupplyindex::gtfs_by_route_type("data/251001/TFI_GTFS_All_251001.zip")
+
+```
+
+```{r load_region_of_interest_function, eval = TRUE, echo = FALSE}
+
+load_region_of_interest <- function(){
+region_of_interest <- Small_Area_National_Statistical_Boundaries_2022 %>% 
+  filter(COUNTY_ENGLISH == "CLARE" |
+           COUNTY_ENGLISH == "LIMERICK" |
+           COUNTY_ENGLISH == "LIMERICK CITY" |
+           COUNTY_ENGLISH == "SOUTH TIPPERARY" |
+           COUNTY_ENGLISH == "NORTH TIPPERARY" |
+           COUNTY_ENGLISH == "CARLOW" |
+           COUNTY_ENGLISH == "KILKENNY" |
+           COUNTY_ENGLISH == "WATERFORD CITY" |
+           COUNTY_ENGLISH == "WATERFORD" |
+           COUNTY_ENGLISH == "WEXFORD" |
+           COUNTY_ENGLISH == "CORK" |
+           COUNTY_ENGLISH == "CORK CITY" |
+           COUNTY_ENGLISH == "KERRY")
+return(region_of_interest)}
+```
+
+```{r run_for_all_modes_ireland_, eval = FALSE, echo = FALSE}
+
+list_gtfs = TFI_GTFS_All_251001_list_gtfs
+
+
+Small_Area_National_Statistical_Boundaries_2022 <- st_read("data/Small_Area_National_Statistical_Boundaries_2022_Ungeneralised_view_-7354763930310470674.gpkg")
+st_geometry(Small_Area_National_Statistical_Boundaries_2022) <- "SHAPE"
+
+region_of_interest <- load_region_of_interest()
+
+region_of_interest <- st_set_geometry(region_of_interest, "SHAPE")
+
+
+#Load region_of_interest codes
+areas_of_interest <- load_areas_of_interest(region_of_interest,  
+  area_id_field = "SA_PUB2022")
+
+areas_of_interest <- st_set_geometry(areas_of_interest, "geometry")
+
+
+stops_in_or_near_areas <- gtfssupplyindex:::stops_in_walk_dist(
+  list_gtfs = list_gtfs, 
+  areas_of_interest = areas_of_interest,
+  EPSG_for_transform = 2157,
+  verbose = FALSE
+)
+
+
+
+si_south_ireland_week_251001_by_day_hour_route <- SI_by_day_hour_and_route_type(
+     list_gtfs = list_gtfs, 
+stops_in_or_near_areas = stops_in_or_near_areas,
+ start_date_ymd = "2025-10-01", 
+ end_date_ymd = "2025-10-07",
+verbose = TRUE)
+
+write.csv(si_south_ireland_week_251001_by_day_hour_route, "results/si_south_ireland_week_251001_by_day_hour_route.csv")
+
+
+si_south_ireland_week_251001_aggregated <- si_south_ireland_week_251001_by_day_hour_route %>% 
+           group_by(area_id) %>%    
+           summarize(SI = sum(SI))
+
+write.csv(si_south_ireland_week_251001_aggregated, "results/si_south_ireland_week_251001_aggregated.csv")
+
+
+```
+
+
+
