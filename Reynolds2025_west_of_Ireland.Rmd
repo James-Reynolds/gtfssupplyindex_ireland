@@ -492,13 +492,6 @@ write.csv(si_west_ireland_week_251001_aggregated, "results/si_west_ireland_week_
 
 # Results
 
-## SI scores and categories
-
-
-Table 1 shows summary statistics for SI scores and the population, overall for all of the west of Ireland and split by transit supply category. 
-Figure \ref{fig:SI_map_region_of_interest_county} shows transit Supply Index (SI) categories by Small Areas across the west of Ireland. It also shows to the
-population living in Small Areas in each category for both the entire west of Ireland and for each county. 
-
 
 ```{r threshold_function, fig.show="hold", out.width="100%", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE,  cache=FALSE, results='hide'}
 
@@ -747,6 +740,71 @@ si_region_of_interest_aggregated$si_by_area$density_category <-
 si_region_of_interest_aggregated$si_by_area$population_density <-  si_region_of_interest_aggregated$si_by_area$population_density %>% as.numeric()
 
 ```
+
+
+## SI scores and transit supply categories
+
+Figure \ref{fig:SI_boxplot__by_county} shows the distribution of SI score to Small Areas for each of the Counties in the west of Ireland. Table 1 shows summary statistics by transit supply category, while a map and the distribution of transit Supply Index (SI) categories across the west of Ireland and to the populations of each County are shown in Figure \ref{fig:SI_map_region_of_interest_county}.
+
+
+```{r SI_boxplot__by_county, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="West of Ireland urban areas: boxplot of Small Area SI scores"}
+
+
+
+new_order <- with(si_region_of_interest_aggregated$si_by_area %>%
+                    st_drop_geometry() %>%
+                    select(SI, population, COUNTY_ENGLISH), 
+                  reorder(COUNTY_ENGLISH, population, sum)) 
+
+
+
+si_region_of_interest_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  select(SI, COUNTY_ENGLISH) %>% 
+  ggplot(aes(x = COUNTY_ENGLISH %>% factor(levels = new_order %>% levels()), y = SI)) + 
+  theme_tufte() + 
+  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[6,1] %>% as.numeric(), label = "Very High", vjust=-1,color = "darkgreen", size = 2) +
+  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[5,1] %>% as.numeric(), label = "High", vjust=-1,color = "#53A212", size = 2) +
+  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[4,1] %>% as.numeric(), label = "Above Average", vjust=-0.5,color = "lightgreen", size = 2) +
+  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[3,1] %>% as.numeric(), label = "Below Average", vjust=-0.5,color = "#F29C33", size = 2) +
+  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[2,1] %>% as.numeric(), label = "Low",vjust=-1, color = "#F7C387", size = 2) + 
+  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[1,1] %>% as.numeric(), label = "Very Low", vjust=-1,color = "#F9D8B1", size = 2) + 
+  scale_y_log10(limits = c(1, 12000)) +
+  theme(axis.text.y = element_text(size = 4), 
+        axis.text.x = element_text(size = 4, angle = 90, hjus = 0.95, vjust=0.2),
+        axis.title=element_blank()) +
+  geom_tufteboxplot(outlier.colour="transparent") + 
+  theme() +
+  coord_flip()
+
+
+
+```
+Figure \ref{fig:SI_boxplot__by_county} shows
+
+
+```{r summary_table_west_ireland_by_county, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
+
+
+theme_gtsummary_compact()
+si_region_of_interest_aggregated$si_by_area %>% 
+  st_drop_geometry() %>% 
+  select(SI, population, COUNTY_ENGLISH) %>%
+   tbl_summary(
+    by = COUNTY_ENGLISH,
+    digits = SI ~ 1,
+    type = all_continuous() ~ "continuous2",
+     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
+   )) %>%
+    add_overall()  %>%
+  as_kable_extra()
+
+```
+
+
+
+
+
 
 
 ```{marginfigure}
