@@ -491,7 +491,9 @@ write.csv(si_west_ireland_week_251001_aggregated, "results/si_west_ireland_week_
 
 
 # Results
+## SI scores and transit supply categories
 
+A map and the distribution of transit Supply Index (SI) categories across the west of Ireland and to the populations of each County are shown in Figure \ref{fig:SI_map_region_of_interest_county}.
 
 ```{r threshold_function, fig.show="hold", out.width="100%", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE,  cache=FALSE, results='hide'}
 
@@ -742,92 +744,6 @@ si_region_of_interest_aggregated$si_by_area$population_density <-  si_region_of_
 ```
 
 
-## SI scores and transit supply categories
-
-Figure \ref{fig:SI_boxplot__by_county} shows the distribution of SI score to Small Areas for each of the Counties in the west of Ireland. Table 1 shows summary statistics by transit supply category, while a map and the distribution of transit Supply Index (SI) categories across the west of Ireland and to the populations of each County are shown in Figure \ref{fig:SI_map_region_of_interest_county}.
-
-
-```{r SI_boxplot__by_county, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE, fig.cap="West of Ireland urban areas: boxplot of Small Area SI scores"}
-
-
-
-new_order <- with(si_region_of_interest_aggregated$si_by_area %>%
-                    st_drop_geometry() %>%
-                    select(SI, population, COUNTY_ENGLISH), 
-                  reorder(COUNTY_ENGLISH, population, sum)) 
-
-
-
-si_region_of_interest_aggregated$si_by_area %>%
-  st_drop_geometry() %>%
-  select(SI, COUNTY_ENGLISH) %>% 
-  ggplot(aes(x = COUNTY_ENGLISH %>% factor(levels = new_order %>% levels()), y = SI)) + 
-  theme_tufte() + 
-  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[6,1] %>% as.numeric(), label = "Very High", vjust=-1,color = "darkgreen", size = 2) +
-  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[5,1] %>% as.numeric(), label = "High", vjust=-1,color = "#53A212", size = 2) +
-  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[4,1] %>% as.numeric(), label = "Above Average", vjust=-0.5,color = "lightgreen", size = 2) +
-  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[3,1] %>% as.numeric(), label = "Below Average", vjust=-0.5,color = "#F29C33", size = 2) +
-  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[2,1] %>% as.numeric(), label = "Low",vjust=-1, color = "#F7C387", size = 2) + 
-  geom_texthline(yintercept=si_region_of_interest_aggregated$thresholds_values[1,1] %>% as.numeric(), label = "Very Low", vjust=-1,color = "#F9D8B1", size = 2) + 
-  scale_y_log10(limits = c(1, 12000)) +
-  theme(axis.text.y = element_text(size = 4), 
-        axis.text.x = element_text(size = 4, angle = 90, hjus = 0.95, vjust=0.2),
-        axis.title=element_blank()) +
-  geom_tufteboxplot(outlier.colour="transparent") + 
-  theme() +
-  coord_flip()
-
-
-
-```
-Figure \ref{fig:SI_boxplot__by_county} shows
-
-
-```{r summary_table_west_ireland_by_county, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
-
-
-theme_gtsummary_compact()
-si_region_of_interest_aggregated$si_by_area %>% 
-  st_drop_geometry() %>% 
-  select(SI, population, COUNTY_ENGLISH) %>%
-   tbl_summary(
-    by = COUNTY_ENGLISH,
-    digits = SI ~ 1,
-    type = all_continuous() ~ "continuous2",
-     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
-   )) %>%
-    add_overall()  %>%
-  as_kable_extra()
-
-```
-
-
-
-
-
-
-
-```{marginfigure}
-Table 1: Summary statistics; SI score by transit supply category, by Small Area.
-```
-
-```{r summary_table_west_ireland, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
-
-theme_gtsummary_compact()
-si_region_of_interest_aggregated$si_by_area %>% 
-  st_drop_geometry() %>% 
-  select(SI, population, transit_supply) %>%
-   tbl_summary(
-    by = transit_supply,
-    digits = SI ~ 1,
-    type = all_continuous() ~ "continuous2",
-     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
-   )) %>%
-    add_overall() %>% 
-  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
-  as_kable_extra()
-
-```
 
 
 
@@ -1450,49 +1366,44 @@ county_region_of_interest_map +
 ``` 
 
 
-
-In general, there appear to be large areas of 
-the west of Ireland with SI scores below the average, or with no transit supply at all. Also, as might be expected, Small Areas where SI scores are higher than the average (of those with non-zero scores) appears to be located in very small and scattered geographic areas (at population centers).
-The average SI score across all the Small Areas in the west of Ireland was only `r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% unlist() %>% mean())`. Some `r label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI == 0) %>% nrow())` of the 
-`r label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% nrow())` Small Areas (`r label_percent()(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI == 0) %>% nrow() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% nrow())`)
-however, 
-have no transit service 
-at all. 
-If only including those Small Areas with at least some transit service, the average SI score is
-`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`^[The boundaries between the transit service categories are 
-`r label_number(accuracy = 0.1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[1,1] %>% unlist() %>% as.numeric())`, 
-`r label_number(accuracy = 0.1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[2,1] %>% unlist() %>% as.numeric())`, 
-`r label_number(accuracy = 1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[3,1] %>% unlist() %>% as.numeric())`, `r label_number(accuracy = 1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[4,1] %>% unlist() %>% as.numeric())`, and
-`r label_number(accuracy = 0.1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[5,1] %>% unlist() %>% as.numeric())`]
-
-
-The total SI score for all of the Small Areas in the west of Ireland was `r  label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% sum())`, whereas the largest SI score for a single Small Area was `r  label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max())`^[This Small Area happens to be located in `r si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI == si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max()) %>% select(SA_URBAN_AREA_NAME) %>% as.character()`, and it receives some `r  label_percent(accuracy=0.01)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% sum())` of the SI score across all of the west of Ireland, `r  label_percent(accuracy=0.01)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "GALWAY") %>% select(SI) %>% sum())` of the SI score for all of County Gallway, and `r  label_percent(accuracy=0.01)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI == si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max()) %>% select(SA_URBAN_AREA_NAME) %>% as.character()) %>% select(SI) %>% sum())` of the SI scores across all of `r si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI == si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max()) %>% select(SA_URBAN_AREA_NAME) %>% as.character()`]. This might perhaps be indicative of how much of what transit service there is provided in the west of Ireland is provided within Galway city and surrounds (`r  label_percent(accuracy=0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Galway city and suburbs") %>% select(SI) %>% sum() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% sum())`)^[Aggregate SI score for Galway city and suburbs was `r label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME == "Galway city and suburbs") %>% select(SI) %>% sum())`.] or County Galway (`r  label_percent(accuracy=0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "GALWAY") %>% select(SI) %>% sum() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% sum())`)^[Aggregate SI score for County Galway was `r label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "GALWAY") %>% select(SI) %>% sum())`.] of the SI score across all of the west of Ireland, `r  label_percent(accuracy=0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% max() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(COUNTY_ENGLISH == "GALWAY") %>% select(SI) %>% sum())`
-
-
-
-
-
-
-
-*Population* across the west of Ireland is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
-
-
-
-Table 2 summarises the Small Area populations in each County by transit supply category, shown as a share of the total west of Ireland population. Table 3 shows SI scores and transit supply categories by County, weighted by population. 
-
-
-```{marginfigure}
-Table 2: County Small Area populations, by transit supply catergory.
-```
-
-
-```{r west_of_ireland_population_by_county, eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-
+```{r small_area_by_county_calculations, eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 
 small_area_supply_by_county <- si_region_of_interest_aggregated$si_by_area %>% 
   st_drop_geometry() %>%
   select(transit_supply, population, COUNTY_ENGLISH) %>%
   aggregate(population ~ transit_supply +  COUNTY_ENGLISH , sum)
+
+
+```
+
+
+In general, there appear to be large areas of 
+the west of Ireland with SI scores below the average^[The average SI score across all the Small Areas in the west of Ireland was only `r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% select(SI) %>% unlist() %>% mean())`. Some `r label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI == 0) %>% nrow())` of the 
+`r label_number(big.mark=",")(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% nrow())` Small Areas (`r label_percent()(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI == 0) %>% nrow() / si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% nrow())`). 
+However, 
+the categorisation methodology used in Currie (2010) sets the threshold between "Below Average" and "Above Average" as the average SI score for areas of interest that have at least some transit service (i.e. excluding "Zero Supply" areas). This approach is likewise adopted here, with the threshold 'average' being an SI score of `r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`.  Similarly, the upper boundaries between the other transit service categories are 
+`r label_number(accuracy = 0.1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[1,1] %>% unlist() %>% as.numeric())` for "Very Low", 
+`r label_number(accuracy = 0.1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[2,1] %>% unlist() %>% as.numeric())` for "Low", `r label_number(accuracy = 1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[4,1] %>% unlist() %>% as.numeric())` for "Above average", and
+`r label_number(accuracy = 0.1, big.mark=",")(si_region_of_interest_aggregated$thresholds_values[5,1] %>% unlist() %>% as.numeric())` for "High"]. 
+
+Figure \ref{fig:SI_map_region_of_interest_county}(top left) shows that 
+
+
+
+*Population* across the west of Ireland is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
+`r label_number(big.mark=",")(small_area_supply_by_county %>% filter(COUNTY_ENGLISH == "MAYO") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% as.numeric())` people living in County Galway, County Donegal and County Mayo in Small Areas with no transit at all.  
+
+
+
+Table 1 summarises the Small Area populations in each County by transit supply category.
+
+
+```{marginfigure}
+Table 1: County Small Area populations, by transit supply category.
+```
+
+
+```{r west_of_ireland_population_by_county, eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 
 small_area_supply_by_county_table <- small_area_supply_by_county %>% 
   pivot_wider(names_from = transit_supply, values_from = population) %>%
@@ -1506,7 +1417,7 @@ small_area_supply_by_county_table <- small_area_supply_by_county_table[order(sma
 small_area_supply_by_county_table <- small_area_supply_by_county_table [,1:8]
 
 small_area_supply_by_county_table %>% 
-  adorn_totals(where = c("row","col")) %>%
+  adorn_totals(where = c("row", "col")) %>%
   adorn_percentages(denominator = "all") %>%
   adorn_pct_formatting() %>% 
   adorn_ns() %>% 
@@ -1532,56 +1443,14 @@ small_area_supply_by_county_table %>%
 
 ```
 
-As shown in Table 2, the largest shares of the total population of the west of Ireland are the `r label_number(big.mark=",")(small_area_supply_by_county %>% filter(COUNTY_ENGLISH == "GALWAY") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% as.numeric())`, `r label_number(big.mark=",")(small_area_supply_by_county %>% filter(COUNTY_ENGLISH == "DONEGAL") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% as.numeric())` and
-`r label_number(big.mark=",")(small_area_supply_by_county %>% filter(COUNTY_ENGLISH == "MAYO") %>% filter(transit_supply == "Zero Supply") %>% select(population) %>% as.numeric())` people living in County Galway, County Donegal and County Mayo in Small Areas with no transit at all.  
+
+*Population* across the west of Ireland is `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:7,2] %>% sum())`, of whom `r label_percent()(pcol_si_region_of_interest$data[1:4,3] %>% sum())` (`r label_number(big.mark=",")(pcol_si_region_of_interest$data[1:4,2] %>% sum())`) live in Small Areas where the SI score is below the average (of those Small Areas with a non-zero SI score) (`r label_number(accuracy = 0.1)(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SI != 0) %>% select(SI) %>% unlist() %>% mean())`). This includes the `r label_number(big.mark=",")(pcol_si_region_of_interest$data[1,2] %>% sum())` people (`r label_percent()(pcol_si_region_of_interest$data[1,3] %>% sum())`) who live in Small Areas with no transit at all.
 
 
-
-```{marginfigure}
-Table 3: SI score \& transit supply category by County, weighted by population.
-```
-
-```{r summary_table_by_county, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = FALSE}
-
-#ggbarstats(si_region_of_interest_aggregated$si_by_area %>% 
-#  st_drop_geometry() %>% 
-#  select(SI, population, transit_supply, COUNTY_ENGLISH) %>%
-#  as.tibble(), 
-#  y = COUNTY_ENGLISH, 
-#  x = transit_supply
-#  ) + 
-#  scale_fill_manual(values = c("Very High" = "darkgreen",
-#                               "High" = "#53A212", 
-#                               "Above average" = "lightgreen", 
-#                               "Below average" = "#F29C33",
-#                               "Low" = "#F7C387", 
-#                               "Very Low" = "#F9D8B1", 
-#                               "Zero Supply" = "#FFFFFF" )) +  
-#  theme(legend.position="bottom")
+There is a statistically significant variation between Counties in the share of Small Areas in each transit supply category (`r prmisc::print_chi2(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% tabyl(transit_supply, COUNTY_ENGLISH) %>% chisq.test())`). 
 
 
-theme_gtsummary_compact()
-si_region_of_interest_aggregated$si_by_area %>% 
-  st_drop_geometry() %>% 
-  select(SI, population, transit_supply, COUNTY_ENGLISH) %>%
-  as.tibble() |>
-  survey::svydesign(data = _, ids = ~1, weights = ~population) %>%
-   tbl_svysummary(
-    by = COUNTY_ENGLISH,
-    include = c("SI", "transit_supply"),
-    digits = SI ~ 1,
-   type = all_continuous() ~ "continuous2",
-     statistic = list(all_continuous() ~ c("{min}", "{p25}", "{mean}", "{p75}", "{max}", "{sum}")
-   )) %>%
-  # add_overall() %>% 
-  #  add_p() %>%
-#  modify_spanning_header(c("stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "stat_7") ~ "**Transit supply category**") %>%
-  as_kable_extra()
-
-```
-
-
-There is a statistically significant variation between Counties in the share of Small Areas in each transit supply category (`r prmisc::print_chi2(si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% tabyl(transit_supply, COUNTY_ENGLISH) %>% chisq.test())`). Table 3 indicates that Mayo and Roscommon have higher shares of their population living in Small Areas with no transit supply (over two people in every five), whereas Sligo has the lowest (close to one in eight). Close to one-third of people living in Sligo live in Small Areas with SI scores above the average (not including areas with no transit), followed by a little under one in four in Clare and around one in seven in Roscommon. At the other end of the spectrum, only around one in twelve people in Mayo and Leitrim live in areas with above the average SI scores, while for Donegal it is only one in twenty. 
+Table 3 indicates that Mayo and Roscommon have higher shares of their population living in Small Areas with no transit supply (over two people in every five), whereas Sligo has the lowest (close to one in eight). Close to one-third of people living in Sligo live in Small Areas with SI scores above the average (not including areas with no transit), followed by a little under one in four in Clare and around one in seven in Roscommon. At the other end of the spectrum, only around one in twelve people in Mayo and Leitrim live in areas with above the average SI scores, while for Donegal it is only one in twenty. 
 
 
 ```{r gglorenz, fig.show="hold", eval = TRUE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="West of Ireland: Lorenz curves"}
