@@ -192,6 +192,8 @@ locations,
 as in how Wong (2013) 
 compared TCQSM metrics across 50 USA transit operators. 
 
+## Social needs-gap approach
+
 Another such recently developed 
 software tool is the 
 *gtfssupplyindex* 
@@ -226,23 +228,45 @@ where:
 
 Currie (2010) also used 
 a Composite Social Needs Index, 
-based mostly on census data including measures 
+based mostly on census data available from the Australian Bureau of Statistics (ABS), including measures 
 related to income, age, car ownership and other 
 indicators related to the extent to which 
 those living in each area of interest might 
-have higher or lower needs for public transport.  
-The final step of the Currie (2010) social needs-gap approach involved identifying those 
+have higher or lower needs for public transport^[These included the Index of Relative Socio-Economic Advantage/Disadvantage (IRSAD), 
+which is reported directly 
+by the ABS and
+based on 31 weighted indicators 
+and data collected during the census. A transport-specific need index, 
+was also included, based on eight weighted indicators: adults without cars (0.19), 
+distance to the Melbourne Central Business District (0.15), 
+persons aged over 60 years (0.14), 
+persons on a disability pension (0.12), 
+low income households (0.10), 
+adults not in the labour force (0.09), 
+students (0.09) and 
+persons 5-9 years (0.12).
+The IRSAD and transport-specific needs index were then weighted by population and combined to form the Social Needs Index.]
+
+The final step 
+of the Currie (2010) 
+social needs-gap approach 
+involved identifying those 
 areas of interest that had 
 both high social needs, 
 but low or zero transit supply levels. 
-
-This approach, 
-and its potential application 
+Hence, the result is 
+a comparative assessment amongst all of the areas of interest
+that allows those that would have the largest gaps 
+between the social need for transport to be identified, 
+rather than being based on comparing raw scores to a threshold.  
+Its potential application 
 to policy-making, 
 route design 
 and service planning 
 was suggested to be 
 “substantially more useful than the presentation of anecdotal evidence, which is the most common means of identifying transport needs in local transport studies throughout the world”[@currie2010identifying]. 
+Essentially, use of this approach might help practitioners 
+identify where best the available, or any additional, resources might be allocated^[As opposed to planning routes based on minimum thresholds, such as a maximum allowable distance between residential properties and a transit stop, or frequency standards based on ridership or population.]
 
 A feature of the SI equation is that scores can be summed across areas of interest so as to provide an aggregate score 
 for a larger district, region or city.
@@ -254,7 +278,6 @@ meaning that the score
 reflects the accessibility 
 'to' public transport for those living within an area, 
 but also how accessible the area is 'by' transit.
-
 
 The development of the Currie (2010) needs-gap approach
 predated the GTFS, 
@@ -410,6 +433,215 @@ si_west_ireland_week_251001_aggregated <- si_west_ireland_week_251001_by_day_hou
 
 write.csv(si_west_ireland_week_251001_aggregated, "results/si_west_ireland_week_251001_aggregated.csv")
 
+
+```
+
+
+For assessing social needs for transport, it is not possible to exactly replicate the Composite Social Needs Index used in the Currie 2010 or Reynolds et al (2025) analyses. These used indicators drawn from Australian censuses, not all of which have equivalents in the Irish censuses or other available datasets. 
+Therefore, assessment of social needs for transport for Small Areas within the west of Ireland is based on various indicators reported in the 2022 Irish Census^[Item T15_1_NC is the number of households without a motor car. Items T1_1_AGE60-64T, T1_1_AGE65-69T, ... T1_1_AGE80-84T and T1_1_AGE85T report persons aged 60 years and older; T8_1_UTWSDT reports the total number of people unable to work due to permanent sickness or disability; T8_1_TT reports the total population aged 15 years and over, while T8_1_WT reports the total at work, thereby allowing calculation of the number of adults (15+) not in the labour force; T8_1_ST reports the number of people aged 15 years and over who are students; and T1_1AGE5T, T1_1AGE6T ... T1_1AGE9T report the number of people aged 5 through 9. There does not appear to be any data available about low income households at the "Small Area" geographic area. As well, there does not appear to be a IRSAD or similar socio-economic indicator available.]. As such, this analysis adapts the Currie (2010) approach and uses the same weighting for the following indicators: households without cars (0.19); distance to the centre of the nearest urban area with population of at least 4,500 people^[As the population of Carrick-On-Shannon is a little below 5,000 this threshold ensures that there is at least one 'centre' in each County] (0.15); persons aged 60 years and over (0.14), persons unable to work due to permant sickness or disability (0.12), those aged 15 years or older who are not at work; students (0.09) and people aged 5-9 years (0.12).  Each of these indicators were normalised across all of the Small Areas in the west of Ireland, weighted as indicated to develop an Social Index score. As in Currie (2010), the Social Index score was then normalised, weighted by the total population in each Small Area and normalised to produce a Relative Social Index score. The (unweighted) Social Index score and the Relatvie Social Index score were then added together to produce the Composite Social Needs Index.
+
+```{r social_needs_calc, fig.dim=c(7.5,7.5), echo = FALSE, eval=FALSE, warning=FALSE, message=FALSE, cache=FALSE,  fig.fullwidth = FALSE,fig.cap="Wexford: Distribution of categories of social need index scores"}
+
+centroids <- areas_of_interest %>% 
+  st_centroid()
+
+# si_pop_by_urban_area %>% filter(population >= 4500) provides list of places. Select central post office in each as 'centre' of each Urban area
+
+#Athenry \"Athlone\", \"Ballina\", \"Ballinasloe\", \"Ballybofey-Stranorlar\", \"Buncrana\", \"Carrick-On-Shannon\", \"Carrick-On-Shannon\", \"Castlebar\", \"Ennis\", \"Galway city and suburbs\", \"Letterkenny\", \"Loughrea\", \"Oranmore\", \"Roscommon\", \"Shannon\", \"Sligo\", \"Tuam\", \"Westport\")"
+
+#Wexford post office is at 52.33856865371817, -6.460882271188064
+
+df <- data.frame(
+  centre = c("Athenry", "Athlone", "Ballina", "Ballinasloe", "Ballybofey-Stranorlar", "Buncrana", "Carrick-On-Shannon", "Castlebar", "Ennis", "Galway city and suburbs", "Letterkenny", "Loughrea", "Oranmore", "Roscommon", "Shannon", "Sligo", "Tuam", "Westport"),
+  lat = c(52.33856865371817),
+  lon = c(-6.460882271188064)
+)
+
+### PICK UP FROM HERE
+
+wexford_post_office <- df %>% st_as_sf(coords = c("lon", "lat"), crs = 4326)
+wexford_post_office <- st_transform(wexford_post_office, crs=2157)
+
+wexford$distance_m_to_GPO <- wexford_centroids %>% 
+  st_distance(wexford_post_office) %>% 
+  as.numeric()
+
+
+
+#join to si data, including lat and long of each sa1
+social_data_wexford <- inner_join(
+  social_needs, 
+  wexford %>% st_drop_geometry,
+  by = join_by(guid == SA_GUID_2022))
+
+
+#FUNCTION TO CALCULATE COMBINED NEEDS INDEX
+#Comment out indicators we don't have
+calculate_IRSAD_and_need_index <- function(social_dataset) {
+ # scale all to 0 to 100
+ # social_dataset$IRSAD_100 <- rescale_max(
+#     social_dataset$IRSAD, to = c(0, 100))
+#  social_dataset$adult_no_car_100 <- rescale_max(
+#    social_dataset$adult_no_car, to = c(0, 100))
+   social_dataset$accessibility_100 <- rescale_max(
+     social_dataset$distance_m_to_GPO, to = c(0, 100))
+   social_dataset$over_60_100 <- rescale_max(
+     social_dataset$over_60, to = c(0, 100))
+#   social_dataset$disability_pension_100 <- rescale_max(
+#     social_dataset$disability_support_pension, to = c(0, 100))
+#   social_dataset$low_income_families_100 <- rescale_max(
+#     social_dataset$low_income_families, to = c(0, 100))
+  social_dataset$adult_not_labour_force_100 <- rescale_max(
+     social_dataset$adult_not_labour_force, to = c(0, 100))
+  social_dataset$students_100 <- rescale_max(
+     social_dataset$students, to = c(0, 100))
+  social_dataset$age_five_to_nine_100 <- rescale_max(
+     social_dataset$age_five_to_nine, to = c(0, 100))
+  
+  # calculate needs scores and scale to 100
+  social_dataset$needs_score <- social_dataset$accessibility_100 * 0.15 + 
+    social_dataset$over_60_100 * 0.14 + 
+    social_dataset$adult_not_labour_force_100 * 0.09 + 
+    social_dataset$students_100 * 0.09 + 
+    social_dataset$age_five_to_nine_100 * 0.12
+  
+  social_dataset$needs_score_100 <- rescale_max(
+     social_dataset$needs_score, to = c(0, 100))
+
+  ### No IRSAD, so will only return the needs score based on the available transport indicators 
+# weighted by population 
+  
+social_dataset$needs_score_100_population_weighted <- social_dataset$needs_score_100  *  social_dataset$population
+  
+#  social_dataset$total_need_IRSAD <- social_dataset$IRSAD *
+#    social_dataset$population
+#  social_dataset$total_transport_need <- social_dataset$needs_score * 
+#    social_dataset$population
+ 
+#  # create combined indicator 0 to 100
+#  social_dataset$combined_needs_index <- social_dataset$total_need_IRSAD + 
+#    social_dataset$total_transport_need 
+#  social_dataset$combined_needs_index <- rescale_max(
+#     social_dataset$combined_needs_index, to = c(0, 100))
+  
+social_dataset$combined_needs_index <- rescale_max(
+     social_dataset$needs_score_100_population_weighted, to = c(0, 100))
+
+  
+  return(social_dataset %>% 
+           select(guid, combined_needs_index, population)) 
+}
+
+needs_index_wexford <- calculate_IRSAD_and_need_index(
+  social_data_wexford)
+
+# Reuse the set thresholds function (but cheat by switching name of column two to SIs)
+thresholds_holding <- needs_index_wexford %>%
+  st_drop_geometry() %>% 
+  select(guid, combined_needs_index) 
+
+thresholds_holding$combined_needs_index <- thresholds_holding$combined_needs_index %>% unlist()
+
+names(thresholds_holding) <- c("area_id", "SI")  
+
+thresholds_holding <- set_thresholds(thresholds_holding)
+names(thresholds_holding[[1]]) <- c("guid", "combined_needs_index", "composite_needs")
+thresholds_holding[[1]]$composite_needs <- thresholds_holding[[1]]$composite_needs %>% fct_other(keep = c("Very Low", "Low", "Below average", "Above average", "High", "Very High"), other_level = "NA")
+
+#join to guid geometry data
+needs_index_wexford <- left_join(
+  wexford %>%
+    select(SA_GUID_2022),
+  thresholds_holding[[1]], 
+  by = join_by(SA_GUID_2022 == guid)
+)
+
+
+
+combined_needs_2021_plot <- ggplot()+ 
+  geom_sf(data=needs_index_wexford %>% na.omit(),
+          aes(fill =  composite_needs), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c("#FFFB07", "#CEE102", "#A3CF07", "#61AE09", "#2EA105", "#0A7B01")) +
+    ggspatial::annotation_scale(location = 'tl', height = (unit(0.05, "cm")), text_cex = 0.25) 
+#combined_needs_2021_plot
+
+```
+
+
+
+```{r wexford_social_needs_population, fig.show="hold", eval = FALSE, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE, fig.margin = TRUE, fig.cap="Transit Supply across County Wexford, by population"}
+
+
+#Set boundings box
+bbox_list <- wexford %>% 
+  st_geometry %>% 
+  st_combine() %>%
+  st_bbox()
+
+
+lat = c(bbox_list["ymin"] %>% as.numeric(), bbox_list["ymax"] %>% as.numeric())
+lon = c(bbox_list["xmin"] %>% as.numeric(), bbox_list["xmax"] %>% as.numeric() + 0*(bbox_list["xmax"] %>% as.numeric() - bbox_list["xmin"] %>% as.numeric()))
+
+Poly_Coord_df = data.frame(lon, lat)
+
+poly <- Poly_Coord_df %>% 
+  st_as_sf(coords = c("lon", "lat"), 
+           crs = 2157) %>% 
+  st_bbox() %>% 
+  st_as_sfc()
+
+si_wexford_250423_day_aggregated$si_by_area <- left_join(
+  si_wexford_250423_day_aggregated$si_by_area, 
+  needs_index_wexford %>% 
+    st_drop_geometry()
+)
+
+si_wexford_250423_day_aggregated$si_by_area$composite_needs <- 
+  factor(si_wexford_250423_day_aggregated$si_by_area$composite_needs, 
+            levels = c("Very Low", "Low", "Below average", "Above average", "High", "Very High"))
+  
+
+pcol_needs_wexford_county <- si_wexford_250423_day_aggregated$si_by_area %>%
+  st_drop_geometry() %>%
+  aggregate(population ~ composite_needs, sum) %>%
+  right_join(tibble(composite_needs = si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% levels())) %>%
+  replace_na(list(population = 0)) %>%
+  mutate(composite_needs=factor(composite_needs, levels = si_wexford_250423_day_aggregated$si_by_area$composite_needs %>% levels())) %>%
+  arrange(composite_needs) %>%
+  mutate(perc=population/sum(population)) %>% 
+  na.omit() %>%
+  ggplot() + 
+  geom_col(aes(composite_needs, perc, fill = composite_needs), colour="black") +
+  scale_y_continuous(limits = c(0,.6)) +
+  geom_hline(yintercept = 0)  + 
+  geom_text(aes(composite_needs,  0.5, label = glue::glue("{label_comma(accuracy = 1, big.mark = ",")(population)} ({label_percent(accuracy = 1)(perc)})"))) +
+   coord_flip() + 
+scale_fill_manual(values = c("Very Low" = "#FFFB07", "Low" = "#CEE102", "Below average" = "#A3CF07", "Above average" = "#61AE09", "High" = "#2EA105", "Very High" = "#0A7B01")) + 
+  scale_color_manual(values = c(rep("black", 5), rep("white", 2), "black")) +
+  guides(fill = "none", color = "none") +
+  labs(
+    title = "Transport need by population",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_void() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_blank(),
+    axis.text.y = element_text(hjust = 1),
+    axis.text.x = element_blank()
+  ) 
+
+
+#pcol_needs_wexford_county
 
 ```
 
@@ -1417,11 +1649,26 @@ Approximately `r label_percent(accuracy = 10)(si_region_of_interest_aggregated$s
 
 si_pop_by_urban_area <- si_region_of_interest_aggregated$si_by_area %>% st_drop_geometry() %>% filter(SA_URBAN_AREA_NAME != "NA") %>% aggregate(cbind(SI, population) ~ SA_URBAN_AREA_NAME, sum)
 
+# Some SA_URBAN_AREA_NAMES correspond to more than one COUNTY, where cities and towns have spread to both sides of a County border.  Therefore, need to create a key such that when aggregated the urban areas are allocated to the County that they are 'mostly' in.  
+
+urban_area_to_county <- si_region_of_interest_aggregated$si_by_area %>% 
+    st_drop_geometry() %>% 
+    tabyl(SA_URBAN_AREA_NAME, COUNTY_ENGLISH)
+
+urban_area_to_county <- urban_area_to_county %>%
+  mutate(COUNTY_ENGLISH = case_when(
+    CLARE == pmax(CLARE, DONEGAL, GALWAY, LEITRIM, MAYO, ROSCOMMON, SLIGO) ~ "CLARE",
+    DONEGAL == pmax(CLARE, DONEGAL, GALWAY, LEITRIM, MAYO, ROSCOMMON, SLIGO) ~ "DONEGAL",
+    GALWAY == pmax(CLARE, DONEGAL, GALWAY, LEITRIM, MAYO, ROSCOMMON, SLIGO) ~ "GALWAY",
+    LEITRIM == pmax(CLARE, DONEGAL, GALWAY, LEITRIM, MAYO, ROSCOMMON, SLIGO) ~ "LEITRIM",
+    MAYO == pmax(CLARE, DONEGAL, GALWAY, LEITRIM, MAYO, ROSCOMMON, SLIGO) ~ "MAYO",
+    ROSCOMMON == pmax(CLARE, DONEGAL, GALWAY, LEITRIM, MAYO, ROSCOMMON, SLIGO) ~ "ROSCOMMON",
+    SLIGO == pmax(CLARE, DONEGAL, GALWAY, LEITRIM, MAYO, ROSCOMMON, SLIGO) ~ "SLIGO"))
+
+## Join to cross-ref of SA_URBAN_AREA to COUNTY_ENGLISH
 si_pop_by_urban_area <- left_join(si_pop_by_urban_area, 
-                                  si_region_of_interest_aggregated$si_by_area %>% 
-                                    st_drop_geometry() %>% 
-                                    select(SA_URBAN_AREA_NAME, COUNTY_ENGLISH)) %>% 
-                                    unique()
+                                  urban_area_to_county %>% 
+                                    select(SA_URBAN_AREA_NAME, COUNTY_ENGLISH))
 
 p <- ggplot(si_pop_by_urban_area, aes(population, SI, colour = COUNTY_ENGLISH)) + 
   geom_point()  + 
@@ -1443,11 +1690,6 @@ ggMarginal(p, type = "boxplot", fill="transparent")
 ```
 
 There is a statistically significant relationship between population and aggregate SI score for urban areas in the west of Ireland (`r prmisc::print_cortest(cor.test(si_pop_by_urban_area$SI, si_pop_by_urban_area$population))`). However, as shown in Figure \ref{fig:urban_si_pop_histogram}, there are outliers at both ends of the spectrum of both population and aggregate SI.   
-
-
-
-## Needs Index
-
 
 
 
