@@ -50,3 +50,9 @@ rsconnect/
 
 # data files
 data/
+
+# results
+results/
+
+# DS store. 
+.DS_Store
