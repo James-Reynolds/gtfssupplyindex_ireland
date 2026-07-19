@@ -1,0 +1,457 @@
+---
+title: "Social needs and transit gaps in western Ireland"
+subtitle: "Methodology extensions and comparisons"
+runningheader: "The west of Ireland:transit needs-gaps" # only for pdf output
+author: "Dr James Reynolds"
+date: "`r Sys.Date()`"
+bibliography: 
+  - References.bib
+  - packages.bib
+#csl: https://www.zotero.org/styles/chicago-fullnote-bibliography-16th-edition
+suppress-bibliography: yes
+output:
+  tufte::tufte_html: default
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+#library(absmapsdata)
+#library(ASGS.foyer)
+#library(DescTools)
+#library(devtools)
+library(dplyr)
+#library(geomtextpath)
+#library(geosphere)
+#library(ggExtra)
+#library(gglorenz)
+#library(ggmap)
+#library(ggmapinset)
+library(ggplot2)
+#library(ggpubr)
+library(ggrepel)
+#library(ggstatsplot)
+#library(ggthemes)
+library(gtfssupplyindex)
+library(gtfstools)
+#library(gtsummary)
+library(janitor)
+library(knitr)
+library(kableExtra)
+#library(lsr)
+#library(lubridate)
+#library(magrittr)
+#library(mapview)
+#library(memisc, warn.conflicts = FALSE, quietly=TRUE)
+#library(moments)
+#library(patchwork)
+#library(png)
+#library(ptinpoly)
+#library(raster)
+#library(RColorBrewer)
+#library(readabs)
+#library(readr)
+#library(readxl)
+#library(scales)
+library(sf)
+#library(strayr)
+library(tidyverse)
+library(tidytransit)
+library(tufte)
+#library(units)
+library(viridis)
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+
+```
+
+# Introduction
+
+
+# Research Background
+Many
+indexes, 
+metrics 
+and other indicators 
+have been developed by 
+researchers, 
+practitioners 
+and others 
+to examine 
+transport,
+land use 
+and related topics. 
+Examples include: 
+*Walk Score* and *Transit Score* [@WalkScore:2023tg], 
+the many metrics within the *Transit Capacity and Quality of Service Manual (TCQSM)*[@TCQSM:2013]; and
+the UK's 
+Public Transport Accessibility Level (PTAL) approach
+and Public Transport Accessibility Index (PTAI)[@Saghapour:2016aa].
+
+What may sometimes 
+be lacking is 
+comparison of 
+the results from 
+one set of indicators 
+to another other, 
+in part often because 
+variability in data availability. 
+As well, some 
+indicators are developed bespoke 
+for specific contexts, 
+such as the 
+recently reported
+a Mobility Index (MI)
+for rural centres in the west of Ireland [@McHenry:2023aa].
+Finally, 
+some indicators are 
+difficult or impossible 
+to calculate independently. 
+Some, such as WalkScore and Transit Score, 
+cannot be independently calculated and the exact algorithm remains unpublished.
+Others may just be challenging to calculate 
+due to a lack of, 
+or free access to, 
+software tools. 
+although an example 
+of a response to this 
+in the context of transit 
+is provided by 
+open-source software developed by @Wong:2013aa
+for calculating *TCQSM* indicators from 
+General Transit Feed Specification (GTFS) datasets, 
+
+Another such recently developed 
+software tool is the 
+*gtfssupplyindex* 
+R package [@Reynolds2025gtfsmainpaper].
+This builds on 
+*gtfstools* [@R-gtfstools]; 
+and *tidytransit* [@R-tidytransit] 
+to calculate the  
+transit Supply Index (SI), 
+developed by @currie2010identifying 
+in research about
+gaps in public transport services 
+according to social needs.
+ 
+The SI equation is:
+
+$$SI_{area, time} = \sum_{i=1}^{n}{\frac{Area_{Bi}}{Area_{area}}SL_{i, time}}$$
+
+where:
+
+-   $SI_{area, time}$ is the Supply Index for the *area of interest* and a given period of time;
+
+-   $Area_{Bi}$ is the amount of the buffer zone for each stop (i) that is within the *area of interest*^[In @currie2010identifying this buffer zone was based on a radius of 400 metres for bus and tram stops, and 800 metres for railway stations. The same definition is used here.];
+
+-   $Area_{area}$ is the area of each *area of interest*; and
+
+-   $SL_{i,time}$ is the number of transit arrivals for each stop (i) within the given time period.
+
+Currie (2010) also developed 
+a Composite Social Needs Index, 
+allowing the identification of locations with
+both high social needs and limited transit supply levels. 
+This approaches potential application 
+to policy-making, 
+route design 
+and service planning 
+was suggested to be 
+“substantially more useful than the presentation of anecdotal evidence, which is the most common means of identifying transport needs in local transport studies throughout the world”[@currie2010identifying]. 
+
+While the tools developed by Reynolds et al. (2025) 
+might allow application of the Currie (2010) needs-gap analysis 
+to any transit system with a GTFS, 
+as of yet results for places other than Melbourne, Australia, 
+have not been reported in the research literature.  
+Applying it to the same areas of Western Ireland 
+used by McHenry et al (2023)[@McHenry:2023aa], 
+therefore, 
+may provide an opportunity for further development of the *gtfssuppplyindex* 
+approach and software tools, 
+and for cross-case comparison. 
+
+# Methodology
+*Small Areas* 
+used in the 2022 Irish Census 
+were adopted as the geographic unit of analysis for this study, 
+while 
+GTFS data for this paper was sourced from
+@Transport-for-Ireland:0aa on October 1, 2025
+The supply index was calculated for the seven-day period starting October 1, 2025, 
+for all *Small Areas* within 
+Claire, 
+Donegal, 
+Galway, 
+Leitrim, 
+Mayo, 
+Roscommon and 
+Sligo counties 
+to match the area studied in  McHenry et al. (2023). 
+
+```{r load_region_of_interest, eval = TRUE, echo = FALSE, include=FALSE}
+
+region_of_interest <- st_read("data/Small_Area_National_Statistical_Boundaries_2022_Ungeneralised_view_-7354763930310470674.gpkg") %>% 
+  filter(COUNTY_ENGLISH == "CLARE" |
+           COUNTY_ENGLISH == "DONEGAL" |
+           COUNTY_ENGLISH == "GALWAY" |
+           COUNTY_ENGLISH == "LEITRIM" |
+           COUNTY_ENGLISH == "MAYO" |
+           COUNTY_ENGLISH == "ROSCOMMON" |
+           COUNTY_ENGLISH == "SLIGO" | 
+           COUNTY_ENGLISH == "GALWAY CITY")
+
+region_of_interest <- st_set_geometry(region_of_interest, "SHAPE")
+
+#Correct Galway City Small Areas to be in County Galway in the County_English field
+region_of_interest$COUNTY_ENGLISH <- if_else(region_of_interest$COUNTY_ENGLISH == "GALWAY CITY", "GALWAY", region_of_interest$COUNTY_ENGLISH)
+
+##Change NA SA_URBAN_AREA_NAME to "non-urban"
+region_of_interest$SA_URBAN_AREA_NAME <- region_of_interest$SA_URBAN_AREA_NAME %>% 
+  replace_na("non-urban")
+
+##Change "Galway city and suburbs" to  "Galway"
+region_of_interest$SA_URBAN_AREA_NAME <- if_else(region_of_interest$SA_URBAN_AREA_NAME == "Galway city and suburbs", "Galway", region_of_interest$SA_URBAN_AREA_NAME)
+
+
+
+## Simplify
+region_of_interest <- region_of_interest %>%
+  select(SA_GUID_2022, SA_PUB2022, SA_URBAN_AREA_NAME, SA_NUTS2_NAME, SA_NUTS3_NAME, COUNTY_ENGLISH)
+
+names(region_of_interest) <- c("SA_GUID_2022", "SA_PUB2022", "SA_URBAN_AREA_NAME", "SA_NUTS2_NAME", "SA_NUTS3_NAME", "COUNTY_ENGLISH", "geometry" )
+region_of_interest <- region_of_interest %>% st_set_geometry("geometry")
+
+```
+
+
+```{r read_census_data_2021, fig.show="hold", eval= TRUE, echo = FALSE"}
+
+SAPS_2022_Small_Area_UR_171024 <- read_csv("data/SAPS_2022_Small_Area_UR_171024.csv")
+
+SAPS_2022_Small_Area_UR_171024 <- SAPS_2022_Small_Area_UR_171024 %>% 
+  clean_names()
+
+```
+
+
+```{r map_region_of_interest, eval = TRUE, echo = FALSE, include=FALSE}
+
+
+# Add population and merge by Urban Area and County
+
+merged_region_of_interest <- region_of_interest %>% 
+  select(SA_PUB2022, SA_URBAN_AREA_NAME, COUNTY_ENGLISH) %>%
+  left_join(
+    SAPS_2022_Small_Area_UR_171024 %>% 
+      select(geogid, t1_1agett), 
+      by = join_by(SA_PUB2022 == geogid)) %>%
+  group_by(SA_URBAN_AREA_NAME, COUNTY_ENGLISH) %>% 
+  summarise(population = sum(t1_1agett))
+
+west_ireland_map <- ggplot() + 
+  geom_sf(data=merged_region_of_interest, 
+          aes(fill=COUNTY_ENGLISH)) + 
+  scale_fill_brewer(palette = "Set2") + 
+  theme(
+        axis.title = element_blank(), 
+        axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="bottom",
+        legend.text = element_text(size = 8), 
+        legend.title = element_blank(), 
+        legend.key.size = unit(0.5, 'in'),
+        ) +
+  geom_label_repel(data=merged_region_of_interest %>% 
+                  filter(population >= 5000) %>%
+                  filter(SA_URBAN_AREA_NAME != "non-urban"), aes(label=SA_URBAN_AREA_NAME, geometry = geometry), 
+                  stat = "sf_coordinates")
+
+
+ggsave(file = "graphics/west_ireland_map.png", 
+       plot = west_ireland_map, 
+       height = 10, 
+       units = "in") 
+
+
+
+```
+
+```{r run_for_all_modes_ireland_, eval = FALSE, echo = FALSE}
+
+## Check feed loads as tidytransit
+#TFI_GTFS_All_251001 <- tidytransit::read_gtfs("data/251001/TFI_GTFS_All_251001.zip")
+#TFI_GTFS_All_251001 %>% class()
+## Yes feed loads successfully
+
+TFI_GTFS_All_251001_list_gtfs <- gtfssupplyindex::gtfs_by_route_type("data/251001/TFI_GTFS_All_251001.zip")
+
+list_gtfs = TFI_GTFS_All_251001_list_gtfs
+
+
+Small_Area_National_Statistical_Boundaries_2022 <- st_read("data/Small_Area_National_Statistical_Boundaries_2022_Ungeneralised_view_-7354763930310470674.gpkg")
+st_geometry(Small_Area_National_Statistical_Boundaries_2022) <- "SHAPE"
+
+#Load region_of_interest codes
+areas_of_interest <- load_areas_of_interest(region_of_interest,  
+  area_id_field = "SA_PUB2022")
+
+areas_of_interest <- st_set_geometry(areas_of_interest, "geometry")
+
+stops_in_or_near_areas <- gtfssupplyindex:::stops_in_walk_dist(
+  list_gtfs = list_gtfs, 
+  areas_of_interest = areas_of_interest,
+  EPSG_for_transform = 2157,
+  verbose = FALSE
+)
+
+si_west_ireland_week_251001_by_day_hour_route <- SI_by_day_hour_and_route_type(
+     list_gtfs = list_gtfs, 
+stops_in_or_near_areas = stops_in_or_near_areas,
+ start_date_ymd = "2025-10-01", 
+ end_date_ymd = "2025-10-07",
+verbose = TRUE)
+
+write.csv(si_west_ireland_week_251001_by_day_hour_route, "results/si_west_ireland_week_251001_by_day_hour_route.csv")
+
+
+si_west_ireland_week_251001_aggregated <- si_west_ireland_week_251001_by_day_hour_route %>% 
+           group_by(area_id) %>%    
+           summarize(SI = sum(SI))
+
+write.csv(si_west_ireland_week_251001_aggregated, "results/si_west_ireland_week_251001_aggregated.csv")
+
+
+```
+
+
+
+For assessing social needs for transport, it is not possible to exactly replicate the Composite Social Needs Index used in the Currie 2010 or Reynolds et al (2025) analyses. These used indicators drawn from Australian censuses, not all of which have equivalents in the Irish censuses or other available datasets. 
+Therefore, assessment of social needs for transport for Small Areas within the west of Ireland is based on various indicators reported in the 2022 Irish Census^[Item T15_1_NC is the number of households without a motor car. Items T1_1_AGE60-64T, T1_1_AGE65-69T, ... T1_1_AGE80-84T and T1_1_AGE85T report persons aged 60 years and older; T8_1_UTWSDT reports the total number of people unable to work due to permanent sickness or disability; T8_1_TT reports the total population aged 15 years and over, while T8_1_WT reports the total at work, thereby allowing calculation of the number of adults (15+) not in the labour force; T8_1_ST reports the number of people aged 15 years and over who are students; and T1_1AGE5T, T1_1AGE6T ... T1_1AGE9T report the number of people aged 5 through 9. There does not appear to be any data available about low income households at the "Small Area" geographic area. As well, there does not appear to be a IRSAD or similar socio-economic indicator available.]. As such, this analysis adapts the Currie (2010) approach and uses the same weighting for the following indicators: households without cars (0.19); distance to the centre of the nearest urban area with population of at least 4,500 people^[As the population of Carrick-On-Shannon is a little below 5,000 this threshold ensures that there is at least one 'centre' in each County] (0.15); persons aged 60 years and over (0.14), persons unable to work due to permant sickness or disability (0.12), those aged 15 years or older who are not at work; students (0.09) and people aged 5-9 years (0.12).  Each of these indicators were normalised across all of the Small Areas in the west of Ireland, weighted as indicated to develop an Social Index score. As in Currie (2010), the Social Index score was then normalised, weighted by the total population in each Small Area and normalised to produce a Relative Social Index score. The (unweighted) Social Index score and the Relatvie Social Index score were then added together to produce the Composite Social Needs Index.
+
+
+
+
+
+
+
+
+# Results
+
+
+```{r threshold_function, eval = FALSE, echo = FALSE}
+
+## FUNCTION to define thresholds and return Very High, High etc. 
+# as per Currie2010 Table 3 and page 34. 
+# the approach appears to be to first identify zones that have zero supply 
+# the remainder are then split into those above and below the average SI value
+# these two groups are then each split into three groups of roughly equal size. 
+set_thresholds <-function(score_by_area_dataframe){ 
+
+names(score_by_area_dataframe) <- c("area_id", "score")  
+  
+## Define Very High, High etc thresholds
+cuts_lower_groups <- score_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(score !=0) %>%
+  filter(score <= score %>% mean()) %>% 
+  select(score) %>% unlist() %>% 
+  as.vector() %>% 
+  quantileCut(3)
+
+cuts_upper_groups <- score_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(score !=0) %>%
+  filter(score > score %>% mean()) %>%
+  select(score) %>% unlist() %>% 
+  as.vector() %>% 
+  quantileCut(3)
+
+# Recode lower_group factors
+allocation_lower_groups <- cuts_lower_groups %>% fct_recode(
+  "Very Low" = levels(cuts_lower_groups)[1], 
+  "Low" = levels(cuts_lower_groups)[2], 
+  "Below average" = levels(cuts_lower_groups)[3])
+
+# Recode upper_group factors
+allocation_upper_groups <- cuts_upper_groups %>% fct_recode(
+  "Above average" = levels(cuts_upper_groups)[1], 
+  "High" = levels(cuts_upper_groups)[2], 
+  "Very High" = levels(cuts_upper_groups)[3])
+
+
+# Join back to lower_group SIs and areas_of_interest
+score_by_area_dataframe_below_average <- score_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(score !=0) %>%
+  filter(score <= score %>% mean()) 
+score_by_area_dataframe_below_average$transit_supply <- allocation_lower_groups
+
+# Join back to upper_group SIs and areas_of_interest
+score_by_area_dataframe_above_average <- score_by_area_dataframe %>% 
+  st_drop_geometry() %>% 
+  filter(score !=0) %>%
+  filter(score > score %>% mean()) 
+score_by_area_dataframe_above_average$transit_supply <- allocation_upper_groups
+
+# combine upper and lower groups
+  
+score_by_area_dataframe_non_zero <- add_row(score_by_area_dataframe_below_average, 
+                                         score_by_area_dataframe_above_average)
+
+#join back to dataframe, and put "Zero" in N/A
+score_by_area_dataframe <- full_join(
+  score_by_area_dataframe %>% 
+    st_drop_geometry(), 
+  score_by_area_dataframe_non_zero
+)
+
+score_by_area_dataframe$transit_supply <- score_by_area_dataframe$transit_supply %>% 
+  fct_explicit_na(na_level = "Zero Supply") %>% 
+  fct_shift(n = -1)
+
+#define thresholds as numeric using https://stackoverflow.com/questions/39387745/cut-extracting-the-minimum-and-maximum-of-cut-levels-as-columns-in-data-frame
+thresholds <- tibble(cuts_lower_groups %>% as_tibble()  %>% 
+  mutate(x_tmp = str_sub(value, 2, -2)) %>% 
+  separate(x_tmp, c("min", "max"), sep = ",") %>% 
+  mutate_at(c("min", "max"), as.double) %>% 
+  select(max) %>% unique() %>%
+  arrange(max)
+)
+
+thresholds <- rbind(thresholds, cuts_upper_groups %>% as_tibble()  %>% 
+  mutate(x_tmp = str_sub(value, 2, -2)) %>% 
+  separate(x_tmp, c("min", "max"), sep = ",") %>% 
+  mutate_at(c("min", "max"), as.double) %>% 
+  select(max) %>% unique() %>%
+  arrange(max)
+)
+
+#return dataframe and information about level cut offs
+score_by_area_dataframe_and_cuts_dataframe <- list(
+  si_by_area = score_by_area_dataframe,
+  thresholds_text = c(levels(cuts_lower_groups), levels(cuts_upper_groups)), 
+  thresholds_values = thresholds
+  )
+return(score_by_area_dataframe_and_cuts_dataframe)
+}
+# END FUNCTION
+
+```
+
+
+
+
+
+
+```{r bib, include=FALSE}
+# create a bib file for the R packages used in this document
+knitr::write_bib(c('base', 'rmarkdown'), file = 'skeleton.bib')
+```
