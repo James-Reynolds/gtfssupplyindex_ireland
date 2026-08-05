@@ -22,7 +22,7 @@ output:
 ```{r setup, include=FALSE}
 #library(absmapsdata)
 #library(ASGS.foyer)
-#library(DescTools)
+library(DescTools)
 #library(devtools)
 library(dplyr)
 #library(geomtextpath)
@@ -42,7 +42,7 @@ library(gtfstools)
 library(janitor)
 library(knitr)
 library(kableExtra)
-#library(lsr)
+library(lsr)
 #library(lubridate)
 #library(magrittr)
 #library(mapview)
@@ -56,7 +56,7 @@ library(kableExtra)
 #library(readabs)
 #library(readr)
 #library(readxl)
-#library(scales)
+library(scales)
 library(sf)
 #library(strayr)
 library(tidyverse)
@@ -73,57 +73,23 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
 # Research Background
-Many
-indexes, 
-metrics 
-and other indicators 
-have been developed by 
-researchers, 
-practitioners 
-and others 
-to examine 
-transport,
-land use 
-and related topics. 
-Examples include: 
-*Walk Score* and *Transit Score* [@WalkScore:2023tg], 
-the many metrics within the *Transit Capacity and Quality of Service Manual (TCQSM)*[@TCQSM:2013]; and
-the UK's 
-Public Transport Accessibility Level (PTAL) approach
-and Public Transport Accessibility Index (PTAI)[@Saghapour:2016aa].
 
-What may sometimes 
-be lacking is 
-comparison of 
-the results from 
-one set of indicators 
-to another other, 
-in part often because 
-variability in data availability. 
-As well, some 
-indicators are developed bespoke 
-for specific contexts, 
-such as the 
-recently reported
-a Mobility Index (MI)
-for rural centres in the west of Ireland [@McHenry:2023aa].
-Finally, 
-some indicators are 
-difficult or impossible 
-to calculate independently. 
-Some, such as WalkScore and Transit Score, 
-cannot be independently calculated and the exact algorithm remains unpublished.
-Others may just be challenging to calculate 
-due to a lack of, 
-or free access to, 
-software tools. 
-although an example 
-of a response to this 
-in the context of transit 
-is provided by 
-open-source software developed by @Wong:2013aa
-for calculating *TCQSM* indicators from 
-General Transit Feed Specification (GTFS) datasets, 
+Transport policy reasons for providing on-road public transport services
+might include to provide: 
+a competitive alternative to the private car for trips beyond walking or cycling distance; mobility and capacity during times of peak traffic congestion; 
+and/or to provide mobility for those who cannot otherwise drive themselves [@Currie:2016aa].
+This third reason relates to providing transit for social policy reasons, 
+for which an aim might be target 
+
+
+
+
+“substantially more useful than the presentation of anecdotal evidence, which is the most common means of identifying transport needs in local transport studies throughout the world”[@currie2010identifying]. 
+
+
+
+
+
 
 Another such recently developed 
 software tool is the 
@@ -157,12 +123,7 @@ Currie (2010) also developed
 a Composite Social Needs Index, 
 allowing the identification of locations with
 both high social needs and limited transit supply levels. 
-This approaches potential application 
-to policy-making, 
-route design 
-and service planning 
-was suggested to be 
-“substantially more useful than the presentation of anecdotal evidence, which is the most common means of identifying transport needs in local transport studies throughout the world”[@currie2010identifying]. 
+
 
 While the tools developed by Reynolds et al. (2025) 
 might allow application of the Currie (2010) needs-gap analysis 
@@ -229,8 +190,7 @@ region_of_interest <- region_of_interest %>% st_set_geometry("geometry")
 
 ```
 
-
-```{r read_census_data_2021, fig.show="hold", eval= TRUE, echo = FALSE"}
+```{r read_census_data_2021}
 
 SAPS_2022_Small_Area_UR_171024 <- read_csv("data/SAPS_2022_Small_Area_UR_171024.csv")
 
@@ -273,14 +233,10 @@ west_ireland_map <- ggplot() +
                   filter(population >= 5000) %>%
                   filter(SA_URBAN_AREA_NAME != "non-urban"), aes(label=SA_URBAN_AREA_NAME, geometry = geometry), 
                   stat = "sf_coordinates")
-
-
 ggsave(file = "graphics/west_ireland_map.png", 
        plot = west_ireland_map, 
        height = 10, 
        units = "in") 
-
-
 
 ```
 
@@ -331,8 +287,6 @@ write.csv(si_west_ireland_week_251001_aggregated, "results/si_west_ireland_week_
 
 ```
 
-
-
 For assessing social needs for transport, it is not possible to exactly replicate the Composite Social Needs Index used in the Currie 2010 or Reynolds et al (2025) analyses. These used indicators drawn from Australian censuses, not all of which have equivalents in the Irish censuses or other available datasets. 
 Therefore, assessment of social needs for transport for Small Areas within the west of Ireland is based on various indicators reported in the 2022 Irish Census^[Item T15_1_NC is the number of households without a motor car. Items T1_1_AGE60-64T, T1_1_AGE65-69T, ... T1_1_AGE80-84T and T1_1_AGE85T report persons aged 60 years and older; T8_1_UTWSDT reports the total number of people unable to work due to permanent sickness or disability; T8_1_TT reports the total population aged 15 years and over, while T8_1_WT reports the total at work, thereby allowing calculation of the number of adults (15+) not in the labour force; T8_1_ST reports the number of people aged 15 years and over who are students; and T1_1AGE5T, T1_1AGE6T ... T1_1AGE9T report the number of people aged 5 through 9. There does not appear to be any data available about low income households at the "Small Area" geographic area. As well, there does not appear to be a IRSAD or similar socio-economic indicator available.]. As such, this analysis adapts the Currie (2010) approach and uses the same weighting for the following indicators: households without cars (0.19); distance to the centre of the nearest urban area with population of at least 4,500 people^[As the population of Carrick-On-Shannon is a little below 5,000 this threshold ensures that there is at least one 'centre' in each County] (0.15); persons aged 60 years and over (0.14), persons unable to work due to permant sickness or disability (0.12), those aged 15 years or older who are not at work; students (0.09) and people aged 5-9 years (0.12).  Each of these indicators were normalised across all of the Small Areas in the west of Ireland, weighted as indicated to develop an Social Index score. As in Currie (2010), the Social Index score was then normalised, weighted by the total population in each Small Area and normalised to produce a Relative Social Index score. The (unweighted) Social Index score and the Relatvie Social Index score were then added together to produce the Composite Social Needs Index.
 
@@ -340,11 +294,171 @@ Therefore, assessment of social needs for transport for Small Areas within the w
 
 
 
+```{r social_needs_data, fig.dim=c(7.5,7.5), eval = FALSE}
 
+#obtain post_office lat and long from osm 
+
+crs_local_metres <- 2157
+
+post_offices <- 
+  region_of_interest %>% 
+  st_transform(crs = 4326) %>%
+  st_bbox() %>% 
+  osmdata::opq() %>% 
+  osmdata::add_osm_feature(key = "amenity",
+        value = "post_office"
+    ) %>% 
+   osmdata::osmdata_sf()
+
+post_offices_sf <- bind_rows(
+  post_offices$osm_points, 
+  post_offices$osm_lines, 
+  post_offices$osm_polygons, 
+  post_offices$osm_multilines, 
+  post_offices$osm_multipolygons) %>% 
+  st_transform(crs = crs_local_metres) %>% 
+  select(name) %>% 
+  st_centroid()
+
+centroids <- region_of_interest %>% 
+  select(SA_PUB2022) %>% 
+  st_centroid()
+
+post_office_distance <- data_frame(distance = NA)
+i <- 1
+for(i in seq(1:nrow(centroids))){
+  post_office_distance <- post_office_distance %>% 
+    add_row(tibble(distance = 
+      centroids[i,] %>% 
+    st_distance(post_offices_sf) %>% 
+           as.integer() %>% 
+           min()))
+
+}
+post_office_distance <- post_office_distance[-1,]
+post_office_distance$SA_GUID_2022 <- region_of_interest$SA_GUID_2022
+
+SAPS_2022_Small_Area_UR_171024 <- read_csv("data/SAPS_2022_Small_Area_UR_171024.csv")
+
+SAPS_2022_Small_Area_UR_171024 <- SAPS_2022_Small_Area_UR_171024 %>% 
+  clean_names()
+
+social_data <- SAPS_2022_Small_Area_UR_171024 %>% 
+  select(guid, geogid, geogdesc, ur_category, ur_category_desc) 
+social_data$over_60 <- SAPS_2022_Small_Area_UR_171024 %>% 
+  select(t1_1age60_64t, t1_1age65_69t, t1_1age70_74t, t1_1age75_79t, t1_1age80_84t, t1_1agege_85t) %>% 
+  rowSums()
+
+social_data$age_five_to_nine <- SAPS_2022_Small_Area_UR_171024 %>% select(
+  t1_1age5t, t1_1age6t, t1_1age7t, t1_1age8t, t1_1age9t) %>%
+  rowSums()
+
+social_data$adult_no_car <- NA
+social_data$low_income_families <- NA
+
+social_data$adult_not_labour_force <- SAPS_2022_Small_Area_UR_171024$t8_1_tt - 
+  SAPS_2022_Small_Area_UR_171024$t8_1_wt
+
+social_data$students <- SAPS_2022_Small_Area_UR_171024$t8_1_st
+
+social_data$IRSAD <- NA
+
+social_data$population <- SAPS_2022_Small_Area_UR_171024$t1_1agett
+
+
+social_data <- social_data %>% 
+  inner_join(post_office_distance, 
+             by = join_by(guid == SA_GUID_2022))
+
+saveRDS(social_data, "data/west_ireland_social_data.rds")
+
+```
+
+
+```{r combined_needs_calc, fig.dim=c(7.5,7.5), eval = FALSE}
+
+#FUNCTION TO CALCULATE COMBINED NEEDS INDEX
+#Comment out indicators we don't have
+calculate_IRSAD_and_need_index <- function(social_dataset) {
+ # scale all to 0 to 100
+ # social_dataset$IRSAD_100 <- rescale_max(
+#     social_dataset$IRSAD, to = c(0, 100))
+#  social_dataset$adult_no_car_100 <- rescale_max(
+#    social_dataset$adult_no_car, to = c(0, 100))
+   social_dataset$accessibility_100 <- rescale_max(
+     social_dataset$distance, to = c(0, 100))
+   social_dataset$over_60_100 <- rescale_max(
+     social_dataset$over_60, to = c(0, 100))
+#   social_dataset$disability_pension_100 <- rescale_max(
+#     social_dataset$disability_support_pension, to = c(0, 100))
+#   social_dataset$low_income_families_100 <- rescale_max(
+#     social_dataset$low_income_families, to = c(0, 100))
+  social_dataset$adult_not_labour_force_100 <- rescale_max(
+     social_dataset$adult_not_labour_force, to = c(0, 100))
+  social_dataset$students_100 <- rescale_max(
+     social_dataset$students, to = c(0, 100))
+  social_dataset$age_five_to_nine_100 <- rescale_max(
+     social_dataset$age_five_to_nine, to = c(0, 100))
+  
+  # calculate needs scores and scale to 100
+  social_dataset$needs_score <- social_dataset$accessibility_100 * 0.15 + 
+    social_dataset$over_60_100 * 0.14 + 
+    social_dataset$adult_not_labour_force_100 * 0.09 + 
+    social_dataset$students_100 * 0.09 + 
+    social_dataset$age_five_to_nine_100 * 0.12
+  
+  social_dataset$needs_score_100 <- rescale_max(
+     social_dataset$needs_score, to = c(0, 100))
+
+  ### No IRSAD, so will only return the needs score based on the available transport indicators 
+# weighted by population 
+  
+social_dataset$needs_score_100_population_weighted <- social_dataset$needs_score_100  *  social_dataset$population
+  
+#  social_dataset$total_need_IRSAD <- social_dataset$IRSAD *
+#    social_dataset$population
+#  social_dataset$total_transport_need <- social_dataset$needs_score * 
+#    social_dataset$population
+ 
+#  # create combined indicator 0 to 100
+#  social_dataset$combined_needs_index <- social_dataset$total_need_IRSAD + 
+#    social_dataset$total_transport_need 
+#  social_dataset$combined_needs_index <- rescale_max(
+#     social_dataset$combined_needs_index, to = c(0, 100))
+  
+social_dataset$combined_needs_index <- rescale_max(
+     social_dataset$needs_score_100_population_weighted, to = c(0, 100))
+
+  
+  return(social_dataset %>% 
+           select(guid, combined_needs_index, population)) 
+}
+
+
+social_data <- readRDS("data/west_ireland_social_data.rds")
+
+needs_index <- calculate_IRSAD_and_need_index(
+  social_data)
+
+saveRDS(needs_index, file = "results/west_ireland_needs_index.rds")
+
+si_west_ireland <- read.csv("results/si_west_ireland_week_251001_aggregated.csv")
+needs_index <- readRDS(file = "results/west_ireland_needs_index.rds")
+
+combined_dataset <- region_of_interest %>% 
+  inner_join(si_west_ireland[,c(2,3)], 
+             by = join_by(SA_PUB2022 == area_id))
+
+combined_dataset <- combined_dataset %>% 
+  inner_join(needs_index, 
+             by = join_by(SA_GUID_2022 == guid))
+
+saveRDS(combined_dataset, "results/west_ireland_combined_dataset.rds")
+
+```
 
 
 # Results
-
 
 ```{r threshold_function, eval = FALSE, echo = FALSE}
 
@@ -354,12 +468,10 @@ Therefore, assessment of social needs for transport for Small Areas within the w
 # the remainder are then split into those above and below the average SI value
 # these two groups are then each split into three groups of roughly equal size. 
 set_thresholds <-function(score_by_area_dataframe){ 
-
-names(score_by_area_dataframe) <- c("area_id", "score")  
+  
   
 ## Define Very High, High etc thresholds
 cuts_lower_groups <- score_by_area_dataframe %>% 
-  st_drop_geometry() %>% 
   filter(score !=0) %>%
   filter(score <= score %>% mean()) %>% 
   select(score) %>% unlist() %>% 
@@ -389,17 +501,16 @@ allocation_upper_groups <- cuts_upper_groups %>% fct_recode(
 
 # Join back to lower_group SIs and areas_of_interest
 score_by_area_dataframe_below_average <- score_by_area_dataframe %>% 
-  st_drop_geometry() %>% 
   filter(score !=0) %>%
   filter(score <= score %>% mean()) 
-score_by_area_dataframe_below_average$transit_supply <- allocation_lower_groups
+score_by_area_dataframe_below_average$category <- allocation_lower_groups
 
-# Join back to upper_group SIs and areas_of_interest
+# Join back to upper_group scores
 score_by_area_dataframe_above_average <- score_by_area_dataframe %>% 
   st_drop_geometry() %>% 
   filter(score !=0) %>%
   filter(score > score %>% mean()) 
-score_by_area_dataframe_above_average$transit_supply <- allocation_upper_groups
+score_by_area_dataframe_above_average$category <- allocation_upper_groups
 
 # combine upper and lower groups
   
@@ -413,7 +524,7 @@ score_by_area_dataframe <- full_join(
   score_by_area_dataframe_non_zero
 )
 
-score_by_area_dataframe$transit_supply <- score_by_area_dataframe$transit_supply %>% 
+score_by_area_dataframe$category <- score_by_area_dataframe$category %>% 
   fct_explicit_na(na_level = "Zero Supply") %>% 
   fct_shift(n = -1)
 
@@ -436,7 +547,7 @@ thresholds <- rbind(thresholds, cuts_upper_groups %>% as_tibble()  %>%
 
 #return dataframe and information about level cut offs
 score_by_area_dataframe_and_cuts_dataframe <- list(
-  si_by_area = score_by_area_dataframe,
+  output_score_dataframe = score_by_area_dataframe,
   thresholds_text = c(levels(cuts_lower_groups), levels(cuts_upper_groups)), 
   thresholds_values = thresholds
   )
@@ -447,6 +558,76 @@ return(score_by_area_dataframe_and_cuts_dataframe)
 ```
 
 
+```{r load_si_and_combine_with_combined_social_index, eval = FALSE, echo = FALSE}
+
+combined_dataset <- readRDS(file = "results/west_ireland_combined_dataset.rds")
+
+score_by_area_dataset_test <- combined_dataset %>% select(SA_GUID_2022) %>% 
+  st_drop_geometry()
+score_by_area_dataset_test$score <- combined_dataset$SI
+
+si_categories <- set_thresholds(score_by_area_dataframe = score_by_area_dataset_test)
+names(si_categories$output_score_dataframe) <- c("SA_GUID_2022", "SI", "SI_category")
+
+score_by_area_dataset_test <- combined_dataset %>% select(SA_GUID_2022) %>% 
+  st_drop_geometry()
+score_by_area_dataset_test$score <- combined_dataset$combined_needs_index
+needs_categories <- set_thresholds(score_by_area_dataframe = score_by_area_dataset_test)
+names(needs_categories$output_score_dataframe) <- c("SA_GUID_2022", "combined_needs_index", "needs_category")
+
+combined_dataset <- combined_dataset %>% 
+  left_join(si_categories$output_score_dataframe %>% 
+              select(SA_GUID_2022, SI_category)) %>% 
+  left_join(needs_categories$output_score_dataframe %>% 
+              select(SA_GUID_2022, needs_category))
+)
+
+combined_dataset$needs_category <- combined_dataset$needs_category %>% 
+  factor(levels = c("Very Low", "Low", "Below average",
+                       "Above average", "High", "Very High"))
+
+combined_needs_plot <- ggplot()+ 
+  geom_sf(data=combined_dataset %>% na.omit(),
+          aes(fill =  needs_category), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+  scale_fill_manual(values = c("#FFFB07", "#CEE102", "#A3CF07", "#61AE09", "#2EA105", "#0A7B01")) +
+    ggspatial::annotation_scale(location = 'tl', height = (unit(0.05, "cm")), text_cex = 0.25) 
+#combined_needs_plot
+  
+
+si_category_plot <- ggplot()+ 
+  geom_sf(data=combined_dataset %>% na.omit(),
+          aes(fill =  SI_category), colour=NA) +
+  theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank(), #remove y axis ticks
+        legend.position="none"
+  ) +
+    #    legend.text = element_text(size = 4), 
+    #    legend.title = element_text(size = 5)) + 
+scale_fill_manual(
+  values = c("Zero Supply" = "white", 
+             "Very Low" = "#F9D8B1", "Low" = "#F7C387", 
+             "Below average" = "#F29C33",
+             "Above average" = "lightgreen", "High" = "#53A212", 
+             "Very High" = "darkgreen")) +
+    ggspatial::annotation_scale(location = 'tl', height = (unit(0.05, "cm")), text_cex = 0.25) 
+#si_category_plot
+  
+
+```
+
+
+
+
 
 
 
@@ -455,3 +636,6 @@ return(score_by_area_dataframe_and_cuts_dataframe)
 # create a bib file for the R packages used in this document
 knitr::write_bib(c('base', 'rmarkdown'), file = 'skeleton.bib')
 ```
+
+
+
